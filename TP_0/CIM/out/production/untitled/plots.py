@@ -14,16 +14,19 @@ with open("initial_state.txt", "r") as f:
 
     particles = []
     for line in f:
-        particles.append(list(map(int, line.split())))
+        particles.append(list(map(float, line.split())))
 
-with open("output.txt", "r"):
+with open("output.txt", "r") as f:
     L = float(f.readline())
     M = int(f.readline())
     N = int(f.readline())
     Rc = float(f.readline())
     points = dict()
     for line in f:
-        pid, nids = f.split(":")
+        pid, nids = line[:-1].split(":")
+        pid = int(pid.strip())
         nids = nids.split(" ")
+        nids = [int(nid) for nid in nids]
         points[pid] = nids
+    print(points)
 

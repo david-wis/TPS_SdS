@@ -24,7 +24,7 @@ public class FileController {
             writer.write(grid.getN() + "\n");
             writer.write(grid.getRc() + "\n");
             for (int i = 0; i < N; i++) {
-                writer.write(i + " : ");
+                writer.write(i + ":");
                 for (int j = 0; j < N; j++)
                     if (adjacencyMatrix[i][j])
                         writer.write(j + " ");
