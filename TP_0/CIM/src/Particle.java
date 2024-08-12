@@ -4,15 +4,13 @@ public class Particle {
     private int id;
     private float x;
     private float y;
-    private float vx;
-    private float vy;
+    private float r;
 
-    public Particle(int id, float x, float y, float vx, float vy) {
+    public Particle(int id, float x, float y, float r) {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.vx = vx;
-        this.vy = vy;
+        this.r = r;
     }
 
     @Override
@@ -29,7 +27,7 @@ public class Particle {
     }
 
     public float distance(Particle p) {
-        return (float) Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2));
+        return (float) Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2)) - this.r - p.r;
     }
 
     public int getId() {
@@ -44,32 +42,15 @@ public class Particle {
         return x;
     }
 
-    public void setX(float x) {
-        this.x = x;
-    }
 
     public float getY() {
         return y;
     }
 
-    public void setY(float y) {
-        this.y = y;
+    public float getR() {
+        return r;
     }
 
-    public float getVx() {
-        return vx;
-    }
 
-    public void setVx(float vx) {
-        this.vx = vx;
-    }
-
-    public float getVy() {
-        return vy;
-    }
-
-    public void setVy(float vy) {
-        this.vy = vy;
-    }
 
 }

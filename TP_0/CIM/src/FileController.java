@@ -8,8 +8,7 @@ public class FileController {
         try {
             FileWriter writer = new FileWriter(filename);
             for (Particle p : particles)
-                writer.write(p.getId() + " " + p.getX() + " " + p.getY() + "\n");
-//                writer.write(p.getId() + " " + p.getX() + " " + p.getY() + " " + p.getVx() + " " + p.getVy() + "\n");
+                writer.write(p.getId() + " " + p.getX() + " " + p.getY() + " " + p.getR() + "\n");
             writer.close();
         } catch (IOException e) {
             System.err.println("An error occurred writing the initial state.");
