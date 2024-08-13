@@ -11,6 +11,14 @@ public class Grid {
     private final int M; // Number of cells of a row
     private final float rc; // Interaction radius
 
+    private static final Point[] directionsToCheck = new Point[] {
+            new Point(0, 0),
+            new Point(0, 1),
+            new Point(1, 0),
+            new Point(1, 1),
+            new Point(-1,1)
+    };
+
     public Grid(int n, float l, int m, float rc) {
         this.N = n;
         this.L = l;
@@ -35,13 +43,6 @@ public class Grid {
         grid[cell.x][cell.y].add(p);
     }
 
-    private final static Point[] directionsToCheck = new Point[] {
-            new Point(0, 0),
-            new Point(0, 1),
-            new Point(1, 0),
-            new Point(1, 1),
-            new Point(-1,1)
-    };
 
     protected boolean isInBounds(final Point p1, final Point p2) {
         return p1.x + p2.x < M && p1.y + p2.y < M && p1.x + p2.x >= 0 && p1.y + p2.y >= 0;

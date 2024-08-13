@@ -73,7 +73,7 @@ if __name__ == "__main__":
             nids = [int(nid) for nid in nids if nid != ""]
             points[pid] = nids
 
-    print(points)
+    # print(points)
     if len(sys.argv) < 2:
         pid = 0
     else:
