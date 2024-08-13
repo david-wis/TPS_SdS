@@ -28,7 +28,7 @@ def plot_grid(L, M, particles, selected, neighbors, rc, filename):
     radius = 3000
     # use circle to plot particles instead of scatter
     for particle in particles:
-        circle = plt.Circle(np.array([particle[X_INDEX], particle[Y_INDEX]]), particle[R_INDEX], color='red', fill=True)
+        circle = plt.Circle(np.array([particle[X_INDEX], particle[Y_INDEX]]), particle[R_INDEX], color='grey', fill=True)
         ax.add_artist(circle)
 
     for neighbor in neighbors:
@@ -39,8 +39,16 @@ def plot_grid(L, M, particles, selected, neighbors, rc, filename):
     ax.add_artist(selected_circle)
 
     # Plot the circle
-    circle = plt.Circle(np.array([selected[X_INDEX], selected[Y_INDEX]]), rc+selected[R_INDEX], color='orange', fill=False)
-    ax.add_artist(circle)
+    vi = np.array([1,0])
+    vj = np.array([0,1])
+    dirs = [np.array([0,0]), vi, vj, vi+vj, -vi, -vj, -vi+vj, vi-vj, -vi-vj]
+
+    # Without periodic boundary conditions
+    # dirs = [np.array([0,0])]
+
+    for d in dirs:
+        circle = plt.Circle(np.array([selected[X_INDEX], selected[Y_INDEX]]) + d * L, rc+selected[R_INDEX], color='red', fill=False)
+        ax.add_artist(circle)
 
     plt.savefig(f"{filename}.png")
 

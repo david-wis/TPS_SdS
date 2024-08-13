@@ -7,6 +7,11 @@ public class PeriodicGrid extends Grid {
     }
 
     @Override
+    protected boolean insideInteractionRadius(Particle p1, Particle p2) {
+        return p1.modularDistance(p2, this.getL()) <= this.getRc();
+    }
+
+    @Override
     protected boolean isInBounds(final Point p1, final Point p2) {
         return true;
     }

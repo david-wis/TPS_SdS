@@ -26,8 +26,12 @@ public class Particle {
         return Objects.hash(id);
     }
 
-    public float distance(Particle p) {
+    public float distance(final Particle p) {
         return (float) Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2)) - this.r - p.r;
+    }
+
+    public float modularDistance(final Particle p, final float L) {
+        return (float) Math.sqrt(Math.pow(Math.min(Math.abs(this.x - p.x), L - Math.abs(this.x - p.x)), 2) + Math.pow(Math.min(Math.abs(this.y - p.y), L - Math.abs(this.y - p.y)), 2)) - this.r - p.r;
     }
 
     public int getId() {

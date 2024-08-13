@@ -62,10 +62,14 @@ public class Grid {
         return a + b;
     }
 
+    protected boolean insideInteractionRadius(final Particle p1, final Particle p2) {
+        return p1.distance(p2) <= rc;
+    }
+
     private void checkNeighborsOfCell(final Point cell, final Point d, final Particle p1, final boolean[][] adjacencyMatrix) {
         if (isInBounds(cell, d)) {
             for (Particle p2 : grid[modularSum(cell.x, d.x)][modularSum(cell.y, d.y)]) {
-                if (p1.distance(p2) <= rc && !p1.equals(p2)) {
+                if (insideInteractionRadius(p1, p2) && !p1.equals(p2)) {
                     adjacencyMatrix[p1.getId()][p2.getId()] = true;
                     adjacencyMatrix[p2.getId()][p1.getId()] = true;
                 }
