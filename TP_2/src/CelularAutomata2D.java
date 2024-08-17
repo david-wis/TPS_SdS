@@ -34,10 +34,10 @@ public class CelularAutomata2D {
         return i >= 0 && i < rows && j >= 0 && j < cols;
     }
 
-    public int sumNeighbors(int i, int j, int d, boolean vonNeumann) {
+    public int sumNeighbors(int i, int j, int d, boolean moore) {
         int sum = 0;
         for (int k = -d; k <= d; k++) {
-            for (int l = -d + (vonNeumann? 0 : Math.abs(k)); l <= d - (vonNeumann? 0 : Math.abs(k)); l++) {
+            for (int l = -d + (moore? 0 : Math.abs(k)); l <= d - (moore? 0 : Math.abs(k)); l++) {
                 if (inBounds(i + k, j + l)) {
                     sum += grid[i + k][j + l] ? 1 : 0;
                 }
