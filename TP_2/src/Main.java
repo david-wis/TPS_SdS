@@ -1,7 +1,7 @@
 public class Main {
     public static void main(String[] args) {
         CelularAutomata2D ca = new CelularAutomata2D(100, 100, (automata, i, j) -> {
-            int sum = automata.sumNeighbors(i, j);
+            int sum = automata.sumNeighbors(i, j, 1, true);
             if (automata.getGridCell(i,j)) {
                 return sum == 2 || sum == 3;
             } else {
