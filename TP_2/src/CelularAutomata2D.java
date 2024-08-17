@@ -1,11 +1,10 @@
 import java.util.function.Function;
 
 
-public class CelularAutomata2D {
+public class CelularAutomata2D implements CelularAutomata {
 
     private boolean [][] grid;
     private boolean [][] nextGrid;
-
     private int rows;
     private int cols;
     private Rule2D rule;
@@ -34,19 +33,19 @@ public class CelularAutomata2D {
         return i >= 0 && i < rows && j >= 0 && j < cols;
     }
 
-    public int sumNeighbors(int i, int j, int d, boolean moore) {
+    public int sumNeighbors(int x, int y, int d, boolean moore) {
         int sum = 0;
-        for (int k = -d; k <= d; k++) {
-            for (int l = -d + (moore? 0 : Math.abs(k)); l <= d - (moore? 0 : Math.abs(k)); l++) {
-                if (inBounds(i + k, j + l)) {
-                    sum += grid[i + k][j + l] ? 1 : 0;
+        for (int i = -d; i <= d; i++) {
+            for (int j = -d + (moore? 0 : Math.abs(i)); j <= d - (moore? 0 : Math.abs(i)); j++) {
+                if (inBounds(x + i, y + j)) {
+                    sum += grid[x + i][y + j] ? 1 : 0;
                 }
             }
         }
         return sum;
     }
-
-    public boolean[][] update() {
+    @Override
+    public void update() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 nextGrid[i][j] = rule.apply(this, i, j);
@@ -56,11 +55,29 @@ public class CelularAutomata2D {
         //swap new grid to grid, and reuse the old grid for the next iteration
         nextGrid = grid;
         grid = temp;
-        return grid; //return the new grid
     }
 
     public boolean getGridCell(int i, int j) {
         return grid[i][j];
+    }
+
+    public boolean[][] getGrid() {
+        return grid.clone();
+    }
+
+    @Override
+    public boolean borderReached(){
+        for (int i = 0; i < rows; i++) {
+            if(grid[i][0] || grid[i][cols-1]){
+                return true;
+            }
+        }
+        for (int j = 0; j < cols; j++) {
+            if(grid[0][j] || grid[rows-1][j]){
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getRows() {

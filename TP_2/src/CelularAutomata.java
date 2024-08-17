@@ -1,3 +1,4 @@
 public interface CelularAutomata {
-    boolean[][] update();
+    void update();
+    boolean borderReached();
 }

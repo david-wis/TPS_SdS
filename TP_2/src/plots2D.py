@@ -4,7 +4,7 @@ from matplotlib.animation import FuncAnimation
 from IPython import display
 from PIL import Image
 
-with open('output.txt') as f:
+with open('gol2d.txt') as f:
     rows = int(f.readline())
     cols = int(f.readline())
     states = [ np.array(list(map(int, g.split()))).reshape((rows,cols)) for g in f.readlines() ]
