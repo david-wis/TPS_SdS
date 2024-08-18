@@ -34,7 +34,7 @@ public class CelularAutomata3D implements  CelularAutomata{
         for (int i = -d; i <= d; i++) {
             for (int j = -d + (moore? 0 : Math.abs(i)); j <= d - (moore? 0 : Math.abs(i)); j++) {
                 for (int k = -d + (moore? 0 : Math.abs(i) + Math.abs(j)); k <= d - (moore? 0 : Math.abs(i) + Math.abs(j)); k++) {
-                    if (inBounds(x + i, y + j, z + k)) {
+                    if (inBounds(x + i, y + j, z + k) && i != x && j != y && k != z) {
                         sum += grid[x + i][y + j][z + k] ? 1 : 0;
                     }
                 }
