@@ -88,7 +88,7 @@ public class CelularAutomata3D implements  CelularAutomata{
     }
 
     @Override
-    public void update() {
+    public boolean update() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 for (int k = 0; k < depth; k++) {
@@ -100,6 +100,7 @@ public class CelularAutomata3D implements  CelularAutomata{
         //swap new grid to grid, and reuse the old grid for the next iteration
         nextGrid = grid;
         grid = temp;
+        return borderReached() || Utils.compare3D(grid, nextGrid);
     }
 
     @FunctionalInterface

@@ -22,14 +22,9 @@ public class Main {
         ca.setBit(2, 1, true);
         final String filename = "gol2d.txt";
         FileController.createFile2D(filename, ca);
-        boolean[][] state = ca.getGrid();
         for (int i = 0; i < 100; i++) {
             FileController.appendToFile2D(filename, ca);
-            ca.update();
-            boolean[][] nextState = ca.getGrid();
-            if (state == nextState || ca.borderReached()) {
-                break;
-            }
+            if (ca.update()) break;
         }
     }
 
@@ -55,16 +50,11 @@ public class Main {
         final String filename = "gol3d.txt";
         FileController.createFile3D(filename, ca);
         FileController.appendToFile3D(filename, ca);
-        boolean[][][] state = ca.getGrid();
         for (int i = 0; i < 105; i++) {
-            ca.update();
             FileController.appendToFile3D(filename, ca);
-            boolean[][][] nextState = ca.getGrid();
-            if (Utils.compare3D(state, nextState) || ca.borderReached()) {
-                System.out.println("Stopped at " + Integer.toString(i));
-                break;
-            }
-            state = nextState;
+            if (ca.update()) break;
         }
     }
+
+
 }

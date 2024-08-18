@@ -45,7 +45,7 @@ public class CelularAutomata2D implements CelularAutomata {
         return sum;
     }
     @Override
-    public void update() {
+    public boolean update() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 nextGrid[i][j] = rule.apply(this, i, j);
@@ -55,6 +55,8 @@ public class CelularAutomata2D implements CelularAutomata {
         //swap new grid to grid, and reuse the old grid for the next iteration
         nextGrid = grid;
         grid = temp;
+
+        return borderReached() || Utils.compare2D(grid, nextGrid);
     }
 
     public boolean getGridCell(int i, int j) {
