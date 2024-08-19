@@ -56,7 +56,7 @@ public class CelularAutomata2D implements CelularAutomata {
         nextGrid = grid;
         grid = temp;
 
-        return borderReached() || Utils.compare2D(grid, nextGrid);
+        return borderReached();// || Utils.compare2D(grid, nextGrid);
     }
 
     public boolean getGridCell(int i, int j) {

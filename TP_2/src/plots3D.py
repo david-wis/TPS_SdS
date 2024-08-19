@@ -5,12 +5,14 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+import moviepy.editor as mp
 import os
-files = [f for f in os.listdir('.') if f.endswith('3d.txt') ]
-files = [f.replace(".txt", "") for f in files if not os.path.exists(f.replace('.txt', '.gif'))]
+BASE_PATH = './output'
+files = [f for f in os.listdir(BASE_PATH) if f.endswith('3d.txt') ]
+files = [f.replace(".txt", "") for f in files if not os.path.exists(f"{BASE_PATH}/{f.replace('.txt', '.gif')}")]
 
 for fpath in files:
-    with open(f'{fpath}.txt') as f:
+    with open(f'{BASE_PATH}/{fpath}.txt') as f:
         rows = int(f.readline())
         cols = int(f.readline())
         depth = int(f.readline())
@@ -22,13 +24,13 @@ for fpath in files:
     ax.set_title('Cantidad de células vivas')
     ax.set_xlabel('Frame')
     ax.plot([np.sum(state) for state in states])
-    plt.savefig(f"{fpath}_mass.png")
+    plt.savefig(f"{BASE_PATH}/{fpath}_mass.png")
 
     fig, ax = plt.subplots()
     ax.set_title('radius')
     ax.set_xlabel('Frame')
     ax.plot([np.sqrt((np.abs(np.array(state.nonzero()).T - np.array([rows/2, cols/2, depth/2]))**2)).sum(axis=1).max() for state in states])
-    plt.savefig(f"{fpath}_radius.png")
+    plt.savefig(f"{BASE_PATH}/{fpath}_radius.png")
 
     def plot_state_3d(state, ax, index):
         ax.clear()
@@ -62,13 +64,6 @@ for fpath in files:
         images.append(Image.fromarray(image))
 
     # Guardar las imágenes como un GIF
-    images[0].save(f'{fpath}.gif', save_all=True, append_images=images[1:], loop=0, duration=100)
-
-
-    def update_plot(frame):
-        plot_state_3d(states[frame], ax)
-        fig.canvas.draw()
-
-    slider = widgets.IntSlider(min=0, max=len(states)-1, step=1, description='Frame')
-    widgets.interact(update_plot, frame=slider)
-    display(fig)
+    images[0].save(f'{BASE_PATH}/{fpath}.gif', save_all=True, append_images=images[1:], loop=0, duration=100)
+    clip = mp.VideoFileClip(f'{BASE_PATH}/{fpath}.gif')
+    clip.write_videofile(f'{BASE_PATH}/{fpath}.mp4')

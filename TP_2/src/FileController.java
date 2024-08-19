@@ -1,6 +1,10 @@
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class FileController {
     //TODO optimize writer for opening and closing once ?
@@ -26,6 +30,27 @@ public class FileController {
         } catch (IOException e) {
             System.err.println("An error occurred writing the output.");
         }
+    }
+
+    public static boolean[][] loadFromFile2D(String filename) {
+        try {
+            File file = new File(
+                    "input/" + filename + ".txt");
+            Scanner sc = new Scanner(file);
+            int rows = Integer.parseInt(sc.nextLine());
+            int cols = Integer.parseInt(sc.nextLine());
+            boolean[][] grid = new boolean[rows][cols];
+            String line = sc.nextLine();
+            int[] a = Arrays.stream(line.split(" ")).mapToInt(Integer::parseInt).toArray();
+            for (int i = 0; i < a.length; i++) {
+                grid[i / cols][i % cols] = a[i] == 1;
+            }
+
+            return grid;
+        } catch (IOException e) {
+            System.err.println("An error occurred reading the input.");
+        }
+        return null;
     }
 
     public static void createFile3D(String filename, CelularAutomata3D ca) {
@@ -54,6 +79,28 @@ public class FileController {
         } catch (IOException e) {
             System.err.println("An error occurred writing the output.");
         }
+    }
+
+    public static boolean[][][] loadFromFile3D(String filename) {
+        try {
+            File file = new File(
+                    "input/" + filename + ".txt");
+            Scanner sc = new Scanner(file);
+            int rows = Integer.parseInt(sc.nextLine());
+            int cols = Integer.parseInt(sc.nextLine());
+            int depth = Integer.parseInt(sc.nextLine());
+            boolean[][][] grid = new boolean[rows][cols][depth];
+            String line = sc.nextLine();
+            int[] a = Arrays.stream(line.split(" ")).mapToInt(Integer::parseInt).toArray();
+            for (int i = 0; i < a.length; i++) {
+                grid[i / (cols * depth)][(i / depth) % cols][i % depth] = a[i] == 1;
+            }
+
+            return grid;
+        } catch (IOException e) {
+            System.err.println("An error occurred reading the input.");
+        }
+        return null;
     }
 
 }

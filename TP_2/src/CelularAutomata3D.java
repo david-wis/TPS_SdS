@@ -100,7 +100,7 @@ public class CelularAutomata3D implements  CelularAutomata{
         //swap new grid to grid, and reuse the old grid for the next iteration
         nextGrid = grid;
         grid = temp;
-        return borderReached() || Utils.compare3D(grid, nextGrid);
+        return borderReached(); //|| Utils.compare3D(grid, nextGrid);
     }
 
     @FunctionalInterface
