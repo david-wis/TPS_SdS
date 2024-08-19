@@ -53,6 +53,10 @@ public class Main {
         int x=ca.getRows()/2;
         int y=ca.getCols()/2;
         ca.setBit(x+0, y+0, true);
+        ca.setBit(x+2, y+2, true);
+        ca.setBit(x-2, y+2, true);
+        ca.setBit(x+2, y-2, true);
+        ca.setBit(x-2, y-2, true);
 //        ca.setBit(x-1, y+0, true);
 
 //        ca.setBit(x+1, y+1, true);

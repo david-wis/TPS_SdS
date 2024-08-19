@@ -29,8 +29,14 @@ public class AutomatonRules {
     };
 
     public static final CelularAutomata2D.Rule2D ring = (automata, i, j) ->
-            automata.sumNeighbors(i, j, 1, true) == 0 && automata.sumNeighbors(i, j, 2, true) > 0;
+            automata.sumNeighbors(i, j, 1, true) == 0 && automata.sumNeighbors(i, j, 2, false) > 0;
 
     public static final CelularAutomata3D.Rule3D ring3D = (automata, i, j, k) ->
             automata.sumNeighbors(i, j, k, 1, true) == 0 && automata.sumNeighbors(i, j, k, 2, true) > 0;
+
+
+    public static final CelularAutomata2D.Rule2D even2D = (automata, i, j) -> {
+        int sum = automata.sumNeighbors(i, j, 1, true);
+        return sum % 2 == 0 && sum > 0;
+    };
 }

@@ -25,7 +25,8 @@ for fpath in files:
     fig, ax = plt.subplots()
     ax.set_title('radius')
     ax.set_xlabel('Frame')
-    ax.plot([np.sqrt((np.abs(np.array(state.nonzero()).T - np.array([rows/2, cols/2]))**2)).sum(axis=1).max() for state in states])
+    # print([state.nonzero()[0].shape for state in states])
+    ax.plot([np.sqrt((np.abs(np.array(state.nonzero()).T - np.array([rows/2, cols/2]))**2)).sum(axis=1).max() if state.nonzero()[0].shape[0] != 0 else 0 for state in states])
     plt.savefig(f"{fpath}_radius.png")
 
     def plot_state(state, ax, index):
