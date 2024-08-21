@@ -2,119 +2,45 @@ import java.lang.annotation.Inherited;
 import java.util.Objects;
 
 public class Main {
+    public static String INPUT_PATH = "input/";
     public static String BASE_PATH = "output/";
     public static void main(String[] args) {
-        GOLAutomata();
-        //seedsAutomata();
-        //basic3DAutomata();
-        lineAutomata();
-        ringAutomata();
-        ringAutomata3D();
-        evenAutomata();
+        runAutomata2D("010a", AutomatonRules.GOL, "gol2d");
+        runAutomata2D("010a", AutomatonRules.seeds, "seeds2d");
+        runAutomata2D("010a", AutomatonRules.ring, "ring2d");
+        runAutomata2D("010a", AutomatonRules.line, "line2d");
+        runAutomata2D("010a", AutomatonRules.even2D, "even2d");
+        runAutomata2D("025a", AutomatonRules.odd2D, "odd2d");
+
+        runAutomata3D("010", AutomatonRules.ring3D, "ring3d");
+
     }
 
-    public static void GOLAutomata(){
-        CelularAutomata2D ca = new CelularAutomata2D(Objects.requireNonNull(FileController.loadFromFile2D("init2d010a")), AutomatonRules.GOL);
-        final String filename = BASE_PATH + "gol2d.txt";
+    public static void runAutomata2D(String initName, CelularAutomata2D.Rule2D rule, String name){
+        CelularAutomata2D ca = new CelularAutomata2D(Objects.requireNonNull(FileController.loadFromFile2D(INPUT_PATH + "init2d" + initName + ".txt")), rule);
+        String filename = BASE_PATH + name  + initName + ".txt";
         FileController.createFile2D(filename, ca);
         for (int i = 0; i < 100; i++) {
             FileController.appendToFile2D(filename, ca);
             if (ca.update()) {
-                System.out.println("stopped at iteration " + i);
+                System.out.println(name + " stopped at iteration " + i);
                 break;
             }
         }
         FileController.appendToFile2D(filename, ca);
     }
 
-    public static void seedsAutomata(){
-        CelularAutomata2D ca = new CelularAutomata2D(Objects.requireNonNull(FileController.loadFromFile2D("init2d010a")), AutomatonRules.seeds);
-
-        final String filename = BASE_PATH + "seeds2d.txt";
-        FileController.createFile2D(filename, ca);
-        for (int i = 0; i < 100; i++) {
-            FileController.appendToFile2D(filename, ca);
-            if (ca.update()) {
-                System.out.println("stopped at iteration " + i);
-                break;
-            }
-        }
-        FileController.appendToFile2D(filename, ca);
-    }
-
-    public static void ringAutomata() {
-        CelularAutomata2D ca = new CelularAutomata2D(Objects.requireNonNull(FileController.loadFromFile2D("init2d010a")), AutomatonRules.ring);
-
-        final String filename = BASE_PATH + "ring2d.txt";
-        FileController.createFile2D(filename, ca);
-        for (int i = 0; i < 100; i++) {
-            FileController.appendToFile2D(filename, ca);
-            if (ca.update()) {
-                System.out.println("stopped at iteration " + i);
-                break;
-            }
-        }
-        FileController.appendToFile2D(filename, ca);
-    }
-
-    public static void lineAutomata(){
-        CelularAutomata2D ca = new CelularAutomata2D(Objects.requireNonNull(FileController.loadFromFile2D("init2d010a")), AutomatonRules.line);
-        final String filename = BASE_PATH + "line2d.txt";
-        FileController.createFile2D(filename, ca);
-        for (int i = 0; i < 100; i++) {
-            FileController.appendToFile2D(filename, ca);
-            if (ca.update()) {
-                System.out.println("stopped at iteration " + i);
-                break;
-            }
-        }
-        FileController.appendToFile2D(filename, ca);
-    }
-
-    public static void evenAutomata(){
-        CelularAutomata2D ca = new CelularAutomata2D(Objects.requireNonNull(FileController.loadFromFile2D("init2d010a")), AutomatonRules.even2D);
-        final String filename = BASE_PATH + "even2d.txt";
-        FileController.createFile2D(filename, ca);
-        for (int i = 0; i < 100; i++) {
-            FileController.appendToFile2D(filename, ca);
-            if (ca.update()) {
-                System.out.println("stopped at iteration " + i);
-                break;
-            }
-        }
-        FileController.appendToFile2D(filename, ca);
-    }
-
-    public static void ringAutomata3D() {
-        CelularAutomata3D ca = new CelularAutomata3D(Objects.requireNonNull(FileController.loadFromFile3D("init3d010")), AutomatonRules.ring3D);
-        final String filename = BASE_PATH + "ring3d.txt";
+    public static void runAutomata3D(String initName, CelularAutomata3D.Rule3D rule, String name){
+        CelularAutomata3D ca = new CelularAutomata3D(Objects.requireNonNull(FileController.loadFromFile3D(INPUT_PATH + "init3d" + initName + ".txt")), rule);
+        String filename = BASE_PATH + name + initName + ".txt";
         FileController.createFile3D(filename, ca);
         for (int i = 0; i < 100; i++) {
             FileController.appendToFile3D(filename, ca);
-            if (ca.update()) break;
-        }
-        FileController.appendToFile3D(filename, ca);
-    }
-
-
-    public static void basic3DAutomata() {
-        CelularAutomata3D ca = new CelularAutomata3D(Objects.requireNonNull(FileController.loadFromFile3D("init3d010")), (automata, i, j, k) -> {
-            int sum = automata.sumNeighbors(i, j, k, 1, true);
-            if (automata.getGridCell(i,j, k)) {
-                sum = sum - 1;
-                return sum >= 3 && sum <= 7;
-            } else {
-                return sum >= 4 && sum <= 9;
+            if (ca.update()) {
+                System.out.println(name + " stopped at iteration " + i);
+                break;
             }
-        });
-        final String filename = BASE_PATH + "gol3d.txt";
-        FileController.createFile3D(filename, ca);
-        FileController.appendToFile3D(filename, ca);
-        for (int i = 0; i < 105; i++) {
-            FileController.appendToFile3D(filename, ca);
-            if (ca.update()) break;
         }
+        FileController.appendToFile3D(filename, ca);
     }
-
-
 }

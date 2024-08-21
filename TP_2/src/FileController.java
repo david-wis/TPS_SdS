@@ -35,7 +35,7 @@ public class FileController {
     public static boolean[][] loadFromFile2D(String filename) {
         try {
             File file = new File(
-                    "input/" + filename + ".txt");
+                    filename);
             Scanner sc = new Scanner(file);
             int rows = Integer.parseInt(sc.nextLine());
             int cols = Integer.parseInt(sc.nextLine());
@@ -84,7 +84,7 @@ public class FileController {
     public static boolean[][][] loadFromFile3D(String filename) {
         try {
             File file = new File(
-                    "input/" + filename + ".txt");
+                    filename);
             Scanner sc = new Scanner(file);
             int rows = Integer.parseInt(sc.nextLine());
             int cols = Integer.parseInt(sc.nextLine());

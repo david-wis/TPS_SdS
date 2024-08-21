@@ -3,17 +3,17 @@ import matplotlib.pyplot as plt
 
 #write s to file
 def write_state(state, filename):
-    with open(filename, 'w') as f:
+    with open(f"{filename}.txt", 'w') as f:
         f.write(f"{state.shape[0]}\n")
         f.write(f"{state.shape[1]}\n")
         f.write(' '.join(map(lambda x: str(int(x)), state.flatten())))
 
-def plot_state(state):
+def plot_state(state, filename):
     plt.imshow(state, cmap='binary')
-    plt.show()
+    plt.savefig(f'{filename}.png')
 
 def read_state(filename):
-    with open(filename) as f:
+    with open(f"{filename}.txt") as f:
         rows = f.readline()
         cols = f.readline()
         line = f.readline()
@@ -30,10 +30,8 @@ if __name__ == '__main__':
     core = a.reshape((10, 10))
 
     state[45:55, 45:55] = core
-    plot_state(state)
-    print(state)
-    filename = f'input/init2d{n}.txt'
+    filename = f'input/init2d{n:03}'
     write_state(state, filename)
     state = read_state(filename)
     print(state)
-    plot_state(state)
+    plot_state(state, filename)

@@ -1,13 +1,11 @@
-*.png
 *.iml
 *.xml
-*.gif
-*.mp4
 TP_2/output
 TP_
 TP_1/out
 TP_1/.idea
 TP_1/*/*.txt
+TP_1/*/*.png
 TP_2/out
 TP_2/.idea
 .idea

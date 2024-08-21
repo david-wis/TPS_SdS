@@ -28,6 +28,8 @@ public class AutomatonRules {
         return false;
     };
 
+
+
     public static final CelularAutomata2D.Rule2D ring = (automata, i, j) ->
             automata.sumNeighbors(i, j, 1, true) == 0 && automata.sumNeighbors(i, j, 2, false) > 0;
 
@@ -39,4 +41,10 @@ public class AutomatonRules {
         int sum = automata.sumNeighbors(i, j, 1, true);
         return sum % 2 == 0 && sum > 0;
     };
+
+    public static final CelularAutomata2D.Rule2D odd2D = (automata, i, j) -> {
+        int sum = automata.sumNeighbors(i, j, 1, true);
+        return sum % 2 == 1;
+    };
+
 }
