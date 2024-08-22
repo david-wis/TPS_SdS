@@ -1,15 +1,12 @@
 import numpy as np
-import ipywidgets as widgets
-from IPython.display import display
 from PIL import Image
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 import moviepy.editor as mp
 import os
 BASE_PATH = './output'
 files = [f for f in os.listdir(BASE_PATH) if f.endswith('3d.txt') ]
-files = [f.replace(".txt", "") for f in files if not os.path.exists(f"{BASE_PATH}/{f.replace('.txt', '.gif')}")]
+files = [f.replace(".txt", "") for f in files] # if not os.path.exists(f"{BASE_PATH}/{f.replace('.txt', '.gif')}")]
 
 for fpath in files:
     with open(f'{BASE_PATH}/{fpath}.txt') as f:
@@ -29,7 +26,7 @@ for fpath in files:
     fig, ax = plt.subplots()
     ax.set_title('radius')
     ax.set_xlabel('Frame')
-    ax.plot([np.sqrt((np.abs(np.array(state.nonzero()).T - np.array([rows/2, cols/2, depth/2]))**2)).sum(axis=1).max() for state in states])
+    ax.plot([np.sqrt((np.abs(np.array(state.nonzero()).T - np.array([rows/2, cols/2, depth/2]))**2)).sum(axis=1).max() if state.nonzero()[0].shape[0] != 0 else 0 for state in states])
     plt.savefig(f"{BASE_PATH}/{fpath}_radius.png")
 
     def plot_state_3d(state, ax, index):

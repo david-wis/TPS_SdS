@@ -1,14 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-from IPython import display
 from PIL import Image
 import moviepy.editor as mp
 import os
 
 BASE_PATH = './output'
 files = [f for f in os.listdir(BASE_PATH) if f.endswith('2d.txt') ]
-files = [f.replace(".txt", "") for f in files if not os.path.exists(f"{BASE_PATH}/{f.replace('.txt', '.gif')}")]
+files = [f.replace(".txt", "") for f in files]# if not os.path.exists(f"{BASE_PATH}/{f.replace('.txt', '.gif')}")]
 print(files)
 for fpath in files:
     with open(f'{BASE_PATH}/{fpath}.txt') as f:

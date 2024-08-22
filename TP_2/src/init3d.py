@@ -30,16 +30,19 @@ def read_state(filename):
     return state
 
 if __name__ == '__main__':
-    state = np.zeros((50, 50, 50))
-    a = np.zeros(125)
-    n = 125
+    total_l = 50
+    state = np.zeros((total_l, total_l, total_l))
+    core_l = 20
+    a = np.zeros(core_l**3)
+    n = 4000
     a[:n] = 1
     np.random.shuffle(a)
-    core = a.reshape((5, 5, 5))
-
-    state[23:28, 23:28, 23:28] = core
+    core = a.reshape((core_l, core_l, core_l))
+    start = total_l//2-core_l//2
+    end = total_l//2+core_l//2
+    state[start:end, start:end, start:end] = core
     filename = f'input/init3d{n:03}'
-#     write_state(state, filename)
+    write_state(state, filename)
     state = read_state(filename)
     print(state)
     plot_state(state, filename)

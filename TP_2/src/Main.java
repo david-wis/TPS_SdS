@@ -11,9 +11,16 @@ public class Main {
         runAutomata2D("010a", AutomatonRules.line, "line2d");
         runAutomata2D("010a", AutomatonRules.even2D, "even2d");
         runAutomata2D("025a", AutomatonRules.odd2D, "odd2d");
+        runAutomata2D("025a", AutomatonRules.fill, "fill2d");
+        runAutomata2D("025b", AutomatonRules.fill, "fill2d");
+        runAutomata2D("010a", AutomatonRules.fill, "fill2d");
 
         runAutomata3D("010", AutomatonRules.ring3D, "ring3d");
-
+        runAutomata3D("010", AutomatonRules.decay3D, "decay3d");
+        runAutomata3D("025", AutomatonRules.decay3D, "decay3d");
+        runAutomata3D("125", AutomatonRules.decay3D, "decay3d");
+        runAutomata3D("1000", AutomatonRules.decay3D, "decay3d");
+        runAutomata3D("8000", AutomatonRules.decay3D, "decay3d");
     }
 
     public static void runAutomata2D(String initName, CelularAutomata2D.Rule2D rule, String name){
