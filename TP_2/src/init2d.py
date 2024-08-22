@@ -24,7 +24,7 @@ if __name__ == '__main__':
     state = np.zeros((100, 100))
     #core random with 10 1's
     a = np.zeros(100)
-    n = 100
+    n = 1
     a[:n] = 1
     np.random.shuffle(a)
     core = a.reshape((10, 10))

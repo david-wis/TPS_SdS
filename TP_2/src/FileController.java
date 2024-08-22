@@ -5,17 +5,18 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class FileController {
-    public static void init() {
-        File file = new File("output");
+    public static void createFolderIfNotExists(String path) {
+        File file = new File(path);
         if (!file.exists() && file.mkdir())
-            System.out.println("Output directory is created!");
+            System.out.println(path + " directory is created!");
 
     }
 
     //TODO optimize writer for opening and closing once ?
-    public static void createFile2D(String filename, CelularAutomata2D ca) {
-        init();
-        try {
+    public static void createFile2D(String path, String filename, CelularAutomata2D ca) {
+        createFolderIfNotExists("output");
+        createFolderIfNotExists(path);
+        try{
             FileWriter writer = new FileWriter(filename, false);
             writer.write(ca.getRows() + "\n");
             writer.write(ca.getCols() + "\n");
@@ -59,8 +60,9 @@ public class FileController {
         return null;
     }
 
-    public static void createFile3D(String filename, CelularAutomata3D ca) {
-        init();
+    public static void createFile3D(String path, String filename, CelularAutomata3D ca) {
+        createFolderIfNotExists("output");
+        createFolderIfNotExists(path);
         try {
             FileWriter writer = new FileWriter(filename, false);
             writer.write(ca.getRows() + "\n");

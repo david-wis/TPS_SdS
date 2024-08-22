@@ -53,6 +53,8 @@ public class AutomatonRules {
         } else return true;
     };
 
+    public static final CelularAutomata2D.Rule2D expansion2D = (automata, i, j) -> automata.getGridCell(i,j) || automata.sumNeighbors(i,j, 1, true) != 0;
+
 
     //3D=================================================================================================================================================================
     public static final CelularAutomata3D.Rule3D decay3D = (automata, i, j, k) -> {
@@ -63,4 +65,6 @@ public class AutomatonRules {
 
     public static final CelularAutomata3D.Rule3D ring3D = (automata, i, j, k) ->
             automata.sumNeighbors(i, j, k, 1, true) == 0 && automata.sumNeighbors(i, j, k, 2, true) > 0;
+
+    public static final CelularAutomata3D.Rule3D expansion3d = (automata, i, j, k) -> automata.getGridCell(i,j, k) || automata.sumNeighbors(i,j, k, 1, true) != 0;
 }
