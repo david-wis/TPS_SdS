@@ -1,0 +1,60 @@
+\section{Introduccion}
+\label{sec:intro}
+
+\subsection{Autómata celular}
+
+Un autómata celular es un modelo matemático discreto utilizado para estudiar sistemas complejos mediante la evolución de un conjunto de celdas.
+Cada celda puede tomar un estado finito de un conjunto predeterminado de estados y, a lo largo del tiempo, su estado cambia de acuerdo con un conjunto de reglas locales que dependen del estado actual de la celda y del estado de sus celdas vecinas.
+Estas reglas se aplican de manera uniforme y simultánea a todas las celdas en el sistema, lo que genera patrones globales a partir de interacciones locales.
+
+El comportamiento de un autómata celular se determina a través de iteraciones discretas en el tiempo, donde el estado del sistema en un momento particular, se denomina "generación".
+Este enfoque permite modelar fenómenos naturales, físicos y computacionales complejos.
+Las propiedades emergentes que surgen del comportamiento colectivo de las celdas hacen de los autómatas celulares una herramienta poderosa para explorar la emergencia de estructuras y patrones en sistemas dinámicos.
+
+Existen diversas clases de autómatas celulares, siendo los más estudiados aquellos que se encuentran en una dimensión y que siguen reglas sencillas.
+En este informe se procederá al estudio de tres autómatas celulares bidimensionales y tres tridimensionales, con el objetivo de analizar su comportamiento y las dinámicas emergentes que generan.
+
+Dentro de los autómatas bidimensionales, se incluirá un análisis detallado del famoso "Juego de la Vida" de John Conway, un autómata celular que ha sido ampliamente investigado debido a su capacidad para generar patrones complejos a partir de reglas simples.
+Además, se examinarán otros dos autómatas bidimensionales junto con tres ejemplos en tres dimensiones, para comprender cómo la dimensionalidad y las reglas locales influyen en la evolución del sistema.
+
+\subsection{Vecindad}
+En este informe, se utilizará la vecindad de Moore para definir las interacciones entre las celdas de los autómatas celulares.
+La vecindad de Moore en dos dimensiones considera las ocho celdas adyacentes a una celda central.
+\begin{equation}
+    \label{eq:moore_neighborhood}
+    \begin{aligned}
+        N^{(M)}_{ij} = \{(k,l) \in \mathbb{Z}^2 : |k-i| \leq r, |l-j| \leq r\}
+    \end{aligned}
+\end{equation}
+
+En tres dimensiones, la vecindad de Moore considera las 26 celdas adyacentes a una celda central.
+\begin{equation}
+    \label{eq:moore_neighborhood_3d}
+    \begin{aligned}
+        N^{(M)}_{ijk} = \{(l,m,n) \in \mathbb{Z}^3 : |l-i| \leq r, |m-j| \leq r, |n-k| \leq r\}
+    \end{aligned}
+\end{equation}
+
+También se implementó la vecindad de Von Neumann, que considera solo las cuatro celdas adyacentes a una celda central en dos dimensiones, pero no se utilizará en este informe.
+
+
+
+
+\subsection{Regla de evolución}
+La regla de evolución de un autómata celular de dos dimensiones (AC 2D de ahora en adelante) está dada por el siguiente mapeo:
+\begin{equation}
+    \label{eq:evolution_rule}
+    \begin{aligned}
+        a_{ij}^{(t)} = f(\sum^{k=r}_{k=-r}\sum^{l=r}_{l=-r}{\alpha_{kl}a_{(i+k)(j+l)}^{(t-1)}})
+    \end{aligned}
+\end{equation}
+donde $a_{i,j}^{(t)}$ es el estado de la celda en la posición $(i,j)$ en la generación $t$, $f$ es una función no lineal que determina el estado de la celda en la siguiente generación, $\alpha_{kl}$ son constantes enteras asociadas a las celdas vecinas y $r$ es el radio de la vecindad de la celda.
+
+
+Para un autómata celular de tres dimensiones (AC 3D), se trabaja de manera análoga:
+\begin{equation}
+    \label{eq:evolution_rule_3d}
+    \begin{aligned}
+        a_{ijk}^{(t)} = f(\sum^{l=r}_{l=-r}\sum^{m=r}_{m=-r}\sum^{n=r}_{n=-r}{\alpha_{lmn}a_{(i+l)(j+m)(k+n)}^{(t-1)}})
+    \end{aligned}
+\end{equation}

@@ -1,0 +1,44 @@
+% Author - Jon Arnt Kårstad, NTNU IMT
+\documentclass[12pt]{article}
+
+% Importing document settings from our file "packages.sty"
+\usepackage{packages}
+
+\begin{document}
+
+
+% Beginning of document
+
+% Inserting title page
+    \import{./Sections/}{Titulo}
+
+% Defining front matter settings (Norsk: innstillinger for forord m.m.)
+    \frontmatter
+
+
+% Inserting table of contents
+    \renewcommand*\contentsname{Índice}
+    \tableofcontents
+
+% Defining main matter settings (Norsk: innstillinger for hoveddelen av teksten)
+    \mainmatter
+
+% Introduction explaining this LaTeX-template
+    \import{./Sections/}{Introduccion}
+    \newpage
+
+    \import{./Sections/}{Modelo}
+    \newpage
+
+    \import{./Sections/}{Simulaciones}
+    \newpage
+
+    \import{./Sections/}{Resultados}
+    \newpage
+
+    % Printing bibliography
+    \newpage
+    \printbibliography[heading = bibintoc, title = Referencias]    % 'bibintoc' inserts our bibliography into the table of contents
+
+% End of document
+\end{document}
