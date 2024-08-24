@@ -1,5 +1,33 @@
 public class AutomatonRules {
-    public static final CelularAutomata2D.Rule2D GOL = (automata, i, j) -> {
+    public enum Rules2D {
+        GOL("gol2D", gol),
+        FILL("fill2D", fill),
+        ;
+
+        public final String name;
+        public final CelularAutomata2D.Rule2D rule;
+
+        Rules2D(String name, CelularAutomata2D.Rule2D rule) {
+            this.name = name;
+            this.rule = rule;
+        }
+    }
+
+    public enum Rules3D {
+        GOL("decay3D", decay3D),
+        EXPANSION3D("expansion3D", expansion3d),
+        ;
+
+        public final String name;
+        public final CelularAutomata3D.Rule3D rule;
+
+        Rules3D(String name, CelularAutomata3D.Rule3D rule) {
+            this.name = name;
+            this.rule = rule;
+        }
+    }
+
+    public static final CelularAutomata2D.Rule2D gol = (automata, i, j) -> {
         int sum = automata.sumNeighbors(i, j, 1, true);
         if (automata.getGridCell(i,j)) {
             return sum == 2 || sum == 3;

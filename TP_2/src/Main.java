@@ -7,31 +7,25 @@ public class Main {
     public static String INPUT_PATH = "input/";
     public static String BASE_PATH = "output/";
     public static void main(String[] args) {
-        runAutomata2D("10", AutomatonRules.GOL, "gol2d");
-//        runAutomata2D("10", AutomatonRules.seeds, "seeds2d");
-//        runAutomata2D("10", AutomatonRules.ring, "ring2d");
-//        runAutomata2D("10", AutomatonRules.line, "line2d");
-//        runAutomata2D("10", AutomatonRules.even2D, "even2d");
-//        runAutomata2D("25", AutomatonRules.odd2D, "odd2d");
-//        runAutomata2D("25", AutomatonRules.fill, "fill2d");
-//        runAutomata2D("25", AutomatonRules.fill, "fill2d");
-//        runAutomata2D("10", AutomatonRules.fill, "fill2d");
-//        runAutomata2D("25", AutomatonRules.expansion2D, "expansion2d");
-//        runAutomata2D("1", AutomatonRules.expansion2D, "expansion2d");
+        List<Integer> initialStates2D = List.of(1,10,25,50,75,99);
+        for (AutomatonRules.Rules2D rule : AutomatonRules.Rules2D.values()) {
+            for (Integer initialState : initialStates2D) {
+                runAutomata2D(initialState.toString(), rule.rule, rule.name);
+            }
+        }
 
-//        runAutomata3D("10", AutomatonRules.ring3D, "ring3d");
-//        runAutomata3D("010", AutomatonRules.decay3D, "decay3d");
-//        runAutomata3D("025", AutomatonRules.decay3D, "decay3d");
-//        runAutomata3D("125", AutomatonRules.decay3D, "decay3d");
-//        runAutomata3D("1000", AutomatonRules.decay3D, "decay3d");
-        runAutomata3D("7200", AutomatonRules.decay3D, "decay3d");
-//        runAutomata3D("025", AutomatonRules.expansion3d, "expansion3d");
+        List<Integer> initialStates3D = List.of(10,50,100,800,4000,7200);
+        for (AutomatonRules.Rules3D rule : AutomatonRules.Rules3D.values()) {
+            for (Integer initialState : initialStates3D) {
+                runAutomata3D(initialState.toString(), rule.rule, rule.name);
+            }
+        }
     }
 
     public static void runAutomata2D(String initName, CelularAutomata2D.Rule2D rule, String name){
         List<boolean[][]> initialStates = FileController.loadFromFile2D(INPUT_PATH + "init2d_" + initName + ".txt");
-        String path = BASE_PATH + name + initName + "_2d";
-        String filename = path + "/" + name + initName + "_2d.txt";
+        String path = BASE_PATH + name;
+        String filename = path + "/" + initName + ".txt";
         FileController.createFile2D(path, filename, initialStates.get(0).length, initialStates.get(0)[0].length);
         for (boolean[][] initialState : initialStates) {
             FileController.startNewRun(path, filename);
@@ -49,8 +43,8 @@ public class Main {
 
     public static void runAutomata3D(String initName, CelularAutomata3D.Rule3D rule, String name){
         List<boolean[][][]> initialStates = FileController.loadFromFile3D(INPUT_PATH + "init3d_" + initName + ".txt");
-        String path = BASE_PATH + name + initName + "_3d";
-        String filename = path + "/" + name  + initName + "_3d.txt";
+        String path = BASE_PATH + name;
+        String filename = path + "/" + initName + ".txt";
         FileController.createFile3D(path, filename, initialStates.get(0).length, initialStates.get(0)[0].length, initialStates.get(0)[0][0].length);
         for (boolean[][][] initialState : initialStates) {
             FileController.startNewRun(path, filename);
