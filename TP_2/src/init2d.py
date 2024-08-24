@@ -2,36 +2,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #write s to file
-def write_state(state, filename):
-    with open(f"{filename}.txt", 'w') as f:
-        f.write(f"{state.shape[0]}\n")
-        f.write(f"{state.shape[1]}\n")
-        f.write(' '.join(map(lambda x: str(int(x)), state.flatten())))
-
-def plot_state(state, filename):
-    plt.imshow(state, cmap='binary')
-    plt.savefig(f'{filename}.png')
-
-def read_state(filename):
-    with open(f"{filename}.txt") as f:
-        rows = f.readline()
-        cols = f.readline()
-        line = f.readline()
-        state = np.array(list(map(int, line.split()))).reshape((int(rows), int(cols)))
-    return state
 
 if __name__ == '__main__':
-    state = np.zeros((100, 100))
-    #core random with 10 1's
-    a = np.zeros(100)
-    n = 1
-    a[:n] = 1
-    np.random.shuffle(a)
-    core = a.reshape((10, 10))
+    n = 35
+    filename = f'input/init2d_{n}'
+    fig, axs = plt.subplots(2, 5, figsize=(20, 10))
+    x, y = 100, 100
+    with open(f"{filename}.txt", 'w') as f:
+        f.write(f"{x}\n")
+        f.write(f"{y}\n")
 
-    state[45:55, 45:55] = core
-    filename = f'input/init2d{n:03}'
-    write_state(state, filename)
-    state = read_state(filename)
-    print(state)
-    plot_state(state, filename)
+        for i in range(2):
+            for j in range(5):
+                state = np.zeros((x, y))
+                #core random with 10 1's
+                a = np.zeros(100)
+                a[:n] = 1
+                np.random.shuffle(a)
+                core = a.reshape((10, 10))
+
+                state[45:55, 45:55] = core
+                f.write(''.join(map(lambda x: str(int(x)), state.flatten())) + '\n')
+                axs[i,j].imshow(state, cmap='binary')
+    plt.savefig(f'{filename}.png')
