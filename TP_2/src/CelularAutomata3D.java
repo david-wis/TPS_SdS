@@ -2,31 +2,25 @@ public class CelularAutomata3D implements  CelularAutomata{
     private boolean [][][] grid;
     private boolean [][][] nextGrid;
 
-    private int rows;
-    private int cols;
-    private int depth;
+    private int length;
     private Rule3D rule;
 
-    public CelularAutomata3D(int rows, int cols, int depth, Rule3D rule) {
-        this.grid = new boolean[rows][cols][depth];
-        this.nextGrid = new boolean[rows][cols][depth];
-        this.rows = rows;
-        this.cols = cols;
-        this.depth = depth;
+    public CelularAutomata3D(int length, Rule3D rule) {
+        this.grid = new boolean[length][length][length];
+        this.nextGrid = new boolean[length][length][length];
+        this.length = length;
         this.rule = rule;
     }
 
     public CelularAutomata3D(boolean [][][] grid, Rule3D rule) {
         this.grid = grid;
         this.nextGrid = new boolean[grid.length][grid[0].length][grid[0][0].length];
-        this.rows = grid.length;
-        this.cols = grid[0].length;
-        this.depth = grid[0][0].length;
+        this.length = grid.length;
         this.rule = rule;
     }
 
     public boolean inBounds(int i, int j, int k) {
-        return i >= 0 && i < rows && j >= 0 && j < cols && k >= 0 && k < depth;
+        return i >= 0 && i < length && j >= 0 && j < length && k >= 0 && k < length;
     }
 
     public int sumNeighbors(int x, int y, int z,  int d, boolean moore) {
@@ -43,18 +37,9 @@ public class CelularAutomata3D implements  CelularAutomata{
         return sum;
     }
 
-    public int getRows() {
-        return rows;
+    public int getLength() {
+        return length;
     }
-
-    public int getCols() {
-        return cols;
-    }
-
-    public int getDepth() {
-        return depth;
-    }
-
     public boolean getGridCell(int i, int j, int k) {
         return grid[i][j][k];
     }
@@ -69,18 +54,18 @@ public class CelularAutomata3D implements  CelularAutomata{
 
     @Override
     public boolean borderReached(){
-        for (int i = 0; i < rows; i++) {
-            if(grid[i][0][0] || grid[i][cols-1][0] || grid[i][0][depth-1] || grid[i][cols-1][depth-1]){
+        for (int i = 0; i < length; i++) {
+            if(grid[i][0][0] || grid[i][length -1][0] || grid[i][0][length -1] || grid[i][length -1][length -1]){
                 return true;
             }
         }
-        for (int j = 0; j < cols; j++) {
-            if(grid[0][j][0] || grid[rows-1][j][0] || grid[0][j][depth-1] || grid[rows-1][j][depth-1]){
+        for (int j = 0; j < length; j++) {
+            if(grid[0][j][0] || grid[length -1][j][0] || grid[0][j][length -1] || grid[length -1][j][length -1]){
                 return true;
             }
         }
-        for (int k = 0; k < depth; k++) {
-            if(grid[0][0][k] || grid[0][cols-1][k] || grid[rows-1][0][k] || grid[rows-1][cols-1][k]){
+        for (int k = 0; k < length; k++) {
+            if(grid[0][0][k] || grid[0][length -1][k] || grid[length -1][0][k] || grid[length -1][length -1][k]){
                 return true;
             }
         }
@@ -89,9 +74,9 @@ public class CelularAutomata3D implements  CelularAutomata{
 
     @Override
     public boolean update() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                for (int k = 0; k < depth; k++) {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                for (int k = 0; k < length; k++) {
                     nextGrid[i][j][k] = rule.apply(this, i, j, k);
                 }
             }

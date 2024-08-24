@@ -7,10 +7,9 @@ from analysis import poly_analysis
 
 def get_runs(filename):
     with open(filename) as f:
-        # rows = int(f.readline())
-        # cols = int(f.readline())
-        while line := f.readline() != "\n":
-            pass
+        length = int(f.readline())
+        core = int(f.readline())
+        f.readline()
         states = []
         runs = [states]
         while line := f.readline():
@@ -20,27 +19,41 @@ def get_runs(filename):
             else:
                 states.append(np.array([int(x) for x in line[:-1]]))
 
-    return runs#, rows, cols
+    return [r for r in runs if len(r) > 0], length, core
 
 def plot_animation(run):
     pass
 
 
-def add_line(ms, label):
-    plt.plot(range(len(ms)), ms, label=label)
+def add_line(ax, ms, label):
+    ax.plot(range(len(ms)), ms, label=label)
 
 
 BASE_PATH = './output'
-def analyze_rule(rulename):
+def analyze_rule(rulename, obs_function):
+    dim = 2 if rulename.endswith('2D') else 3
     path = f"{BASE_PATH}/{fname}"
-    quantities = [f.replace(".txt","") for f in os.listdir(path) if f.endswith('.txt')]
+    quantities = [int(f.replace(".txt","")) for f in os.listdir(path) if f.endswith('.txt')]
+    quantities.sort()
     first_masses = []
+    fig, ax = plt.subplots()
+    dict_msss = dict()
     for q in quantities:
-        runs = get_runs(f'{path}/{q}.txt')
-        masses = [[np.sum(state) for state in run ] for run in runs ]
-        add_line(masses[0], f"{q / } %")
-    plt.legend()
+        runs, length, core = get_runs(f'{path}/{q}.txt')
+        mss = [[np.sum(state) for state in run ] for run in runs ]
+        dict_msss[q] = mss
+        add_line(ax, mss[0], f"{q} : {100 * q / core ** dim} %")
+        print(rulename, q, len(runs))
+    ax.legend()
     plt.savefig(f"{path}/{fname}_mass.png")
+
+    obss = [[obs_function(ms) for ms in mss] for mss in dict_msss.values()]
+    masses_avg = np.array([np.mean(obs) for obs in obss])
+    masses_std = np.array([np.std(obs) for obs in obss])
+    fig, ax = plt.subplots()
+    ax.errorbar(quantities, masses_avg, masses_std, fmt='o', linewidth=2, capsize=6)
+    ax.set_xticks(quantities)
+    plt.savefig(f"{path}/{fname}_obs.png")
 
 
 if __name__ == '__main__':
@@ -48,7 +61,7 @@ if __name__ == '__main__':
     print(fnames)
 
     for fname in fnames:
-        analyze_rule(fname)
+        analyze_rule(fname, np.max)
 
 
         # if os.path.exists(f"{path}/{fname}.gif"):

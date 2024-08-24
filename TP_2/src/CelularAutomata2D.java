@@ -5,23 +5,20 @@ public class CelularAutomata2D implements CelularAutomata {
 
     private boolean [][] grid;
     private boolean [][] nextGrid;
-    private int rows;
-    private int cols;
-    private Rule2D rule;
+    private final int length;
+    private final Rule2D rule;
 
-    public CelularAutomata2D(int rows, int cols, Rule2D rule) {
-        this.grid = new boolean[rows][cols];
-        this.nextGrid = new boolean[rows][cols];
-        this.rows = rows;
-        this.cols = cols;
+    public CelularAutomata2D(int length, Rule2D rule) {
+        this.grid = new boolean[length][length];
+        this.nextGrid = new boolean[length][length];
+        this.length = length;
         this.rule = rule;
     }
 
     public CelularAutomata2D(boolean [][] grid, Rule2D rule) {
         this.grid = grid;
         this.nextGrid = new boolean[grid.length][grid[0].length];
-        this.rows = grid.length;
-        this.cols = grid[0].length;
+        this.length = grid.length;
         this.rule = rule;
     }
 
@@ -30,7 +27,7 @@ public class CelularAutomata2D implements CelularAutomata {
     }
 
     public boolean inBounds(int i, int j) {
-        return i >= 0 && i < rows && j >= 0 && j < cols;
+        return i >= 0 && i < length && j >= 0 && j < length;
     }
 
     public int sumNeighbors(int x, int y, int d, boolean moore) {
@@ -46,8 +43,8 @@ public class CelularAutomata2D implements CelularAutomata {
     }
     @Override
     public boolean update() {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
                 nextGrid[i][j] = rule.apply(this, i, j);
             }
         }
@@ -69,25 +66,21 @@ public class CelularAutomata2D implements CelularAutomata {
 
     @Override
     public boolean borderReached(){
-        for (int i = 0; i < rows; i++) {
-            if(grid[i][0] || grid[i][cols-1]){
+        for (int i = 0; i < length; i++) {
+            if(grid[i][0] || grid[i][length-1]){
                 return true;
             }
         }
-        for (int j = 0; j < cols; j++) {
-            if(grid[0][j] || grid[rows-1][j]){
+        for (int j = 0; j < length; j++) {
+            if(grid[0][j] || grid[length-1][j]){
                 return true;
             }
         }
         return false;
     }
 
-    public int getRows() {
-        return rows;
-    }
-
-    public int getCols() {
-        return cols;
+    public int getLength() {
+        return length;
     }
 
     @FunctionalInterface

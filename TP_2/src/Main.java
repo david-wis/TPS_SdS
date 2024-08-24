@@ -11,13 +11,15 @@ public class Main {
         for (AutomatonRules.Rules2D rule : AutomatonRules.Rules2D.values()) {
             for (Integer initialState : initialStates2D) {
                 runAutomata2D(initialState.toString(), rule.rule, rule.name);
+                System.out.println("Finished " + rule.name + " with initial state " + initialState);
             }
         }
 
-        List<Integer> initialStates3D = List.of(10,50,100,800,4000,7200);
+        List<Integer> initialStates3D = List.of(10, 100, 500, 1000, 4000, 7200);
         for (AutomatonRules.Rules3D rule : AutomatonRules.Rules3D.values()) {
             for (Integer initialState : initialStates3D) {
                 runAutomata3D(initialState.toString(), rule.rule, rule.name);
+                System.out.println("Finished " + rule.name + " with initial state " + initialState);
             }
         }
     }
@@ -26,7 +28,7 @@ public class Main {
         List<boolean[][]> initialStates = FileController.loadFromFile2D(INPUT_PATH + "init2d_" + initName + ".txt");
         String path = BASE_PATH + name;
         String filename = path + "/" + initName + ".txt";
-        FileController.createFile2D(path, filename, initialStates.get(0).length, initialStates.get(0)[0].length);
+        FileController.createFile(path, filename, initialStates.get(0).length, 10);
         for (boolean[][] initialState : initialStates) {
             FileController.startNewRun(path, filename);
             CelularAutomata2D ca = new CelularAutomata2D(initialState, rule);
@@ -45,18 +47,18 @@ public class Main {
         List<boolean[][][]> initialStates = FileController.loadFromFile3D(INPUT_PATH + "init3d_" + initName + ".txt");
         String path = BASE_PATH + name;
         String filename = path + "/" + initName + ".txt";
-        FileController.createFile3D(path, filename, initialStates.get(0).length, initialStates.get(0)[0].length, initialStates.get(0)[0][0].length);
+        FileController.createFile(path, filename, initialStates.get(0).length, 20);
         for (boolean[][][] initialState : initialStates) {
             FileController.startNewRun(path, filename);
             CelularAutomata3D ca = new CelularAutomata3D(initialState, rule);
+            FileController.appendToFile3D(filename, ca);
             for (int i = 0; i < 100; i++) {
-                FileController.appendToFile3D(filename, ca);
                 if (ca.update()) {
                     System.out.println(name + " stopped at iteration " + i);
                     break;
                 }
+                FileController.appendToFile3D(filename, ca);
             }
-            FileController.appendToFile3D(filename, ca);
         }
     }
 }
