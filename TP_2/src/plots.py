@@ -106,6 +106,7 @@ def analyze_rule(rulename, obs_function):
     mass_fig, mass_ax = plt.subplots()
     radius_fig, radius_ax = plt.subplots()
     dict_msss = dict()
+    _, length, core = get_runs(f'{path}/{quantities[0]}.txt')
     for q in quantities:
         runs, length, core = get_runs(f'{path}/{q}.txt')
         # set only min limit as 0, the max limit is implicit
@@ -139,7 +140,12 @@ def analyze_rule(rulename, obs_function):
     masses_std = np.array([np.std(obs) for obs in obss])
     fig, ax = plt.subplots()
     ax.errorbar(quantities, masses_avg, masses_std, fmt='o', linewidth=2, capsize=6)
+
+
     ax.set_xticks(quantities)
+    ax.set_xticklabels([f"{100 * q / (core ** dim)}" for q in quantities], rotation=45, ha='right')
+    # ax.set_xticks([100 * q / (core ** dim) for q in quantities])
+    # ax.set_xlabel("Porcentaje (%)")
     plt.savefig(f"{path}/{rulename}_obs.png")
 
 
@@ -148,11 +154,11 @@ if __name__ == '__main__':
     print(fnames)
     # ['decay3D', 'even2D', 'gol2D', 'fill2D', 'odd2D', 'gol3D', 'expansion3D']
 
-    analyze_rule("fill2D", np.max)
+    # analyze_rule("fill2D", np.max)
     analyze_rule("gol2D", lambda x: x[-1])
-    analyze_rule("gol2Dv2", lambda x: x[-1])
-    analyze_rule("odd2D", np.max)
-    analyze_rule("even2D", lambda x: x[-1])
+    # analyze_rule("gol2Dv2", lambda x: x[-1])
+    # analyze_rule("odd2D", np.max)
+    # analyze_rule("even2D", lambda x: x[-1])
 
     # analyze_rule("decay3D", lambda x: x[-1])
     # analyze_rule("decay3Dv2", lambda x: x[-1])

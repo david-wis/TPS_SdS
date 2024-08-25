@@ -2,6 +2,7 @@
 \label{sec:modelo}
 
 \subsection{Autómatas celulares de dos dimensiones}
+\label{subsec:2d}
 
 \subsubsection{El juego de la vida de Conway (Moore)}
 
@@ -32,9 +33,18 @@ Reglas:
     \item Una celda viva sigue viva en la siguiente generación
     \item Una celda muerta se transforma en viva si existe un par de vecinos (vecindad de moore de distancia 1) vivos que no comparten ni fila ni columna entre sí.
 \end{itemize}
-Entonces, los casos donde una celda muerta no se transforman 
+Entonces, los casos donde una celda muerta se mantiene muerta son lados rectos:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/fill_example_1a}
+    \caption{Vecindad de Moore en dos dimensiones}
+    \label{fig:fill}
+\end{figure}
+Los rectángulos son las únicas superficies estables, ya que son las únicas superficies cuyo borde es exclusivamente de lados rectos, y el perímetro de celdas muertas que lo rodea cae en los casos mencionados.
+Entonces, el sistema va a converger a un conjunto de rectángulos que contienen a las células vivas iniciales y estén suficientemente cerca entre sí.
 
 \subsection{Autómatas celulares de tres dimensiones}
+\label{subsec:3d}
 
 \subsubsection{El juego de la vida de Conway 3D (Moore)}
 El Juego de la Vida en 3D es una extensión tridimensional del clásico Juego de la Vida de Conway, donde en lugar de una cuadrícula bidimensional, se utiliza un espacio cúbico tridimensional.
@@ -45,7 +55,13 @@ Reglas:
 \begin{itemize}
     \item Una celda viva muere en la siguiente generación.
     \item Si una celda muerta tiene 7 o más vecinos vivos, se convierte en una celda viva en la siguiente generación.
-\end
+\end{itemize}
 
 \subsubsection{Decaimiento (Von Neumann)}
+Similar al anterior, pero con ligeras modificaciones en las reglas para considerar la vecindad de Von Neumann.
+\begin{itemize}
+    \item Una celda viva muere en la siguiente generación.
+    \item Si una celda muerta tiene 2 o más vecinos vivos, se convierte en una celda viva en la siguiente generación.
+\end{itemize}
+
 

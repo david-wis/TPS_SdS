@@ -15,13 +15,13 @@ public class Main {
             }
         }
 
-//        List<Integer> initialStates3D = List.of(10, 100, 500, 1000, 2000,3000,4000, 5000,6000,7200);
-//        for (AutomatonRules.Rules3D rule : AutomatonRules.Rules3D.values()) {
-//            for (Integer initialState : initialStates3D) {
-//                runAutomata3D(initialState.toString(), rule.rule, rule.name);
-//                System.out.println("Finished " + rule.name + " with initial state " + initialState);
-//            }
-//        }
+        List<Integer> initialStates3D = List.of(10, 100, 500, 1000, 2000,3000,4000, 5000,6000,7200);
+        for (AutomatonRules.Rules3D rule : AutomatonRules.Rules3D.values()) {
+            for (Integer initialState : initialStates3D) {
+                runAutomata3D(initialState.toString(), rule.rule, rule.name);
+                System.out.println("Finished " + rule.name + " with initial state " + initialState);
+            }
+        }
     }
 
     public static void runAutomata2D(String initName, CelularAutomata2D.Rule2D rule, String name){
