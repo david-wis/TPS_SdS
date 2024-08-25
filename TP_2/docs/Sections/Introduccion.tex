@@ -2,6 +2,7 @@
 \label{sec:intro}
 
 \subsection{Autómata celular}
+\label{subsec:ac}
 
 Un autómata celular es un modelo matemático discreto utilizado para estudiar sistemas complejos mediante la evolución de un conjunto de celdas.
 Cada celda puede tomar un estado finito de un conjunto predeterminado de estados y, a lo largo del tiempo, su estado cambia de acuerdo con un conjunto de reglas locales que dependen del estado actual de la celda y del estado de sus celdas vecinas.
@@ -18,6 +19,7 @@ Dentro de los autómatas bidimensionales, se incluirá un análisis detallado de
 Además, se examinarán otros dos autómatas bidimensionales junto con tres ejemplos en tres dimensiones, para comprender cómo la dimensionalidad y las reglas locales influyen en la evolución del sistema.
 
 \subsection{Vecindad}
+\label{subsec:vecindad}
 En este informe, se utilizará la vecindad de Moore para definir las interacciones entre las celdas de los autómatas celulares.
 La vecindad de Moore en dos dimensiones considera las ocho celdas adyacentes a una celda central.
 \begin{equation}
@@ -27,6 +29,14 @@ La vecindad de Moore en dos dimensiones considera las ocho celdas adyacentes a u
     \end{aligned}
 \end{equation}
 
+% imagen de moore.jpg
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/moore}
+    \caption{Vecindad de Moore en dos dimensiones.}
+    \label{fig:moore}
+\end{figure}
+
 En tres dimensiones, la vecindad de Moore considera las 26 celdas adyacentes a una celda central.
 \begin{equation}
     \label{eq:moore_neighborhood_3d}
@@ -35,12 +45,25 @@ En tres dimensiones, la vecindad de Moore considera las 26 celdas adyacentes a u
     \end{aligned}
 \end{equation}
 
-También se implementó la vecindad de Von Neumann, que considera solo las cuatro celdas adyacentes a una celda central en dos dimensiones, pero no se utilizará en este informe.
+También se implementó la vecindad de Von Neumann, que considera solo las cuatro celdas adyacentes a una celda central en dos dimensiones.
+\begin{equation}
+    \label{eq:von_neumann_neighborhood}
+    \begin{aligned}
+        N^{(V)}_{ij} = \{(k,l) \in \mathbb{Z}^2 : |k-i| + |l-j| \leq r\}
+    \end{aligned}
+\end{equation}
 
-
+En tres dimensiones, la vecindad de Von Neumann considera las seis celdas adyacentes a una celda central.
+\begin{equation}
+    \label{eq:von_neumann_neighborhood_3d}
+    \begin{aligned}
+        N^{(V)}_{ijk} = \{(l,m,n) \in \mathbb{Z}^3 : |l-i| + |m-j| + |n-k| \leq r\}
+    \end{aligned}
+\end{equation}
 
 
 \subsection{Regla de evolución}
+\label{subsec:evolucion}
 La regla de evolución de un autómata celular de dos dimensiones (AC 2D de ahora en adelante) está dada por el siguiente mapeo:
 \begin{equation}
     \label{eq:evolution_rule}
@@ -49,14 +72,6 @@ La regla de evolución de un autómata celular de dos dimensiones (AC 2D de ahor
     \end{aligned}
 \end{equation}
 donde $a_{i,j}^{(t)}$ es el estado de la celda en la posición $(i,j)$ en la generación $t$, $f$ es una función no lineal que determina el estado de la celda en la siguiente generación, $\alpha_{kl}$ son constantes enteras asociadas a las celdas vecinas y $r$ es el radio de la vecindad de la celda.
-
-% imagen de moore.jpg
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{Images/moore}
-    \caption{Vecindad de Moore en dos dimensiones.}
-    \label{fig:moore}
-\end{figure}
 
 Para un autómata celular de tres dimensiones (AC 3D), se trabaja de manera análoga:
 \begin{equation}

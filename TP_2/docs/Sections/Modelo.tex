@@ -3,23 +3,49 @@
 
 \subsection{Autómatas celulares de dos dimensiones}
 
-\subsubsection{El juego de la vida de Conway}
+\subsubsection{El juego de la vida de Conway (Moore)}
 
-\subsubsection{Rectángulo autorellenado???}
+El Juego de la Vida de Conway es un autómata celular diseñado por el matemático británico John Horton Conway en 1970.
+Es un sistema simple basado en una cuadrícula bidimensional de celdas, donde cada celda puede estar en uno de dos estados: viva o muerta.
+La evolución del sistema se determina por reglas sencillas que se aplican a cada celda en función del estado de sus celdas vecinas.
 
-\subsubsection{Expansión máxima}
-\begin{equation}
-    A(x) = (2x+a) (2x+b) = 4x^2 + 2 (a+b) x + ab
-\end{equation}
+Reglas:
+\begin{itemize}
+    \item Supervivencia: Una celda viva con 2 o 3 vecinos vivos sigue viva en la siguiente generación.
+
+    \item Muerte por soledad: Una celda viva con menos de 2 vecinos vivos muere por soledad.
+
+    \item Muerte por sobrepoblaión: Una celda viva con más de 3 vecinos vivos muere por sobrepoblación.
+
+    \item Reproducción: Una celda muerta con exactamente 3 vecinos vivos "nace" (se convierte en una célula viva) en la siguiente generación.
+\end{itemize}
+
+Para esta simulación, se consideró la distancia de Moore, donde se consideran las ocho celdas adyacentes a una celda central.
+
+\subsubsection{El juego de la vida de Conway (Von Neumann)}
+
+Las reglas del Juego de la Vida de Conway en la vecindad de Von Neumann son las mismas que en la vecindad de Moore, pero en este caso se consideran solo las cuatro celdas adyacentes a una celda central.
+
+\subsubsection{Rectángulo Relleno}
+Reglas:
+\begin{itemize}
+    \item Una celda viva sigue viva en la siguiente generación
+    \item Una celda muerta se transforma en viva si existe un par de vecinos (vecindad de moore de distancia 1) vivos que no comparten ni fila ni columna entre sí.
+\end{itemize}
+Entonces, los casos donde una celda muerta no se transforman 
 
 \subsection{Autómatas celulares de tres dimensiones}
 
-\subsubsection{Decaimiento}
+\subsubsection{El juego de la vida de Conway 3D (Moore)}
+El Juego de la Vida en 3D es una extensión tridimensional del clásico Juego de la Vida de Conway, donde en lugar de una cuadrícula bidimensional, se utiliza un espacio cúbico tridimensional.
+Las reglas son las mismas que en el Juego de la Vida de Conway clásico, pero en este caso la cantidad de vecinos de cada celda será 26 en lugar de 8.
 
-\subsubsection{}
+\subsubsection{Decaimiento (Moore)}
+Reglas:
+\begin{itemize}
+    \item Una celda viva muere en la siguiente generación.
+    \item Si una celda muerta tiene 7 o más vecinos vivos, se convierte en una celda viva en la siguiente generación.
+\end
 
-\subsubsection{Expansión máxima}
-\begin{equation}
-    A(x) = (2x+a) (2x+b) (2x+c) = 8x^3 + 4 (a+b+c) x^2 + 2 (ab+bc+ca) x + abc
-\end{equation}
+\subsubsection{Decaimiento (Von Neumann)}
 

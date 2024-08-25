@@ -99,7 +99,7 @@ def radius(state, length):
 
 BASE_PATH = './output'
 def analyze_rule(rulename, obs_function):
-    dim = 2 if rulename.endswith('2D') else 3
+    dim = 2 if '2D' in rulename else 3
     path = f"{BASE_PATH}/{rulename}"
     quantities = [int(f.replace(".txt","")) for f in os.listdir(path) if f.endswith('.txt')]
     quantities.sort()
@@ -108,6 +108,8 @@ def analyze_rule(rulename, obs_function):
     dict_msss = dict()
     for q in quantities:
         runs, length, core = get_runs(f'{path}/{q}.txt')
+        # set only min limit as 0, the max limit is implicit
+
         print(rulename, q, len(runs))
         mss = [[np.sum(state) for state in run ] for run in runs ]
         rss = [[radius(state.reshape((length, ) * dim), length).max() for state in run] for run in runs]
@@ -117,12 +119,19 @@ def analyze_rule(rulename, obs_function):
         p_mass_fig, p_mass_ax = plt.subplots()
         for i, ms in enumerate(mss):
             add_line(p_mass_ax, ms, f"muestra {i}")
-        p_mass_ax.legend()
+        p_mass_ax.set_ylim(bottom=0)
+        p_mass_ax.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+        p_mass_fig.tight_layout()
         p_mass_fig.savefig(f"{path}/{q}_mass.png")
 
-    mass_ax.legend()
-    radius_ax.legend()
+    mass_ax.set_ylim(bottom=0)
+    mass_ax.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+    mass_fig.tight_layout()
     mass_fig.savefig(f"{path}/{rulename}_mass.png")
+
+    radius_ax.set_ylim(bottom=0)
+    radius_ax.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+    radius_fig.tight_layout()
     radius_fig.savefig(f"{path}/{rulename}_radius.png")
 
     obss = [[obs_function(ms) for ms in mss] for mss in dict_msss.values()]
@@ -137,11 +146,25 @@ def analyze_rule(rulename, obs_function):
 if __name__ == '__main__':
     fnames = [f for f in os.listdir(BASE_PATH) if f.endswith('2D') or f.endswith('3D') ]
     print(fnames)
+    # ['decay3D', 'even2D', 'gol2D', 'fill2D', 'odd2D', 'gol3D', 'expansion3D']
 
-    for fname in fnames:
-        analyze_rule(fname, np.max)
+    analyze_rule("fill2D", np.max)
+    analyze_rule("gol2D", lambda x: x[-1])
+    analyze_rule("gol2Dv2", lambda x: x[-1])
+    analyze_rule("odd2D", np.max)
+    analyze_rule("even2D", lambda x: x[-1])
 
-    plot_animation_3d(f"{BASE_PATH}/decay3D", 7200)
-    plot_animation_3d(f"{BASE_PATH}/decay3D", 4000)
+    # analyze_rule("decay3D", lambda x: x[-1])
+    # analyze_rule("decay3Dv2", lambda x: x[-1])
+    # analyze_rule("gol3D", lambda x: len(x))
+
+
+
+
+    # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 500)
+    # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 4000)
+    # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 7200)
+    # plot_animation_3d(f"{BASE_PATH}/decay3D", 7200)
+    # plot_animation_3d(f"{BASE_PATH}/decay3D", 4000)
     # plot_animation_2d(f"{BASE_PATH}/fill2D", 25)
     # plot_animation_2d(f"{BASE_PATH}/fill2D", 10)

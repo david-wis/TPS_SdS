@@ -15,7 +15,7 @@ if __name__ == '__main__':
     total_l = 50
     core_l = 20
 
-    for n in [10, 100, 500, 1000, 4000, 7200]:
+    for n in [2000,3000,5000,6000]:
         filename = f'input/init3d_{n}'
         fig, axs = plt.subplots( 2, 5, figsize=(20, 10), subplot_kw=dict(projection='3d'))
         with open(f"{filename}.txt", 'w') as f:

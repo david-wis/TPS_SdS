@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 if __name__ == '__main__':
     total_l = 100
     core_l = 10
-    for n in [1, 10, 25, 50, 75, 99]:
+    for n in [60,70,80,90]:
         fig, axs = plt.subplots(2, 5, figsize=(20, 10))
         filename = f'input/init2d_{n}'
         with open(f"{filename}.txt", 'w') as f:

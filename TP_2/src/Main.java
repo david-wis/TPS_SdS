@@ -7,7 +7,7 @@ public class Main {
     public static String INPUT_PATH = "input/";
     public static String BASE_PATH = "output/";
     public static void main(String[] args) {
-        List<Integer> initialStates2D = List.of(1,10,25,50,75,99);
+        List<Integer> initialStates2D = List.of(1,10,15,20,25,30,35,40,50,60,70,75,80,90,99);
         for (AutomatonRules.Rules2D rule : AutomatonRules.Rules2D.values()) {
             for (Integer initialState : initialStates2D) {
                 runAutomata2D(initialState.toString(), rule.rule, rule.name);
@@ -15,13 +15,13 @@ public class Main {
             }
         }
 
-        List<Integer> initialStates3D = List.of(10, 100, 500, 1000, 4000, 7200);
-        for (AutomatonRules.Rules3D rule : AutomatonRules.Rules3D.values()) {
-            for (Integer initialState : initialStates3D) {
-                runAutomata3D(initialState.toString(), rule.rule, rule.name);
-                System.out.println("Finished " + rule.name + " with initial state " + initialState);
-            }
-        }
+//        List<Integer> initialStates3D = List.of(10, 100, 500, 1000, 2000,3000,4000, 5000,6000,7200);
+//        for (AutomatonRules.Rules3D rule : AutomatonRules.Rules3D.values()) {
+//            for (Integer initialState : initialStates3D) {
+//                runAutomata3D(initialState.toString(), rule.rule, rule.name);
+//                System.out.println("Finished " + rule.name + " with initial state " + initialState);
+//            }
+//        }
     }
 
     public static void runAutomata2D(String initName, CelularAutomata2D.Rule2D rule, String name){
