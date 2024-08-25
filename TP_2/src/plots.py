@@ -74,7 +74,7 @@ def plot_animation_3d(path, q):
             ax.set_ylim(0, length)
             ax.set_zlim(0, length)
             x, y, z = state.nonzero()
-            a = np.abs(x) + np.abs(y) + np.abs(z)
+            a = radius(state, length)
             if np.sum(state) > 0:
                 colors =plt.cm.cool((a-a.min())/float((a-a.min()).max()))
             else:
@@ -94,7 +94,7 @@ def add_line(ax, ms, label):
     ax.plot(range(len(ms)), ms, label=label)
 
 def radius(state, length):
-    return np.abs(np.array(state.nonzero()).T - np.array([length/2, length/2])).sum(axis=1).max() if state.nonzero()[0].shape[0] != 0 else 0
+    return np.abs(np.array(state.nonzero()).T - np.array([length/2] * state.ndim)).sum(axis=1) if state.nonzero()[0].shape[0] != 0 else np.array([0])
 
 
 BASE_PATH = './output'
@@ -110,13 +110,14 @@ def analyze_rule(rulename, obs_function):
         runs, length, core = get_runs(f'{path}/{q}.txt')
         print(rulename, q, len(runs))
         mss = [[np.sum(state) for state in run ] for run in runs ]
-        rss = [[radius(state, length) for state in run ] for run in runs ]
+        rss = [[radius(state.reshape((length, ) * dim), length).max() for state in run] for run in runs]
         dict_msss[q] = mss
         add_line(mass_ax, mss[0], f"{q} : {100 * q / core ** dim} %")
         add_line(radius_ax, rss[0], f"{q} : {100 * q / core ** dim} %")
         p_mass_fig, p_mass_ax = plt.subplots()
-        for ms in mss:
-            add_line(p_mass_ax, ms, "")
+        for i, ms in enumerate(mss):
+            add_line(p_mass_ax, ms, f"muestra {i}")
+        p_mass_ax.legend()
         p_mass_fig.savefig(f"{path}/{q}_mass.png")
 
     mass_ax.legend()
@@ -137,9 +138,10 @@ if __name__ == '__main__':
     fnames = [f for f in os.listdir(BASE_PATH) if f.endswith('2D') or f.endswith('3D') ]
     print(fnames)
 
-    # for fname in fnames:
-    #     analyze_rule(fname, np.max)
+    for fname in fnames:
+        analyze_rule(fname, np.max)
 
-    # plot_animation_3d(f"{BASE_PATH}/decay3D", 7200)
-    plot_animation_2d(f"{BASE_PATH}/fill2D", 25)
-    plot_animation_2d(f"{BASE_PATH}/fill2D", 10)
+    plot_animation_3d(f"{BASE_PATH}/decay3D", 7200)
+    plot_animation_3d(f"{BASE_PATH}/decay3D", 4000)
+    # plot_animation_2d(f"{BASE_PATH}/fill2D", 25)
+    # plot_animation_2d(f"{BASE_PATH}/fill2D", 10)
