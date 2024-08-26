@@ -55,10 +55,12 @@ public class CelularAutomata3D implements  CelularAutomata{
     @Override
     public boolean borderReached(){
         for (int i = 0; i < length; i++) {
-            if(grid[i][0][0] || grid[i][length -1][0] || grid[i][0][length -1] || grid[i][length -1][length -1] ||
-                    grid[0][i][0] || grid[length -1][i][0] || grid[0][i][length -1] || grid[length -1][i][length -1] ||
-                    grid[0][0][i] || grid[0][length -1][i] || grid[length -1][0][i] || grid[length -1][length -1][i]){
-                return true;
+            for (int j = 0; j <length; j++) {
+                if (grid[i][j][0] || grid[i][j][length - 1] ||
+                        grid[i][0][j] || grid[i][length-1][j] ||
+                        grid[0][i][j] || grid[length-1][i][j]) {
+                    return true;
+                }
             }
         }
         return false;

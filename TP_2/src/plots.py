@@ -155,22 +155,23 @@ if __name__ == '__main__':
     # ['decay3D', 'even2D', 'gol2D', 'fill2D', 'odd2D', 'gol3D', 'expansion3D']
 
     # analyze_rule("fill2D", np.max)
-    analyze_rule("gol2D", lambda x: x[-1])
+    # analyze_rule("gol2D", lambda x: x[-1])
     # analyze_rule("gol2Dv2", lambda x: x[-1])
-    # analyze_rule("odd2D", np.max)
+    # analyze_rule("seeds2D", lambda x: x[-1])
+    # analyze_rule("odd2D", lambda x: x[-1])
     # analyze_rule("even2D", lambda x: x[-1])
 
-    # analyze_rule("decay3D", lambda x: x[-1])
-    # analyze_rule("decay3Dv2", lambda x: x[-1])
-    # analyze_rule("gol3D", lambda x: len(x))
+    analyze_rule("decay3D", lambda x: x[-1])
+    analyze_rule("decay3Dv2", lambda x: x[-1])
+    analyze_rule("gol3D", lambda x: x[-1])
 
 
 
-
-    # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 500)
-    # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 4000)
-    # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 7200)
-    # plot_animation_3d(f"{BASE_PATH}/decay3D", 7200)
-    # plot_animation_3d(f"{BASE_PATH}/decay3D", 4000)
+    plot_animation_3d(f"{BASE_PATH}/decay3D", 4000)
+    plot_animation_3d(f"{BASE_PATH}/decay3D", 6000)
+    plot_animation_3d(f"{BASE_PATH}/decay3D", 7200)
+    plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 500)
+    plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 4000)
+    plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 7200)
     # plot_animation_2d(f"{BASE_PATH}/fill2D", 25)
     # plot_animation_2d(f"{BASE_PATH}/fill2D", 10)
