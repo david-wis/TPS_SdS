@@ -1,5 +1,49 @@
 \section{Simulaciones}
 \label{sec:simulaciones}
 
-\subsection{Autómatas celulares de dos dimensiones}
-\label{subsec:simul2d}
+\subsection{Dimensiones}
+\label{subsec:acdim}
+Las simulaciones 2D se enfocarán en analizar el comportamiento de células dentro de una grilla 2D de $100 \times 100$ celdas.
+
+Para las simulaciones 3D se trabajará dentro de una grilla 2D de $50 \times 50 \times 50$ celdas.
+
+La grilla 2D contiene una región interna (núcleo) de $10 \times 10$ celdas, en la cual se generan las condiciones iniciales, mientras que la 3D tiene un núcleo de $20 \times 20 \times 20$.
+Dentro de esta región, se toman distintos porcentajes de células vivas iniciales en el intervalo $(0, 100)$ y para cada uno de estos porcentajes, se realizan 10 simulaciones.
+
+\subsection{Condiciones iniciales}
+\label{subsec:acini}
+Para cada porcentaje elegido se generaron 10 condiciones iniciales distintas, generando dicha cantidad de celdas vivas aleatoriamente en dentro del núcleo.
+
+\subsubsection{Condición de corte}
+\label{subsubsec:ac2corte}
+El máximo número de iteraciones es de 100.
+La simulación se detiene antes si alguna célula activa alcanza el borde de la grilla.
+
+\subsection{Masa}
+Para cada porcentaje, en cada una de las reglas, se realizó un análisis de la evolución de la cantidad de células vivas en función de la iteración, denominada masa.
+En cada gráfico se puede ver el cambio de la masa para las 10 simulaciones.
+
+\subsection{Radio}
+De manera análoga a la masa, se realizaron gráficos analizando el cambio del radio, que se definió como la mayor distancia (norma 1) entre una célula y el centro de la grilla.
+
+\subsection{Observables}
+Para todas las reglas tanto 2D como 3D, se eligió tomar como observable la masa final del sistema, es decir la que se alcanza en la iteración numero 100, o cuando se toca un borde.
+Así, se graficó el valor del observable en función de las iteraciones.
+
+Debido a que las condiciones iniciales se tomaron de manera aleatoria y los resultados finales dependian de las mismas, los gráficos muestran los valores promedio del observable en cada porcentaje (para las 10 condiciones iniciales de cada uno).
+
+El promedio se calculó de la siguiente manera:
+
+\begin{equation}
+    \label{eq:mean}
+    \bar{m} = \frac{1}{10} \sum_{i=1}^{10} m_i
+\end{equation}
+donde $m_i$ es la masa de la simulación $i$
+
+El desvio estandar se obtuvo de la siguiente manera:
+
+\begin{equation}
+    \label{eq:std}
+    \sigma = \sqrt{\frac{1}{9} \sum_{i=1}^{10} (m_i - \bar{m})^2}
+\end{equation}
+donde $\bar{m}$ es el promedio previamente definido

@@ -1,4 +1,88 @@
+\newcommand{\massgraph}[1]{
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.65\textwidth]{Images/#1/#1_mass}
+        \caption{Gráfico de la masa en función del tiempo}
+        \label{fig:#1mass}
+    \end{figure}
+}
+
+\newcommand{\radiusgraph}[1]{
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.65\textwidth]{Images/#1/#1_radius}
+        \caption{Gráfico del radio en función del tiempo}
+        \label{fig:#1radius}
+    \end{figure}
+}
+
+\newcommand{\obsgraph}[1]{
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.65\textwidth]{Images/#1/#1_obs}
+        \caption{Gráfico de los observables en función de los porcentajes}
+        \label{fig:#1obs}
+    \end{figure}
+}
+
 \section{Resultados}
 \label{sec:resultados}
 
-Resultaditos
+\subsection{Autómatas celulares de dos dimensiones}
+\label{subsec:results2d}
+\subsubsection{El juego de la vida de Conway (Von Neumann)}
+\massgraph{gol2Dv2}
+Se puede observar en la Fig. \ref{fig:gol2Dv2mass} que la masa tiene una tendencia decreciente y se estabiliza en un valor constante, con casos donde dicho valor no es $0$.
+\radiusgraph{gol2Dv2}
+Se puede observar en la Fig. \ref{fig:gol2Dv2radius} que el radio exhibe tres comportamientos: mantenerse constante, decrecer hasta anularse o hasta un valor constante no nulo.
+\obsgraph{gol2Dv2}
+Se puede observar en la Fig. \ref{fig:gol2Dv2obs} que la masa final de cada simulación tiene una tendencia creciente, y se estabiliza en los porcentajes al rededor de 75. Sin embargo, el desvío también es muy grande.
+
+\subsubsection{Vecinos impares (Moore)}
+\massgraph{odd2D}
+Se puede observar en la Fig. \ref{fig:odd2Dmass} que la masa tiene una tendencia creciente, pero con notables picos en los que decrece.
+\radiusgraph{odd2D}
+A pesar de lo irregular que es el crecimiento de la masa, en la Fig. \ref{fig:odd2Dradius} se ve que los radios en función de la generación crecen de manera constante y sin saltos.
+\obsgraph{odd2D}
+Por último, en la Fig. \ref{fig:odd2Dobs} se ve que la masa final de cada simulación va aumentando su valor en los primeros porcentajes, y luego se estabiliza llegando a los últimos.
+
+\subsubsection{Rectángulo Relleno}
+\massgraph{fill2D}
+Se puede observar en la Fig. \ref{fig:fill2Dmass} que la masa tiene una tendencia creciente, y luego de algunas iteraciones se estabiliza en un valor constante.
+\radiusgraph{fill2D}
+Al igual que la masa, puede observar en la Fig. \ref{fig:fill2Dradius} que el radio también tiene una tendencia creciente, y luego de algunas iteraciones se estabiliza en un valor constante.
+\obsgraph{fill2D}
+Al igual que en las figuras anteriores Fig. \ref{fig:fill2Dmass} y Fig. \ref{fig:fill2Dradius}, en la Fig. \ref{fig:fill2Dobs} se puede observar que la masa de cada simulación tiene una tendencia creciente en los primeros porcentajes, y finalmente se estabiliza en un valor constante.
+
+\subsection{Autómatas celulares de tres dimensiones}
+\label{subsec:results3d}
+
+\subsubsection{El juego de la vida de Conway 3D (Moore)}
+\massgraph{gol3D}
+En la Fig. \ref{fig:fill2Dmass} queda en evidencia el crecimiento explosivo que tiene el juego de la vida de Conway en 3D, llegando a los bordes en 20 iteraciones o menos.
+
+\radiusgraph{gol3D}
+???
+
+\obsgraph{gol3D}
+Se puede observar que el valor final aumenta hasta alcanzar lo que parecería un máximo local en 37.5\%, y luego disminuye.
+Es interesante notar como en los primeros y en los últimos valores, el desvío estandar aumenta, mientras que acercandose al máximo disminuye.
+
+
+\subsubsection{Umbral (Moore)}
+\massgraph{decay3D}
+Se puede observar en la Fig. \ref{fig:decay3Dmass} que para los primeros porcentajes, la masa tiende a decrecer hasta llegar a $0$.
+Los que ocupan entre el 25\% y el 75\% del núcleo, tienen una tendencia creciente.
+Por último, el que cuenta con 7200 partículas, que ocupa el 90\% del núcleo, tiene una tendencia creciente que luego se estabiliza en un valor constante.
+\radiusgraph{decay3D}
+En la Fig. \ref{fig:decay3Dradius}, se puede observar que el radio tiene un comportamiento similar a la masa.
+Los primeros porcentajes tienen una tendencia decreciente.
+Aquellas simulaciones que cuentan con un porcentaje entre el 25\% y el 75\% del núcleo tienen una tendencia creciente.
+Por último, el que ocupa el 90\% del núcleo tiene una tendencia creciente que luego se estabiliza.
+\obsgraph{decay3D}
+En la Fig. \ref{fig:decay3Dobs} se puede observar que la masa final de cada simulación tiene una tendencia creciente en los primeros porcentajes, se estabiliza momentáneamente, y luego comienza a decrecer.
+
+\subsubsection{Umbral (Von Neumann)}
+\massgraph{decay3Dv2}
+\radiusgraph{decay3Dv2}
+\obsgraph{decay3Dv2}

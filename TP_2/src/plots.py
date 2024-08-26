@@ -81,7 +81,7 @@ def plot_animation_3d(path, q):
                 colors = 'black'
             ax.scatter(x, y, z, c=colors, marker='o', s=1)
             ax.set_title(f'Estado {j}')
-            ax.view_init(j, 3*j)
+            ax.view_init(10, 3*j)
             fig.canvas.draw()
             image = np.array(fig.canvas.renderer.buffer_rgba())
             images.append(Image.fromarray(image))
@@ -161,9 +161,9 @@ if __name__ == '__main__':
     # analyze_rule("odd2D", lambda x: x[-1])
     # analyze_rule("even2D", lambda x: x[-1])
 
-    analyze_rule("decay3D", lambda x: x[-1])
-    analyze_rule("decay3Dv2", lambda x: x[-1])
-    analyze_rule("gol3D", lambda x: x[-1])
+    # analyze_rule("decay3D", lambda x: x[-1])
+    # analyze_rule("decay3Dv2", lambda x: x[-1])
+    # analyze_rule("gol3D", lambda x: x[-1])
 
 
 
