@@ -34,7 +34,7 @@ public class CelularAutomata2D implements CelularAutomata {
         int sum = 0;
         for (int i = -d; i <= d; i++) {
             for (int j = -d + (moore? 0 : Math.abs(i)); j <= d - (moore? 0 : Math.abs(i)); j++) {
-                if (inBounds(x + i, y + j) && i != x && j != y) {
+                if (inBounds(x + i, y + j) && !(i == 0 && j == 0)) {
                     sum += grid[x + i][y + j] ? 1 : 0;
                 }
             }

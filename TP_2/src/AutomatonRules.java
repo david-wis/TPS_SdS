@@ -17,8 +17,8 @@ public class AutomatonRules {
     }
 
     public enum Rules3D {
-//        GOL("gol3D", gol3D),
-//        DECAY("decay3D", decay3D),
+        GOL("gol3D", gol3D),
+        DECAY("decay3D", decay3D),
         DECAYV2("decay3Dv2", decay3Dv2),
 //        EXPANSION3D("expansion3D", expansion3d),
 //        FILL3D("fill3D", fill3D)

@@ -28,7 +28,7 @@ public class CelularAutomata3D implements  CelularAutomata{
         for (int i = -d; i <= d; i++) {
             for (int j = -d + (moore? 0 : Math.abs(i)); j <= d - (moore? 0 : Math.abs(i)); j++) {
                 for (int k = -d + (moore? 0 : Math.abs(i) + Math.abs(j)); k <= d - (moore? 0 : Math.abs(i) + Math.abs(j)); k++) {
-                    if (inBounds(x + i, y + j, z + k) && i != x && j != y && k != z) {
+                    if (inBounds(x + i, y + j, z + k) && !(i == 0 && j == 0 && k == 0)) {
                         sum += grid[x + i][y + j][z + k] ? 1 : 0;
                     }
                 }
@@ -55,17 +55,9 @@ public class CelularAutomata3D implements  CelularAutomata{
     @Override
     public boolean borderReached(){
         for (int i = 0; i < length; i++) {
-            if(grid[i][0][0] || grid[i][length -1][0] || grid[i][0][length -1] || grid[i][length -1][length -1]){
-                return true;
-            }
-        }
-        for (int j = 0; j < length; j++) {
-            if(grid[0][j][0] || grid[length -1][j][0] || grid[0][j][length -1] || grid[length -1][j][length -1]){
-                return true;
-            }
-        }
-        for (int k = 0; k < length; k++) {
-            if(grid[0][0][k] || grid[0][length -1][k] || grid[length -1][0][k] || grid[length -1][length -1][k]){
+            if(grid[i][0][0] || grid[i][length -1][0] || grid[i][0][length -1] || grid[i][length -1][length -1] ||
+                    grid[0][i][0] || grid[length -1][i][0] || grid[0][i][length -1] || grid[length -1][i][length -1] ||
+                    grid[0][0][i] || grid[0][length -1][i] || grid[length -1][0][i] || grid[length -1][length -1][i]){
                 return true;
             }
         }
