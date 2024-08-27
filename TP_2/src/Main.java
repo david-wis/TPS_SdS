@@ -7,21 +7,38 @@ public class Main {
     public static String INPUT_PATH = "input/";
     public static String BASE_PATH = "output/";
     public static void main(String[] args) {
-        List<Integer> initialStates2D = List.of(1,10,15,20,25,30,35,40,50,60,70,75,80,90,99);
-        for (AutomatonRules.Rules2D rule : AutomatonRules.Rules2D.values()) {
-            for (Integer initialState : initialStates2D) {
-                runAutomata2D(initialState.toString(), rule.rule, rule.name);
-                System.out.println("Finished " + rule.name + " with initial state " + initialState);
-            }
+
+        for (Integer initialState : List.of(10,20,30,40,50,60,70,80,90,99)) {
+            AutomatonRules.Rules2D rule = AutomatonRules.Rules2D.GOLV2;
+            runAutomata2D(initialState.toString(), rule.rule, rule.name);
         }
 
-        List<Integer> initialStates3D = List.of(10, 100, 500, 1000, 2000,3000,4000, 5000,6000,7200);
-        for (AutomatonRules.Rules3D rule : AutomatonRules.Rules3D.values()) {
-            for (Integer initialState : initialStates3D) {
-                runAutomata3D(initialState.toString(), rule.rule, rule.name);
-                System.out.println("Finished " + rule.name + " with initial state " + initialState);
-            }
+        for (Integer initialState : List.of(1,5,10,15,20,25,30,35,50,75)) {
+            AutomatonRules.Rules2D rule = AutomatonRules.Rules2D.FILL;
+            runAutomata2D(initialState.toString(), rule.rule, rule.name);
         }
+
+        for (Integer initialState : List.of(1,10,20,30,40,50,60,70,80,90)) {
+            AutomatonRules.Rules2D rule = AutomatonRules.Rules2D.ODD;
+            runAutomata2D(initialState.toString(), rule.rule, rule.name);
+        }
+
+
+        for (Integer initialState : List.of(100, 500, 1000, 2000,3000,4000, 5000,6000,7200)) {
+            AutomatonRules.Rules3D rule = AutomatonRules.Rules3D.GOL;
+            runAutomata3D(initialState.toString(), rule.rule, rule.name);
+        }
+
+        for (Integer initialState : List.of(100, 1000, 2000,3000,4000, 5000,6000, 6500,7000,7500)) {
+            AutomatonRules.Rules3D rule = AutomatonRules.Rules3D.DECAY;
+            runAutomata3D(initialState.toString(), rule.rule, rule.name);
+        }
+
+        for (Integer initialState : List.of(100, 500, 1000, 2000, 3000, 4000, 5000,6000, 7000,7500)) {
+            AutomatonRules.Rules3D rule = AutomatonRules.Rules3D.DECAYV2;
+            runAutomata3D(initialState.toString(), rule.rule, rule.name);
+        }
+
     }
 
     public static void runAutomata2D(String initName, CelularAutomata2D.Rule2D rule, String name){
@@ -41,6 +58,7 @@ public class Main {
                 FileController.appendToFile2D(filename, ca);
             }
         }
+        System.out.println("Finished " + name + " with initial state " + initName);
     }
 
     public static void runAutomata3D(String initName, CelularAutomata3D.Rule3D rule, String name){
@@ -60,5 +78,6 @@ public class Main {
                 FileController.appendToFile3D(filename, ca);
             }
         }
+        System.out.println("Finished " + name + " with initial state " + initName);
     }
 }

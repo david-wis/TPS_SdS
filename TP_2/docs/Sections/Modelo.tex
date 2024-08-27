@@ -1,5 +1,6 @@
 \section{Modelo}
 \label{sec:modelo}
+Se plantearon 6 reglas distintas, 3 de dos dimensiones y 3 de tres  dimensiones.
 
 \subsection{Autómatas celulares de dos dimensiones}
 \label{subsec:2d}
@@ -38,14 +39,14 @@ Reglas:
     \item Una célula viva sigue viva en la siguiente generación
     \item Una célula muerta se transforma en viva si existe un par de vecinos (vecindad de moore de distancia 1) vivos que no comparten ni fila ni columna entre sí.
 \end{itemize}
-Entonces, en la Fig. \ref{fig:fill} se puede ver que los casos donde una celda muerta se mantiene muerta son lados rectos:
+Entonces, en la Fig. \ref{fig:fill} se puede ver que los casos donde una celda muerta se mantiene muerta son los que todos sus vecinos vivos compartan exclusivamente o la columna o la fila:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Images/fill_example_1a}
-    \caption{Casos donde una celda muerta se mantiene muerta}
+    \caption{Casos donde una celda muerta se mantiene muerta (sin contar simetrías rotacionales)}
     \label{fig:fill}
 \end{figure}
-Los rectángulos son las únicas superficies estables, ya que son las únicas superficies cuyo borde es exclusivamente de lados rectos, y el perímetro de celdas muertas que lo rodea cae en los casos mencionados.
+Los rectángulos son las únicas figuras (conjunto conexo de celdas vivas) estables, ya que son las únicas figuras tales que todo el perímetro de celdas muertas que lo rodea, cae en los casos mencionados.
 Entonces, el sistema va a converger a un conjunto de rectángulos que contienen a las células vivas iniciales y estén suficientemente cerca entre sí.
 
 \subsection{Autómatas celulares de tres dimensiones}
@@ -63,7 +64,7 @@ Reglas:
 \end{itemize}
 
 \subsubsection{Umbral (Von Neumann)}
-Similar al anterior, pero con ligeras modificaciones en las reglas para considerar la vecindad de Von Neumann.
+Similar al anterior, pero disminuyendo el umbral a 2, ya que la vencidad Von Neumann comprede 6 celdas, en contraste a la de Moore que tiene 26.
 \begin{itemize}
     \item Una celda viva muere en la siguiente generación.
     \item Si una celda muerta tiene 2 o más vecinos vivos, se convierte en una celda viva en la siguiente generación.

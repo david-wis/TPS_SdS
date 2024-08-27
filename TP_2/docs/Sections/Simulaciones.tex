@@ -27,9 +27,6 @@ En cada gráfico se puede ver el cambio de la masa para las 10 simulaciones.
 De manera análoga a la masa, se realizaron gráficos analizando el cambio del radio, que se definió como la mayor distancia (norma 1) entre una célula y el centro de la grilla.
 
 \subsection{Observables}
-Para todas las reglas tanto 2D como 3D, se eligió tomar como observable la masa final del sistema, es decir la que se alcanza en la iteración numero 100, o cuando se toca un borde.
-Así, se graficó el valor del observable en función de las iteraciones.
-
 Debido a que las condiciones iniciales se tomaron de manera aleatoria y los resultados finales dependian de las mismas, los gráficos muestran los valores promedio del observable en cada porcentaje (para las 10 condiciones iniciales de cada uno).
 
 El promedio se calculó de la siguiente manera:
@@ -47,3 +44,9 @@ El desvio estandar se obtuvo de la siguiente manera:
     \sigma = \sqrt{\frac{1}{9} \sum_{i=1}^{10} (m_i - \bar{m})^2}
 \end{equation}
 donde $\bar{m}$ es el promedio previamente definido
+
+\subsubsection{Masa final}
+Para todas las reglas tanto 2D como 3D, se eligió tomar como observable la masa final del sistema, es decir la que se alcanza en la iteración numero 100, o cuando se toca un borde.
+Así, se graficó el valor del observable en función de las iteraciones.
+\subsubsection{Generación de estabilización}
+Además, para las reglas donde se observó que la masa en un ciclo estable, se eligió tomar como otro observable a la generación en la que alcanza dicho ciclo.

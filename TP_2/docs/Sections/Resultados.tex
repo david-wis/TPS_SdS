@@ -16,12 +16,21 @@
     \end{figure}
 }
 
-\newcommand{\obsgraph}[1]{
+\newcommand{\obsfinalgraph}[1]{
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.65\textwidth]{Images/#1/#1_obs}
-        \caption{Gráfico de los observables en función de los porcentajes}
-        \label{fig:#1obs}
+        \includegraphics[width=0.65\textwidth]{Images/#1/#1_obs_final}
+        \caption{Gráfico de la masa final en función de los porcentajes}
+        \label{fig:#1obsfinal}
+    \end{figure}
+}
+
+\newcommand{\obsstablegraph}[1]{
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.65\textwidth]{Images/#1/#1_obs_stable}
+        \caption{Gráfico de la generación de estabilización en función de los porcentajes}
+        \label{fig:#1obsstable}
     \end{figure}
 }
 
@@ -32,27 +41,35 @@
 \label{subsec:results2d}
 \subsubsection{El juego de la vida de Conway (Von Neumann)}
 \massgraph{gol2Dv2}
-Se puede observar en la Fig. \ref{fig:gol2Dv2mass} que la masa tiene una tendencia decreciente y se estabiliza en un valor constante, con casos donde dicho valor no es $0$.
+Se puede observar en la Fig. \ref{fig:gol2Dv2mass} que la masa tiene una tendencia decreciente y se estabiliza en un valor constante, existiendo algunos casos donde dicho valor no es $0$.
 \radiusgraph{gol2Dv2}
 Se puede observar en la Fig. \ref{fig:gol2Dv2radius} que el radio exhibe tres comportamientos: mantenerse constante, decrecer hasta anularse o hasta un valor constante no nulo.
-\obsgraph{gol2Dv2}
-Se puede observar en la Fig. \ref{fig:gol2Dv2obs} que la masa final de cada simulación tiene una tendencia creciente, y se estabiliza en los porcentajes al rededor de 75. Sin embargo, el desvío también es muy grande.
+\obsfinalgraph{gol2Dv2}
+Se puede observar en la Fig. \ref{fig:gol2Dv2obsfinal} que la masa final de cada simulación tiene una tendencia creciente en función de los porcentajes. Parece alcanzar estabilidad al rededor del 80\%.
+Sin embargo, el desvío asociado con estos porcentajes también es muy grande.
+\obsstablegraph{gol2Dv2}
+Se puede observar en la Fig. \ref{fig:gol2Dv2obsstable} que la generación de estabilización tiene una tendencia creciente en función de los porcentajes hasta el 80\%, y luego disminuye.
+Sin embargo, estos últimos valores también tienen un desvío muy grande.
+
 
 \subsubsection{Vecinos impares (Moore)}
 \massgraph{odd2D}
-Se puede observar en la Fig. \ref{fig:odd2Dmass} que la masa tiene una tendencia creciente, pero con notables picos en los que decrece.
+Se puede observar en la Fig. \ref{fig:odd2Dmass} que si bien el cambio de la masa es algo caótico, parece haber una tendencia global creciente.
+Además se puede ver que hay cierta concordancia en las generaciones donde ocurren caídas en la masa. La más destacable es la que ocurren al rededor de la generación 30, donde todos los porcentajes exhibidos sufren una caída de la masa.
+
 \radiusgraph{odd2D}
 A pesar de lo irregular que es el crecimiento de la masa, en la Fig. \ref{fig:odd2Dradius} se ve que los radios en función de la generación crecen de manera constante y sin saltos.
-\obsgraph{odd2D}
-Por último, en la Fig. \ref{fig:odd2Dobs} se ve que la masa final de cada simulación va aumentando su valor en los primeros porcentajes, y luego se estabiliza llegando a los últimos.
+\obsfinalgraph{odd2D}
+Por último, en la Fig. \ref{fig:odd2Dobsfinal} se ve que la masa final de cada simulación va aumentando su valor en los primeros porcentajes, y luego se estabiliza llegando a los últimos.
 
 \subsubsection{Rectángulo Relleno}
 \massgraph{fill2D}
-Se puede observar en la Fig. \ref{fig:fill2Dmass} que la masa tiene una tendencia creciente, y luego de algunas iteraciones se estabiliza en un valor constante.
+Se puede observar en la Fig. \ref{fig:fill2Dmass} que la masa es creciente, lo cual se puede explicar con la regla que si la celda ya estaba viva antes, entonces sigue viva en la siguiente iteración.  y luego de algunas iteraciones se estabiliza en un valor constante.
 \radiusgraph{fill2D}
 Al igual que la masa, puede observar en la Fig. \ref{fig:fill2Dradius} que el radio también tiene una tendencia creciente, y luego de algunas iteraciones se estabiliza en un valor constante.
-\obsgraph{fill2D}
-Al igual que en las figuras anteriores Fig. \ref{fig:fill2Dmass} y Fig. \ref{fig:fill2Dradius}, en la Fig. \ref{fig:fill2Dobs} se puede observar que la masa de cada simulación tiene una tendencia creciente en los primeros porcentajes, y finalmente se estabiliza en un valor constante.
+\obsfinalgraph{fill2D}
+Al igual que en las figuras anteriores Fig. \ref{fig:fill2Dmass} y Fig. \ref{fig:fill2Dradius}, en la Fig. \ref{fig:fill2Dobsfinal} se puede observar que la masa de cada simulación tiene una tendencia creciente en los primeros porcentajes, y finalmente se estabiliza en un valor constante.
+\obsstablegraph{fill2D}
 
 \subsection{Autómatas celulares de tres dimensiones}
 \label{subsec:results3d}
@@ -64,7 +81,7 @@ En la Fig. \ref{fig:fill2Dmass} queda en evidencia el crecimiento explosivo que 
 \radiusgraph{gol3D}
 ???
 
-\obsgraph{gol3D}
+\obsfinalgraph{gol3D}
 Se puede observar que el valor final aumenta hasta alcanzar lo que parecería un máximo local en 37.5\%, y luego disminuye.
 Es interesante notar como en los primeros y en los últimos valores, el desvío estandar aumenta, mientras que acercandose al máximo disminuye.
 
@@ -79,10 +96,11 @@ En la Fig. \ref{fig:decay3Dradius}, se puede observar que el radio tiene un comp
 Los primeros porcentajes tienen una tendencia decreciente.
 Aquellas simulaciones que cuentan con un porcentaje entre el 25\% y el 75\% del núcleo tienen una tendencia creciente.
 Por último, el que ocupa el 90\% del núcleo tiene una tendencia creciente que luego se estabiliza.
-\obsgraph{decay3D}
-En la Fig. \ref{fig:decay3Dobs} se puede observar que la masa final de cada simulación tiene una tendencia creciente en los primeros porcentajes, se estabiliza momentáneamente, y luego comienza a decrecer.
+\obsfinalgraph{decay3D}
+En la Fig. \ref{fig:decay3Dobsfinal} se puede observar que la masa final de cada simulación tiene una tendencia creciente en los primeros porcentajes, se estabiliza momentáneamente, y luego comienza a decrecer.
 
 \subsubsection{Umbral (Von Neumann)}
 \massgraph{decay3Dv2}
 \radiusgraph{decay3Dv2}
-\obsgraph{decay3Dv2}
+\obsfinalgraph{decay3Dv2}
+\obsstablegraph{decay3Dv2}
