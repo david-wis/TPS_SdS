@@ -35,7 +35,7 @@ def plot_animation_2d(path, q):
         fig, ax = plt.subplots()
         for j, state in enumerate(r):
             ax.clear()
-            state = state.reshape((length, length, length))[:,32,:]
+            state = state.reshape((length, length))
             ax.imshow(state, cmap='binary')
             start = (length//2-core//2)-0.5
             end = (length//2+core//2)-0.5
