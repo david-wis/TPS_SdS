@@ -60,26 +60,30 @@ Además se puede ver que hay cierta concordancia en las generaciones donde ocurr
 \radiusgraph{odd2D}
 A pesar de lo irregular que es el crecimiento de la masa, en la Fig. \ref{fig:odd2Dradius} se ve que los radios en función de la generación crecen de manera constante y sin saltos.
 \obsfinalgraph{odd2D}
-Por último, en la Fig. \ref{fig:odd2Dobsfinal} se ve que la masa final de cada simulación va aumentando su valor en los primeros porcentajes, y luego se estabiliza llegando a los últimos.
+Por último, en la Fig. \ref{fig:odd2Dobsfinal} se ve que la masa final de cada simulación en función del porcentaje tiene una tendencia creciente que va desacelerando.
 
 \subsubsection{Rectángulo Relleno}
 \massgraph{fill2D}
-Se puede observar en la Fig. \ref{fig:fill2Dmass} que la masa es creciente, lo cual se puede explicar con la regla que si la celda ya estaba viva antes, entonces sigue viva en la siguiente iteración.  y luego de algunas iteraciones se estabiliza en un valor constante.
+Se puede observar en la Fig. \ref{fig:fill2Dmass} que la masa es creciente, lo cual se puede explicar con la regla que establece que si la celda ya estaba viva antes, entonces sigue viva en la siguiente iteración.
+Y luego de algunas iteraciones se estabiliza en un valor constante.
 \radiusgraph{fill2D}
-Al igual que la masa, puede observar en la Fig. \ref{fig:fill2Dradius} que el radio también tiene una tendencia creciente, y luego de algunas iteraciones se estabiliza en un valor constante.
+Al igual que la masa, se puede observar en la Fig. \ref{fig:fill2Dradius} que el radio también es creciente, y luego de algunas iteraciones se estabiliza en un valor constante.
 \obsfinalgraph{fill2D}
-Al igual que en las figuras anteriores Fig. \ref{fig:fill2Dmass} y Fig. \ref{fig:fill2Dradius}, en la Fig. \ref{fig:fill2Dobsfinal} se puede observar que la masa de cada simulación tiene una tendencia creciente en los primeros porcentajes, y finalmente se estabiliza en un valor constante.
+En la Fig. \ref{fig:fill2Dobsfinal} se puede observar que la masa de cada simulación tiene una tendencia creciente en los primeros porcentajes, y a partir de 35\% se queda constante en 100, que coincide con la superficie del cuadrado del núcleo.
 \obsstablegraph{fill2D}
+En la Fig. \ref{fig:fill2Dobsstable} se puede observar que la generación de estabilización crece hasta el 20\%, y luego decrece.
+
 
 \subsection{Autómatas celulares de tres dimensiones}
 \label{subsec:results3d}
 
 \subsubsection{El juego de la vida de Conway 3D (Moore)}
 \massgraph{gol3D}
-En la Fig. \ref{fig:fill2Dmass} queda en evidencia el crecimiento explosivo que tiene el juego de la vida de Conway en 3D, llegando a los bordes en 20 iteraciones o menos.
+En la Fig. \ref{fig:fill2Dmass} se puede ver una tendencia global creciente de la masa. Además se puede ver que los porcentajes mayores que 12.5\% sufren una caída inicial y luego entran en la tendencia creciente.
+También cabe destacar que todos los porcentajes terminan por la condición de corte en vez de llegar a la iteración máxima establecida.
 
 \radiusgraph{gol3D}
-???
+Se puede observar en la Fig. \ref{fig:fill2Dradius} que el radio tiene una tendencia global creciente, y a diferencia de la masa, las caídas son menos frecuentes y de menor magnitud.
 
 \obsfinalgraph{gol3D}
 Se puede observar que el valor final aumenta hasta alcanzar lo que parecería un máximo local en 37.5\%, y luego disminuye.
@@ -88,19 +92,20 @@ Es interesante notar como en los primeros y en los últimos valores, el desvío 
 
 \subsubsection{Umbral (Moore)}
 \massgraph{decay3D}
-Se puede observar en la Fig. \ref{fig:decay3Dmass} que para los primeros porcentajes, la masa tiende a decrecer hasta llegar a $0$.
-Los que ocupan entre el 25\% y el 75\% del núcleo, tienen una tendencia creciente.
-Por último, el que cuenta con 7200 partículas, que ocupa el 90\% del núcleo, tiene una tendencia creciente que luego se estabiliza en un valor constante.
+Se puede observar en la Fig. \ref{fig:decay3Dmass} que para los primeros porcentajes (1.25\% y 12.5\%), la masa tiende a decrecer hasta llegar a $0$.
+Los que ocupan entre el 25\% y el 57.5\% del núcleo, tienen una tendencia creciente.
+Por último, el que ocupa el 93.75\% del núcleo sufre una caída inicial, y luego crece y alcanza una masa cíclica.
 \radiusgraph{decay3D}
 En la Fig. \ref{fig:decay3Dradius}, se puede observar que el radio tiene un comportamiento similar a la masa.
-Los primeros porcentajes tienen una tendencia decreciente.
+Las simulaciones con 1.25\% y 12.5\% tienen una tendencia decreciente hasta llegar a $0$.
 Aquellas simulaciones que cuentan con un porcentaje entre el 25\% y el 75\% del núcleo tienen una tendencia creciente.
-Por último, el que ocupa el 90\% del núcleo tiene una tendencia creciente que luego se estabiliza.
+Por último, el que ocupa el 93.75\% del núcleo sufre una caída inicial, y luego crece y alcanza un radio constante.
 \obsfinalgraph{decay3D}
-En la Fig. \ref{fig:decay3Dobsfinal} se puede observar que la masa final de cada simulación tiene una tendencia creciente en los primeros porcentajes, se estabiliza momentáneamente, y luego comienza a decrecer.
+En la Fig. \ref{fig:decay3Dobsfinal} se puede observar que la masa final es 0 para los porcentajes 1.25\% y 12.5\%, y entre 25\% y 62.5\% se mantiene cercano a los 20000, y luego comienza a decrecer. Vale destacar que para 93.75\% el desvío es bastante más bajo que el resto.
 
 \subsubsection{Umbral (Von Neumann)}
 \massgraph{decay3Dv2}
+En la Fig. \ref{fig:decay3Dv2mass}
 \radiusgraph{decay3Dv2}
 \obsfinalgraph{decay3Dv2}
 \obsstablegraph{decay3Dv2}

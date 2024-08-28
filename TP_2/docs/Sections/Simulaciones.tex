@@ -3,28 +3,43 @@
 
 \subsection{Dimensiones}
 \label{subsec:acdim}
-Las simulaciones 2D se enfocarán en analizar el comportamiento de células dentro de una grilla 2D de $100 \times 100$ celdas.
+Las simulaciones 2D se enfocarán en analizar el comportamiento de células dentro de una grilla 2D de $100 \times 100$ celdas ($L_{2D} = 100$)
+Se define el estado de la grilla como $S_t \in \{0,1\}^{L_{2D}\times L_{2D}}$,
 
-Para las simulaciones 3D se trabajará dentro de una grilla 2D de $50 \times 50 \times 50$ celdas.
+Para las simulaciones 3D se trabajará dentro de una grilla de $50 \times 50 \times 50$ celdas ($L_{3D} = 50$).
 
-La grilla 2D contiene una región interna (núcleo) de $10 \times 10$ celdas, en la cual se generan las condiciones iniciales, mientras que la 3D tiene un núcleo de $20 \times 20 \times 20$.
-Dentro de esta región, se toman distintos porcentajes de células vivas iniciales en el intervalo $(0, 100)$ y para cada uno de estos porcentajes, se realizan 10 simulaciones.
+Igual que para el caso 2D, se define el estado de la grilla como $S_t \in \{0,1\}^{L_{3D}\times L_{3D}}$.
+
+La grilla 2D contiene una región interna (núcleo) de $10 \times 10$ celdas ($L_{core2D} = 10$), en la cual se generan las condiciones iniciales,
+mientras que la 3D tiene un núcleo de $20 \times 20 \times 20$ $(L_{core3D} = 20)$.
+Dentro de esta región, se toman distintos porcentajes de células vivas iniciales ($p_i \in (0, 100)$ y para cada uno de estos porcentajes, se realizan 10 simulaciones.
 
 \subsection{Condiciones iniciales}
 \label{subsec:acini}
 Para cada porcentaje elegido se generaron 10 condiciones iniciales distintas, generando dicha cantidad de celdas vivas aleatoriamente en dentro del núcleo.
+Cada una de estas condiciones iniciales se define como $\mathbb{I}_{i,p}$, donde $i \in (1, 10)$ es la simulación y $p \in (0, 100)$ es el porcentaje de células vivas.
 
 \subsubsection{Condición de corte}
 \label{subsubsec:ac2corte}
-El máximo número de iteraciones es de 100.
+El máximo número de iteraciones es de 100 ($t_{max} = 100$).
 La simulación se detiene antes si alguna célula activa alcanza el borde de la grilla.
 
 \subsection{Masa}
 Para cada porcentaje, en cada una de las reglas, se realizó un análisis de la evolución de la cantidad de células vivas en función de la iteración, denominada masa.
+Esta se define como:
+\begin{equation}
+m_t = \sum_{i,j}{S_{t_{ij}}}
+\end{equation}
+
 En cada gráfico se puede ver el cambio de la masa para las 10 simulaciones.
 
 \subsection{Radio}
-De manera análoga a la masa, se realizaron gráficos analizando el cambio del radio, que se definió como la mayor distancia (norma 1) entre una célula y el centro de la grilla.
+De manera análoga a la masa, se realizaron gráficos analizando el cambio del radio, que se definió como la mayor distancia (norma 1) entre una célula y el centro de la grilla:
+
+\begin{equation}
+r_t = \max_{i,j}{\left\{ S_{t_{ij}} \cdot \left( \left| i - \frac{L}{2} \right| + \left| j - \frac{L}{2} \right| \right) \right\}}
+\end{equation}
+
 
 \subsection{Observables}
 Debido a que las condiciones iniciales se tomaron de manera aleatoria y los resultados finales dependian de las mismas, los gráficos muestran los valores promedio del observable en cada porcentaje (para las 10 condiciones iniciales de cada uno).
@@ -47,6 +62,11 @@ donde $\bar{m}$ es el promedio previamente definido
 
 \subsubsection{Masa final}
 Para todas las reglas tanto 2D como 3D, se eligió tomar como observable la masa final del sistema, es decir la que se alcanza en la iteración numero 100, o cuando se toca un borde.
+\begin{equation}
+    \label{eq:finalmass}
+    m_{final} = m_{t_{final}}
+\end
+donde $t_{final}$ es la iteración número 100 o aquella donde alcanza un borde.
 Así, se graficó el valor del observable en función de las iteraciones.
 \subsubsection{Generación de estabilización}
-Además, para las reglas donde se observó que la masa en un ciclo estable, se eligió tomar como otro observable a la generación en la que alcanza dicho ciclo.
+Además, para las reglas donde se observó que la masa entra en un ciclo estable, se eligió tomar como otro observable a la generación $t^{*}$ en la que alcanza dicho ciclo.
