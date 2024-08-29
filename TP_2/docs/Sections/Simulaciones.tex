@@ -26,9 +26,15 @@ La simulación se detiene antes si alguna célula activa alcanza el borde de la 
 
 \subsection{Masa}
 Para cada porcentaje, en cada una de las reglas, se realizó un análisis de la evolución de la cantidad de células vivas en función de la iteración, denominada masa.
-Esta se define como:
+
+En 2D, esta se define como:
 \begin{equation}
 m_t = \sum_{i,j}{S_{t_{ij}}}
+\end{equation}
+
+En 3D, la masa se define como:
+\begin{equation}
+m_t = \sum_{i,j,k}{S_{t_{ijk}}}
 \end{equation}
 
 En cada gráfico se puede ver el cambio de la masa para las 10 simulaciones.
@@ -36,8 +42,15 @@ En cada gráfico se puede ver el cambio de la masa para las 10 simulaciones.
 \subsection{Radio}
 De manera análoga a la masa, se realizaron gráficos analizando el cambio del radio, que se definió como la mayor distancia (norma 1) entre una célula y el centro de la grilla:
 
+En 2D:
 \begin{equation}
 r_t = \max_{i,j}{\left\{ S_{t_{ij}} \cdot \left( \left| i - \frac{L}{2} \right| + \left| j - \frac{L}{2} \right| \right) \right\}}
+\end{equation}
+
+
+En 3D:
+\begin{equation}
+r_t = \max_{i,j,k}{\left\{ S_{t_{ijk}} \cdot \left( \left| i - \frac{L}{2} \right| + \left| j - \frac{L}{2} \right| + \left| k - \frac{L}{2} \right| \right) \right\}}
 \end{equation}
 
 
@@ -66,7 +79,8 @@ Para todas las reglas tanto 2D como 3D, se eligió tomar como observable la masa
     \label{eq:finalmass}
     m_{final} = m_{t_{final}}
 \end
+
 donde $t_{final}$ es la iteración número 100 o aquella donde alcanza un borde.
-Así, se graficó el valor del observable en función de las iteraciones.
+
 \subsubsection{Generación de estabilización}
 Además, para las reglas donde se observó que la masa entra en un ciclo estable, se eligió tomar como otro observable a la generación $t^{*}$ en la que alcanza dicho ciclo.

@@ -43,7 +43,7 @@
 \massgraph{gol2Dv2}
 Se puede observar en la Fig. \ref{fig:gol2Dv2mass} que la masa tiene una tendencia decreciente y se estabiliza en un valor constante, existiendo algunos casos donde dicho valor no es $0$.
 \radiusgraph{gol2Dv2}
-Se puede observar en la Fig. \ref{fig:gol2Dv2radius} que el radio exhibe tres comportamientos: mantenerse constante, decrecer hasta anularse o hasta un valor constante no nulo.
+En la Fig. \ref{fig:gol2Dv2radius}, el radio exhibe tres comportamientos: mantenerse constante, decrecer hasta anularse o hasta un valor constante no nulo.
 \obsfinalgraph{gol2Dv2}
 Se puede observar en la Fig. \ref{fig:gol2Dv2obsfinal} que la masa final de cada simulación tiene una tendencia creciente en función de los porcentajes. Parece alcanzar estabilidad al rededor del 80\%.
 Sin embargo, el desvío asociado con estos porcentajes también es muy grande.
@@ -54,8 +54,8 @@ Sin embargo, estos últimos valores también tienen un desvío muy grande.
 
 \subsubsection{Vecinos impares (Moore)}
 \massgraph{odd2D}
-Se puede observar en la Fig. \ref{fig:odd2Dmass} que si bien el cambio de la masa es algo caótico, parece haber una tendencia global creciente.
-Además se puede ver que hay cierta concordancia en las generaciones donde ocurren caídas en la masa. La más destacable es la que ocurren al rededor de la generación 30, donde todos los porcentajes exhibidos sufren una caída de la masa.
+En la Fig. \ref{fig:odd2Dmass} se ve que si bien el cambio de la masa es algo caótico, parece haber una tendencia global creciente.
+Además se puede ver que hay cierta concordancia en las generaciones donde ocurren caídas en la masa, siendo la más destacable la que ocurre alrededor de la generación 30, donde todos los porcentajes exhibidos sufren una rápida caída de la masa, para luego volver a subir.
 
 \radiusgraph{odd2D}
 A pesar de lo irregular que es el crecimiento de la masa, en la Fig. \ref{fig:odd2Dradius} se ve que los radios en función de la generación crecen de manera constante y sin saltos.
@@ -69,13 +69,13 @@ Y luego de algunas iteraciones se estabiliza en un valor constante.
 \radiusgraph{fill2D}
 Al igual que la masa, se puede observar en la Fig. \ref{fig:fill2Dradius} que el radio también es creciente, y luego de algunas iteraciones se estabiliza en un valor constante.
 \obsfinalgraph{fill2D}
-En la Fig. \ref{fig:fill2Dobsfinal} se puede observar que la masa de cada simulación tiene una tendencia creciente en los primeros porcentajes, y a partir de 35\% se queda constante en 100,
+En la Fig. \ref{fig:fill2Dobsfinal} se ve que la masa de cada simulación tiene una tendencia creciente en los primeros porcentajes (con un desvío estandar muy grande entre el 10\% y el 20\%), y a partir de 35\% alcanza un valor constante de 100,
 que coincide con la masa del núcleo.
 \begin{equation}
     m_{nucleo2D} = {L_{nucleo2D}}^2 = 10^2 = 100
 \end{equation}
 \obsstablegraph{fill2D}
-En la Fig. \ref{fig:fill2Dobsstable} se puede observar que la generación de estabilización crece hasta el 20\%, y luego decrece.
+La Fig. \ref{fig:fill2Dobsstable} parece indicar que la generación de estabilización crece hasta el 20\%, y luego decrece (aunque el desvio estandar es bastante grande en gran parte del crecimiento y decrecimiento).
 
 
 \subsection{Autómatas celulares de tres dimensiones}
@@ -83,14 +83,15 @@ En la Fig. \ref{fig:fill2Dobsstable} se puede observar que la generación de est
 
 \subsubsection{El juego de la vida de Conway 3D (Moore)}
 \massgraph{gol3D}
-En la Fig. \ref{fig:fill2Dmass} se puede ver una tendencia global creciente de la masa. Además se puede ver que los porcentajes mayores que 12.5\% sufren una caída inicial y luego entran en la tendencia creciente.
+En la Fig. \ref{fig:gol3Dmass} se puede ver una tendencia global creciente de la masa.
+Por otro lado, los porcentajes mayores que 12.5\% sufren una caída inicial y luego entran en la tendencia creciente.
 También cabe destacar que todos los porcentajes terminan por la condición de corte en vez de llegar a la iteración máxima establecida.
 
 \radiusgraph{gol3D}
-Se puede observar en la Fig. \ref{fig:fill2Dradius} que el radio tiene una tendencia global creciente, y a diferencia de la masa, las caídas son menos frecuentes y de menor magnitud.
+Se puede observar en la Fig. \ref{fig:gol3Dradius} que el radio tiene una tendencia global creciente, y a diferencia de la masa, las caídas son menos frecuentes y de menor magnitud.
 
 \obsfinalgraph{gol3D}
-Se puede observar que el valor final aumenta hasta alcanzar lo que parecería un máximo local en 37.5\%, y luego disminuye.
+En la Fig. \ref{fig:gol3Dobsfinal} se puede observar que el valor final aumenta hasta alcanzar lo que parecería un máximo local en 37.5\%, y luego disminuye.
 Es interesante notar como en los primeros y en los últimos valores, el desvío estandar aumenta, mientras que acercandose al máximo disminuye.
 
 
@@ -117,7 +118,7 @@ También vale destacar que los porcentajes mayores o iguales a 50\% sufren una c
 
 
 \radiusgraph{decay3Dv2}
-En la Fig. \ref{fig:decay3Dv2radius}, similarmente a la masa, se puede observar que para el 1.25\%, el radio disminuye hasta estabilizarse por debajo de 25, mientras que el resto de los porcentajes se estabilizan en 30, que coincide con el radio máximo que puede tener un punto dentro del cubo del núcleo (una esquina).
+En la Fig. \ref{fig:decay3Dv2radius}, de manera similar a la masa, se puede observar que para el 1.25\%, el radio disminuye hasta estabilizarse por debajo de 25, mientras que el resto de los porcentajes se estabilizan en 30, que coincide con el radio máximo que puede tener un punto dentro del cubo del núcleo (una esquina).
 \begin{equation}
     r_{esquina} = 3 \cdot \frac{L_{nucleo3D}}{2} = 3 \cdot \frac{20}{2} = 30
 \end{equation}
