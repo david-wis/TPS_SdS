@@ -7,7 +7,7 @@ Se plantearon 6 reglas distintas, 3 de dos dimensiones y 3 de tres  dimensiones.
 
 \subsubsection{El juego de la vida de Conway (Von Neumann)}
 
-El Juego de la Vida de Conway es un autómata celular diseñado por el matemático británico John Horton Conway en 1970.
+El Juego de la Vida de Conway \cite{GameOfLifeGardner} es un autómata celular diseñado por el matemático británico John Horton Conway en 1970.
 Es un sistema simple basado en una cuadrícula bidimensional de celdas, donde cada celda puede estar en uno de dos estados: viva o muerta.
 La evolución del sistema se determina por reglas sencillas que se aplican a cada celda en función del estado de sus celdas vecinas.
 
@@ -19,7 +19,7 @@ Reglas:
 
     \item Muerte por sobrepoblaión: Una celda viva con más de 3 vecinos vivos muere por sobrepoblación.
 
-    \item Reproducción: Una celda muerta con exactamente 3 vecinos vivos "nace" (se convierte en una célula viva) en la siguiente generación.
+    \item Reproducción: Una celda muerta con exactamente 3 vecinos vivos "nace" (se convierte en una celda viva) en la siguiente generación.
 \end{itemize}
 
 Para esta simulación, se consideró la distancia de Von Neumann, donde una celda tiene 4 vecinos adyacentes.
@@ -36,8 +36,8 @@ Reglas:
 \subsubsection{Rectángulo Relleno}
 Reglas:
 \begin{itemize}
-    \item Una célula viva sigue viva en la siguiente generación
-    \item Una célula muerta se transforma en viva si existe un par de vecinos (vecindad de moore de distancia 1) vivos que no comparten ni fila ni columna entre sí.
+    \item Una celda viva sigue viva en la siguiente generación
+    \item Una celda muerta se transforma en viva si existe un par de vecinos (vecindad de moore de distancia 1) vivos que no comparten ni fila ni columna entre sí.
 \end{itemize}
 Los casos donde una celda muerta pasa a estar viva son los exhibidos en la Fig. \ref{fig:filllive}, sin contar simetrías rotacionales y reflexiones.
 \begin{figure}[H]
@@ -57,7 +57,7 @@ Y en la Fig. \ref{fig:filldead} se puede ver que los casos donde una celda muert
     \label{fig:filldead}
 \end{figure}
 %Los rectángulos son las únicas figuras (conjunto conexo de celdas vivas) estables, ya que son las únicas figuras tales que todo el perímetro de celdas muertas que lo rodea, cae en los casos mencionados.
-%Entonces, el sistema va a converger a un conjunto de rectángulos que contienen a las células vivas iniciales y estén suficientemente cerca entre sí.
+%Entonces, el sistema va a converger a un conjunto de rectángulos que contienen a las celda vivas iniciales y estén suficientemente cerca entre sí.
 
 \subsection{Autómatas celulares de tres dimensiones}
 \label{subsec:3d}

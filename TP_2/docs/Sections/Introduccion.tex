@@ -77,7 +77,7 @@ La regla de evolución de un autómata celular de dos dimensiones (AC 2D de ahor
 \begin{equation}
     \label{eq:evolution_rule}
     \begin{aligned}
-        a_{ij}^{(t)} = f(\sum^{k=r}_{k=-r}\sum^{l=r}_{l=-r}{\alpha_{kl}a_{(i+k)(j+l)}^{(t-1)}})
+        a_{ij}^{(t)} = f(\sum^{k=r}_{k=-r}\sum^{l=r}_{l=-r}{\alpha_{kl}\ a_{(i+k)(j+l)}^{(t-1)}})
     \end{aligned}
 \end{equation}
 donde $a_{i,j}^{(t)}$ es el estado de la celda en la posición $(i,j)$ en la generación $t$, $f$ es una función no lineal que determina el estado de la celda en la siguiente generación, $\alpha_{kl}$ son constantes enteras asociadas a las celdas vecinas y $r$ es el radio de la vecindad de la celda.
@@ -86,6 +86,6 @@ Para un autómata celular de tres dimensiones (AC 3D), se trabaja de manera aná
 \begin{equation}
     \label{eq:evolution_rule_3d}
     \begin{aligned}
-        a_{ijk}^{(t)} = f(\sum^{l=r}_{l=-r}\sum^{m=r}_{m=-r}\sum^{n=r}_{n=-r}{\alpha_{lmn}a_{(i+l)(j+m)(k+n)}^{(t-1)}})
+        a_{ijk}^{(t)} = f(\sum^{l=r}_{l=-r}\sum^{m=r}_{m=-r}\sum^{n=r}_{n=-r}{\alpha_{lmn}\ a_{(i+l)(j+m)(k+n)}^{(t-1)}})
     \end{aligned}
 \end{equation}

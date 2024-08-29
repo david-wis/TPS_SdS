@@ -4,15 +4,15 @@
 \subsection{Dimensiones}
 \label{subsec:acdim}
 Las simulaciones 2D se enfocarán en analizar el comportamiento de células dentro de una grilla 2D de $100 \times 100$ celdas ($L_{2D} = 100$)
-Se define el estado de la grilla como $S_t \in \{0,1\}^{L_{2D}\times L_{2D}}$,
+Se define el estado de la grilla en función de la generación $t$ como $a^{(t)} \in \{0,1\}^{L_{2D}\times L_{2D}}$.
 
 Para las simulaciones 3D se trabajará dentro de una grilla de $50 \times 50 \times 50$ celdas ($L_{3D} = 50$).
 
-Igual que para el caso 2D, se define el estado de la grilla como $S_t \in \{0,1\}^{L_{3D}\times L_{3D}}$.
+Igual que para el caso 2D, se define el estado de la grilla en función de la generación $t$ como $a^{(t)} \in \{0,1\}^{L_{3D}\times L_{3D} \times L_{3D}}$.
 
 La grilla 2D contiene una región interna (núcleo) de $10 \times 10$ celdas ($L_{core2D} = 10$), en la cual se generan las condiciones iniciales,
 mientras que la 3D tiene un núcleo de $20 \times 20 \times 20$ $(L_{core3D} = 20)$.
-Dentro de esta región, se toman distintos porcentajes de células vivas iniciales ($p_i \in (0, 100)$ y para cada uno de estos porcentajes, se realizan 10 simulaciones.
+Dentro de esta región, se toman distintos porcentajes de células vivas iniciales $p_i \in (0, 100)$ y para cada uno de estos porcentajes, se realizan 10 simulaciones.
 
 \subsection{Condiciones iniciales}
 \label{subsec:acini}
@@ -29,12 +29,12 @@ Para cada porcentaje, en cada una de las reglas, se realizó un análisis de la 
 
 En 2D, esta se define como:
 \begin{equation}
-m_t = \sum_{i,j}{S_{t_{ij}}}
+m_t = \sum_{i,j}{a^{(t)}_{ij}}
 \end{equation}
 
 En 3D, la masa se define como:
 \begin{equation}
-m_t = \sum_{i,j,k}{S_{t_{ijk}}}
+m_t = \sum_{i,j,k}{a^{(t)}_{ijk}}
 \end{equation}
 
 En cada gráfico se puede ver el cambio de la masa para las 10 simulaciones.
@@ -44,23 +44,23 @@ De manera análoga a la masa, se realizaron gráficos analizando el cambio del r
 
 En 2D:
 \begin{equation}
-r_t = \max_{i,j}{\left\{ S_{t_{ij}} \cdot \left( \left| i - \frac{L}{2} \right| + \left| j - \frac{L}{2} \right| \right) \right\}}
+r_t = \max_{i,j}{\left\{ a^{(t)}_{ij} \cdot \left( \left| i - \frac{L_{2D}}{2} \right| + \left| j - \frac{L_{2D}}{2} \right| \right) \right\}}
 \end{equation}
 
 
 En 3D:
 \begin{equation}
-r_t = \max_{i,j,k}{\left\{ S_{t_{ijk}} \cdot \left( \left| i - \frac{L}{2} \right| + \left| j - \frac{L}{2} \right| + \left| k - \frac{L}{2} \right| \right) \right\}}
+r_t = \max_{i,j,k}{\left\{ a^{(t)}_{ijk} \cdot \left( \left| i - \frac{L_{3D}}{2} \right| + \left| j - \frac{L_{3D}}{2} \right| + \left| k - \frac{L_{3D}}{2} \right| \right) \right\}}
 \end{equation}
 
 
 \subsection{Observables}
 Debido a que las condiciones iniciales se tomaron de manera aleatoria y los resultados finales dependían de las mismas, los gráficos muestran los valores promedio del observable en cada porcentaje (para las 10 condiciones iniciales de cada uno).
 
-El promedio se calculó de la siguiente manera:
+El promedio de masas se calculó de la siguiente manera:
 
 \begin{equation}
-    \label{eq:mean}
+    \label{eq:meanm}
     \bar{m} = \frac{1}{10} \sum_{i=1}^{10} m_i
 \end{equation}
 donde $m_i$ es la masa de la simulación $i$
@@ -68,10 +68,26 @@ donde $m_i$ es la masa de la simulación $i$
 El desvio estandar se obtuvo de la siguiente manera:
 
 \begin{equation}
-    \label{eq:std}
-    \sigma = \sqrt{\frac{1}{9} \sum_{i=1}^{10} (m_i - \bar{m})^2}
+    \label{eq:stdm}
+    \sigma_{m} = \sqrt{\frac{1}{9} \sum_{i=1}^{10} (m_i - \bar{m})^2}
 \end{equation}
 donde $\bar{m}$ es el promedio previamente definido
+
+De la misma manera, el promedio de tiempos se calculo de la siguiente manera:
+
+\begin{equation}
+    \label{eq:meant}
+    \bar{t} = \frac{1}{10} \sum_{i=1}^{10} t_i
+\end{equation}
+
+donde $t_i$ es el tiempo de la simulación $i$
+
+El desvio estandar se obtuvo de la siguiente manera:
+
+\begin{equation}
+    \label{eq:stdt}
+    \sigma_{t} = \sqrt{\frac{1}{9} \sum_{i=1}^{10} (t_i - \bar{t})^2}
+\end{equation}
 
 \subsubsection{Masa final}
 Para todas las reglas tanto 2D como 3D, se eligió tomar como observable la masa final del sistema, es decir la que se alcanza en la iteración numero 100, o cuando se toca un borde.
