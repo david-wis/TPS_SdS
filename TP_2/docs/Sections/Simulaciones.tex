@@ -55,7 +55,7 @@ r_t = \max_{i,j,k}{\left\{ S_{t_{ijk}} \cdot \left( \left| i - \frac{L}{2} \righ
 
 
 \subsection{Observables}
-Debido a que las condiciones iniciales se tomaron de manera aleatoria y los resultados finales dependian de las mismas, los gráficos muestran los valores promedio del observable en cada porcentaje (para las 10 condiciones iniciales de cada uno).
+Debido a que las condiciones iniciales se tomaron de manera aleatoria y los resultados finales dependían de las mismas, los gráficos muestran los valores promedio del observable en cada porcentaje (para las 10 condiciones iniciales de cada uno).
 
 El promedio se calculó de la siguiente manera:
 
@@ -83,4 +83,8 @@ Para todas las reglas tanto 2D como 3D, se eligió tomar como observable la masa
 donde $t_{final}$ es la iteración número 100 o aquella donde alcanza un borde.
 
 \subsubsection{Generación de estabilización}
-Además, para las reglas donde se observó que la masa entra en un ciclo estable, se eligió tomar como otro observable a la generación $t^{*}$ en la que alcanza dicho ciclo.
+Para las reglas donde se observó que la masa entra en un ciclo estable, se eligió tomar como otro observable a la generación $t^{*}$ en la que alcanza dicho ciclo.
+\begin{equation}
+    \label{eq:stablegen}
+    t^{*} = \min_{t}{\left\{ m_t = m_{final} \right\}}
+\end{equation}

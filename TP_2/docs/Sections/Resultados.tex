@@ -54,7 +54,7 @@ Sin embargo, estos últimos valores también tienen un desvío muy grande.
 
 \subsubsection{Vecinos impares (Moore)}
 \massgraph{odd2D}
-En la Fig. \ref{fig:odd2Dmass} se ve que si bien el cambio de la masa es algo caótico, parece haber una tendencia global creciente.
+En la Fig. \ref{fig:odd2Dmass} se ve que si bien el cambio de la masa es bastante irregular, parece haber una tendencia global creciente.
 Además se puede ver que hay cierta concordancia en las generaciones donde ocurren caídas en la masa, siendo la más destacable la que ocurre alrededor de la generación 30, donde todos los porcentajes exhibidos sufren una rápida caída de la masa, para luego volver a subir.
 
 \radiusgraph{odd2D}
@@ -98,15 +98,15 @@ Es interesante notar como en los primeros y en los últimos valores, el desvío 
 \subsubsection{Umbral (Moore)}
 \massgraph{decay3D}
 Se puede observar en la Fig. \ref{fig:decay3Dmass} que para los primeros porcentajes (1.25\% y 12.5\%), la masa tiende a decrecer hasta llegar a $0$.
-Los que ocupan entre el 25\% y el 57.5\% del núcleo, tienen una tendencia creciente.
+Los que ocupan entre el 25\% y el 87.5\% del núcleo, tienen una tendencia creciente.
 Por último, el que ocupa el 93.75\% del núcleo sufre una caída inicial, y luego crece y alcanza una masa cíclica.
 \radiusgraph{decay3D}
 En la Fig. \ref{fig:decay3Dradius}, se puede observar que el radio tiene un comportamiento similar a la masa.
 Las simulaciones con 1.25\% y 12.5\% tienen una tendencia decreciente hasta llegar a $0$.
-Aquellas simulaciones que cuentan con un porcentaje entre el 25\% y el 75\% del núcleo tienen una tendencia creciente.
+Aquellas simulaciones que cuentan con un porcentaje entre el 25\% y el 87.5\% del núcleo tienen una tendencia creciente.
 Por último, el que ocupa el 93.75\% del núcleo sufre una caída inicial, y luego crece y alcanza un radio constante.
 \obsfinalgraph{decay3D}
-En la Fig. \ref{fig:decay3Dobsfinal} se puede observar que la masa final es 0 para los porcentajes 1.25\% y 12.5\%, y entre 25\% y 62.5\% se mantiene cercano a los 20000, y luego comienza a decrecer. Vale destacar que para 93.75\% el desvío es bastante más bajo que el resto.
+En la Fig. \ref{fig:decay3Dobsfinal} se puede observar que la masa final es 0 para los porcentajes 1.25\% y 12.5\%, y entre 25\% y 62.5\% se mantiene cercano a los 20000, y luego comienza a decrecer. Vale destacar que para 93.75\% el desvío es significativamente más bajo que el resto.
 
 \subsubsection{Umbral (Von Neumann)}
 \massgraph{decay3Dv2}
@@ -125,4 +125,13 @@ En la Fig. \ref{fig:decay3Dv2radius}, de manera similar a la masa, se puede obse
 \obsfinalgraph{decay3Dv2}
 En la Fig. \ref{fig:decay3Dv2obsfinal} se confirma lo que se observó en la Fig. \ref{fig:decay3Dv2mass}, donde las masas finales de todos los porcentajes excepto 1.25\% se estabilizan cerca de 4000, mientras que para 1.25\% se estabiliza cerca de 0. Cabe destacar que el desvío en general es bajo.
 \obsstablegraph{decay3Dv2}
-En la Fig. \ref{fig:decay3Dv2obsstable} se puede observar que para las simulaciones con 1.25\% la generación se estabiliza muy rápidamente. Mientras que para el resto, la generación de estabilización tiene un mínimo en 50\% (cuya masa es 4000, la masa aproximada donde se estabiliza) y parece aumentar cada vez más a medida que se aleja del 50\%. Cabe destacar también, que los porcentajes que son complementarios entre sí (suman 100\%) tienen una generación de estabilización cercana.
+En la Fig. \ref{fig:decay3Dv2obsstable} se puede observar que para las simulaciones con 1.25\% la generación se estabiliza muy rápidamente, mientras que para el resto, la generación de estabilización tiene un mínimo en 50\% (cuya masa es 4000, la masa aproximada donde se estabiliza) y parece aumentar cada vez más a medida que se aleja del 50\%. Cabe destacar también, que los porcentajes que son complementarios entre sí (suman 100\%) tienen una generación de estabilización cercana.
+
+\subsection{Conclusiones}
+\label{subsec:conclusiones}
+El análisis de los autómatas celulares de dos y tres dimensiones permitió observar el comportamiento emergente resultante de simples reglas.
+Se pudo ver que dicho comportamiento es difícil de predecir.
+
+Si bien algunos autómatas celulares exhibieron ser altamente dependientes de las condiciones iniciales, mostrando que pequeñas variaciones en las mismas pueden llevar a comportamientos muy distintos, al mismo tiempo, se observó que para ciertas reglas, las condiciones iniciales no afectan tanto el comportamiento final del sistema, como es el caso de la regla de Rectángulo Relleno o Umbral (Von Neumann).
+
+Es interesante ver como, a pesar de que el comportamiento de los autómatas celulares es tan diverso y aparentemente caótico, es posible definir observables que permiten caracterizar las distintas condiciones iniciales.

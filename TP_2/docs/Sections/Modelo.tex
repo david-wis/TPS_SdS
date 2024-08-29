@@ -39,17 +39,25 @@ Reglas:
     \item Una célula viva sigue viva en la siguiente generación
     \item Una célula muerta se transforma en viva si existe un par de vecinos (vecindad de moore de distancia 1) vivos que no comparten ni fila ni columna entre sí.
 \end{itemize}
-Entonces, en la Fig. \ref{fig:fill} se puede ver que los casos donde una celda muerta se mantiene muerta son los que todos sus vecinos vivos compartan exclusivamente o la columna o la fila:
+Los casos donde una celda muerta pasa a estar viva son los exhibidos en la Fig. \ref{fig:filllive}, sin contar simetrías rotacionales y reflexiones.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Images/fill_example_1b}
+    \captionsetup{justification=centering}
+    \caption{Casos donde una celda muerta se mantiene muerta \\ Negro: Celda viva, Blanco: Celda muerta, Gris: indistinto}
+    \label{fig:filllive}
+\end{figure}
+
+Y en la Fig. \ref{fig:filldead} se puede ver que los casos donde una celda muerta se mantiene muerta son los que todos sus vecinos vivos compartan exclusivamente o la columna o la fila (sin contar simetrías rotacionales).
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Images/fill_example_1a}
     \captionsetup{justification=centering}
-    \caption{Casos donde una celda muerta se mantiene muerta (sin contar simetrías rotacionales)}
-
-    \label{fig:fill}
+    \caption{Casos donde una celda muerta se mantiene muerta\\ Negro: Celda viva, Blanco: Celda muerta}
+    \label{fig:filldead}
 \end{figure}
-Los rectángulos son las únicas figuras (conjunto conexo de celdas vivas) estables, ya que son las únicas figuras tales que todo el perímetro de celdas muertas que lo rodea, cae en los casos mencionados.
-Entonces, el sistema va a converger a un conjunto de rectángulos que contienen a las células vivas iniciales y estén suficientemente cerca entre sí.
+%Los rectángulos son las únicas figuras (conjunto conexo de celdas vivas) estables, ya que son las únicas figuras tales que todo el perímetro de celdas muertas que lo rodea, cae en los casos mencionados.
+%Entonces, el sistema va a converger a un conjunto de rectángulos que contienen a las células vivas iniciales y estén suficientemente cerca entre sí.
 
 \subsection{Autómatas celulares de tres dimensiones}
 \label{subsec:3d}
