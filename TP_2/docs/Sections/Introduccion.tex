@@ -7,21 +7,16 @@
 Un autómata celular es un modelo matemático discreto utilizado para estudiar sistemas complejos mediante la evolución de un conjunto de celdas.
 Cada celda puede tomar un estado finito de un conjunto predeterminado de estados y, a lo largo del tiempo, su estado cambia de acuerdo con un conjunto de reglas locales que dependen del estado actual de la celda y del estado de sus celdas vecinas.
 Estas reglas se aplican de manera uniforme y simultánea a todas las celdas en el sistema, lo que genera patrones globales a partir de interacciones locales.
-
 El comportamiento de un autómata celular se determina a través de iteraciones discretas en el tiempo, donde el estado del sistema en un momento particular, se denomina "generación".
-Este enfoque permite modelar fenómenos naturales, físicos y computacionales complejos.
-Las propiedades emergentes que surgen del comportamiento colectivo de las celdas hacen de los autómatas celulares una herramienta poderosa para explorar el surgimiento de estructuras y patrones en sistemas dinámicos.
 
-Existen diversas clases de autómatas celulares, siendo los más estudiados aquellos que se encuentran en una dimensión y que siguen reglas sencillas.
 En este informe se procederá al estudio de tres autómatas celulares bidimensionales y tres tridimensionales, con el objetivo de analizar su comportamiento y las dinámicas emergentes que generan.
 
-Dentro de los autómatas bidimensionales, se incluirá un análisis detallado del famoso "Juego de la Vida" de John Conway, un autómata celular que ha sido ampliamente investigado debido a su capacidad para generar patrones complejos a partir de reglas simples.
-Además, se examinarán otros dos autómatas bidimensionales junto con tres ejemplos en tres dimensiones, para comprender cómo la dimensionalidad y las reglas locales influyen en la evolución del sistema.
 
 \subsection{Vecindad}
 \label{subsec:vecindad}
 En este informe, se utilizará la vecindad de Moore para definir las interacciones entre las celdas de los autómatas celulares.
 La vecindad de Moore en dos dimensiones considera las ocho celdas adyacentes a una celda central.
+En la Ec.\ref{eq:moore_neighborhood} se muestra la definición de la vecindad de Moore en dos dimensiones:
 \begin{equation}
     \label{eq:moore_neighborhood}
     \begin{aligned}
@@ -38,6 +33,7 @@ En la Fig. \ref{fig:moore} se muestra un esquema de la vecindad de Moore en dos 
 \end{figure}
 
 En tres dimensiones, la vecindad de Moore considera las 26 celdas adyacentes a una celda central.
+En la Ec. \ref{eq:moore_neighborhood_3d} se muestra la definición de la vecindad de Moore en tres dimensiones:
 \begin{equation}
     \label{eq:moore_neighborhood_3d}
     \begin{aligned}
@@ -46,6 +42,7 @@ En tres dimensiones, la vecindad de Moore considera las 26 celdas adyacentes a u
 \end{equation}
 
 También se implementó la vecindad de Von Neumann, que considera solo las cuatro celdas adyacentes a una celda central en dos dimensiones.
+En la Ec. \ref{eq:von_neumann_neighborhood} se muestra la definición de la vecindad de Von Neumann en dos dimensiones:
 \begin{equation}
     \label{eq:von_neumann_neighborhood}
     \begin{aligned}
@@ -54,7 +51,6 @@ También se implementó la vecindad de Von Neumann, que considera solo las cuatr
 \end{equation}
 
 En la Fig. \ref{fig:vonneumann} se muestra un esquema de la vecindad de Von Neumann en dos dimensiones.
-% imagen de moore.jpg
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{Images/vonneumann}
@@ -63,6 +59,7 @@ En la Fig. \ref{fig:vonneumann} se muestra un esquema de la vecindad de Von Neum
 \end{figure}
 
 En tres dimensiones, la vecindad de Von Neumann considera las seis celdas adyacentes a una celda central.
+En la Ec. \ref{eq:von_neumann_neighborhood_3d} se muestra la definición de la vecindad de Von Neumann en tres dimensiones.
 \begin{equation}
     \label{eq:von_neumann_neighborhood_3d}
     \begin{aligned}
@@ -73,7 +70,7 @@ En tres dimensiones, la vecindad de Von Neumann considera las seis celdas adyace
 
 \subsection{Regla de evolución}
 \label{subsec:evolucion}
-La regla de evolución de un autómata celular de dos dimensiones (AC 2D de ahora en adelante) está dada por el siguiente mapeo:
+La regla de evolución de un autómata celular de dos dimensiones (AC 2D de ahora en adelante) está dada por el mapeo expresado en la Ec. \ref{eq:evolution_rule}:
 \begin{equation}
     \label{eq:evolution_rule}
     \begin{aligned}
@@ -82,7 +79,7 @@ La regla de evolución de un autómata celular de dos dimensiones (AC 2D de ahor
 \end{equation}
 donde $a_{i,j}^{(t)}$ es el estado de la celda en la posición $(i,j)$ en la generación $t$, $f$ es una función no lineal que determina el estado de la celda en la siguiente generación, $\alpha_{kl}$ son constantes enteras asociadas a las celdas vecinas y $r$ es el radio de la vecindad de la celda.
 
-Para un autómata celular de tres dimensiones (AC 3D), se trabaja de manera análoga:
+Para un autómata celular de tres dimensiones (AC 3D), se trabaja de manera análoga a la Ec. \ref{eq:evolution_rule}, pero considerando la vecindad de Moore en tres dimensiones, y se puede expresar como en la Ec. \ref{eq:evolution_rule_3d}:
 \begin{equation}
     \label{eq:evolution_rule_3d}
     \begin{aligned}

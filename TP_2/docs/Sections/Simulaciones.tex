@@ -27,14 +27,16 @@ La simulación se detiene antes si alguna célula activa alcanza el borde de la 
 \subsection{Masa}
 Para cada porcentaje, en cada una de las reglas, se realizó un análisis de la evolución de la cantidad de células vivas en función de la iteración, denominada masa.
 
-En 2D, esta se define como:
+En 2D, la masa se define como expresa la Ec. \ref{eq:mass2d}:
 \begin{equation}
-m_t = \sum_{i,j}{a^{(t)}_{ij}}
+    \label{eq:mass2d}
+    m_t = \sum_{i,j}{a^{(t)}_{ij}}
 \end{equation}
 
-En 3D, la masa se define como:
+En 3D, la masa se define como expresa la Ec. \ref{eq:mass3d}:
 \begin{equation}
-m_t = \sum_{i,j,k}{a^{(t)}_{ijk}}
+    \label{eq:mass3d}
+    m_t = \sum_{i,j,k}{a^{(t)}_{ijk}}
 \end{equation}
 
 En cada gráfico se puede ver el cambio de la masa para las 10 simulaciones.
@@ -42,22 +44,24 @@ En cada gráfico se puede ver el cambio de la masa para las 10 simulaciones.
 \subsection{Radio}
 De manera análoga a la masa, se realizaron gráficos analizando el cambio del radio, que se definió como la mayor distancia (norma 1) entre una célula y el centro de la grilla:
 
-En 2D:
+En 2D, el radio se define como expresa la Ec. \ref{eq:radius2d}:
 \begin{equation}
-r_t = \max_{i,j}{\left\{ a^{(t)}_{ij} \cdot \left( \left| i - \frac{L_{2D}}{2} \right| + \left| j - \frac{L_{2D}}{2} \right| \right) \right\}}
+    \label{eq:radius2d}
+    r_t = \max_{i,j}{\left\{ a^{(t)}_{ij} \cdot \left( \left| i - \frac{L_{2D}}{2} \right| + \left| j - \frac{L_{2D}}{2} \right| \right) \right\}}
 \end{equation}
 
 
-En 3D:
+En 3D, el radio se define como expresa la Ec. \ref{eq:radius3d}:
 \begin{equation}
-r_t = \max_{i,j,k}{\left\{ a^{(t)}_{ijk} \cdot \left( \left| i - \frac{L_{3D}}{2} \right| + \left| j - \frac{L_{3D}}{2} \right| + \left| k - \frac{L_{3D}}{2} \right| \right) \right\}}
+    \label{eq:radius3d}
+    r_t = \max_{i,j,k}{\left\{ a^{(t)}_{ijk} \cdot \left( \left| i - \frac{L_{3D}}{2} \right| + \left| j - \frac{L_{3D}}{2} \right| + \left| k - \frac{L_{3D}}{2} \right| \right) \right\}}
 \end{equation}
 
 
 \subsection{Observables}
 Debido a que las condiciones iniciales se tomaron de manera aleatoria y los resultados finales dependían de las mismas, los gráficos muestran los valores promedio del observable en cada porcentaje (para las 10 condiciones iniciales de cada uno).
 
-El promedio de masas se calculó de la siguiente manera:
+El promedio de masas se calculó como expresa la Ec. \ref{eq:meanm}:
 
 \begin{equation}
     \label{eq:meanm}
@@ -65,7 +69,7 @@ El promedio de masas se calculó de la siguiente manera:
 \end{equation}
 donde $m_i$ es la masa de la simulación $i$
 
-El desvio estandar se obtuvo de la siguiente manera:
+El desvio estandar se obtuvo como expresa la Ec. \ref{eq:stdm}:
 
 \begin{equation}
     \label{eq:stdm}
@@ -73,7 +77,7 @@ El desvio estandar se obtuvo de la siguiente manera:
 \end{equation}
 donde $\bar{m}$ es el promedio previamente definido
 
-De la misma manera, el promedio de tiempos se calculo de la siguiente manera:
+De la misma manera, el promedio de tiempos se calculo como expresa la Ec. \ref{eq:meant}:
 
 \begin{equation}
     \label{eq:meant}
@@ -82,7 +86,7 @@ De la misma manera, el promedio de tiempos se calculo de la siguiente manera:
 
 donde $t_i$ es el tiempo de la simulación $i$
 
-El desvio estandar se obtuvo de la siguiente manera:
+El desvio estandar se obtuvo como expresa la Ec. \ref{eq:stdt}:
 
 \begin{equation}
     \label{eq:stdt}
@@ -90,16 +94,16 @@ El desvio estandar se obtuvo de la siguiente manera:
 \end{equation}
 
 \subsubsection{Masa final}
-Para todas las reglas tanto 2D como 3D, se eligió tomar como observable la masa final del sistema, es decir la que se alcanza en la iteración numero 100, o cuando se toca un borde.
+Para todas las reglas tanto 2D como 3D, se eligió tomar como observable la masa final del sistema, es decir la que se alcanza en la iteración numero 100, o cuando se toca un borde. Esta se define como expresa la Ec. \ref{eq:finalmass}:
 \begin{equation}
     \label{eq:finalmass}
     m_{final} = m_{t_{final}}
-\end
+\end{equation}
 
 donde $t_{final}$ es la iteración número 100 o aquella donde alcanza un borde.
 
 \subsubsection{Generación de estabilización}
-Para las reglas donde se observó que la masa entra en un ciclo estable, se eligió tomar como otro observable a la generación $t^{*}$ en la que alcanza dicho ciclo.
+Para las reglas donde se observó que la masa entra en un ciclo estable, se eligió tomar como otro observable a la generación $t^{*}$ en la que alcanza dicho ciclo. Esta se define como expresa la Ec. \ref{eq:stablegen}.
 \begin{equation}
     \label{eq:stablegen}
     t^{*} = \min_{t}{\left\{ m_t = m_{final} \right\}}

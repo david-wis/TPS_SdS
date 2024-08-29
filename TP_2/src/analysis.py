@@ -42,7 +42,8 @@ if __name__ == '__main__':
     set_ticks(axs[1,1])
     axs[1,2].imshow(np.array([[1,1,1],[0,0,0],[0,0,0]]), cmap='binary')
     set_ticks(axs[1,2])
-    axs[1,3].axis("off")
+    axs[1,3].imshow(np.array([[0,0,0],[1,0,1],[0,0,0]]), cmap='binary')
+    set_ticks(axs[1,3])
     fig.tight_layout()
     fig.savefig('../docs/Images/fill_example_1a.png')
 

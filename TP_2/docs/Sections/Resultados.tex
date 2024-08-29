@@ -70,8 +70,9 @@ Y luego de algunas iteraciones se estabiliza en un valor constante.
 Al igual que la masa, se puede observar en la Fig. \ref{fig:fill2Dradius} que el radio también es creciente, y luego de algunas iteraciones se estabiliza en un valor constante.
 \obsfinalgraph{fill2D}
 En la Fig. \ref{fig:fill2Dobsfinal} se ve que la masa de cada simulación tiene una tendencia creciente en los primeros porcentajes (con un desvío estandar muy grande entre el 10\% y el 20\%), y a partir de 35\% alcanza un valor constante de 100,
-que coincide con la masa del núcleo.
+que coincide con la masa del núcleo en la Ec. \ref{eq:fill2Dmasscore}.
 \begin{equation}
+    \label{eq:fill2Dmasscore}
     m_{nucleo2D} = {L_{nucleo2D}}^2 = 10^2 = 100
 \end{equation}
 \obsstablegraph{fill2D}
@@ -110,16 +111,18 @@ En la Fig. \ref{fig:decay3Dobsfinal} se puede observar que la masa final es 0 pa
 
 \subsubsection{Umbral (Von Neumann)}
 \massgraph{decay3Dv2}
-En la Fig. \ref{fig:decay3Dv2mass} se puede observar que salvo el caso de 1.25\%, que decrece hasta llegar a un estado estable cercano a 0, el resto de los porcentajes alcanza un estado estable alrededor de 4000, que coincide con la mitad de la masa del núcleo.
+En la Fig. \ref{fig:decay3Dv2mass} se puede observar que salvo el caso de 1.25\%, que decrece hasta llegar a un estado estable cercano a 0, el resto de los porcentajes alcanza un estado estable alrededor de 4000, que coincide con la mitad de la masa del núcleo expresada en la Ec. \ref{eq:decay3Dv2masscore}.
 \begin{equation}
+    \label{eq:decay3Dv2masscore}
     \frac{m_{nucleo3D}}{2} = \frac{{L_{nucleo3D}}^3}{2} = \frac{20^3}{2} = 4000
 \end{equation}
 También vale destacar que los porcentajes mayores o iguales a 50\% sufren una caída inicial, y luego crecen hasta llegar al equilibrio, mientras que los menores a 50\% (sin incluir al 1.25\%) no sufren dicha caída.
 
 
 \radiusgraph{decay3Dv2}
-En la Fig. \ref{fig:decay3Dv2radius}, de manera similar a la masa, se puede observar que para el 1.25\%, el radio disminuye hasta estabilizarse por debajo de 25, mientras que el resto de los porcentajes se estabilizan en 30, que coincide con el radio máximo que puede tener un punto dentro del cubo del núcleo (una esquina).
+En la Fig. \ref{fig:decay3Dv2radius}, de manera similar a la masa, se puede observar que para el 1.25\%, el radio disminuye hasta estabilizarse por debajo de 25, mientras que el resto de los porcentajes se estabilizan en 30, que coincide con el radio máximo que puede tener un punto dentro del cubo del núcleo (una esquina), expresado en la Ec. \ref{eq:decay3Dv2maxdist}.
 \begin{equation}
+    \label{eq:decay3Dv2maxdist}
     r_{esquina} = 3 \cdot \frac{L_{nucleo3D}}{2} = 3 \cdot \frac{20}{2} = 30
 \end{equation}
 \obsfinalgraph{decay3Dv2}
