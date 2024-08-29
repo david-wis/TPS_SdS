@@ -4,7 +4,7 @@ import matplotlib as mpl
 from PIL import Image
 import moviepy.editor as mp
 import os
-from analysis import poly_analysis
+from matplotlib.ticker import MaxNLocator
 
 mpl.use('Agg')
 
@@ -30,7 +30,7 @@ def plot_animation_2d(path, q):
     if not os.path.exists(animation_path):
         os.makedirs(animation_path)
 
-    for i, r in enumerate(runs):
+    for i, r in enumerate(runs[:1]):
         images = []
         fig, ax = plt.subplots()
         for j, state in enumerate(r):
@@ -43,8 +43,8 @@ def plot_animation_2d(path, q):
             #set tick labels to 10 times
             ax.set_xticks(np.arange(0, state.shape[1], state.shape[1] // 10))
             ax.set_yticks(np.arange(0, state.shape[0], state.shape[0] // 10))
-            ax.set_xticklabels(np.arange(0, state.shape[1], state.shape[1] // 10) * 10)
-            ax.set_yticklabels(np.arange(0, state.shape[0], state.shape[0] // 10) * 10)
+            ax.set_xticklabels(np.arange(0, state.shape[1], state.shape[1] // 10))
+            ax.set_yticklabels(np.arange(0, state.shape[0], state.shape[0] // 10))
             ax.invert_yaxis()
 
             ax.set_title(f'Estado {j}')
@@ -53,7 +53,7 @@ def plot_animation_2d(path, q):
             image = np.array(fig.canvas.renderer.buffer_rgba())
             images.append(Image.fromarray(image))
 
-        images[0].save(f'{animation_path}/{q}_{i}.gif', save_all=True, append_images=images[1:], loop=0, interval=1000)
+        images[0].save(f'{animation_path}/{q}_{i}.gif', save_all=True, append_images=images[1:], loop=0, fps=1)
         clip = mp.VideoFileClip(f'{animation_path}/{q}_{i}.gif')
         clip.write_videofile(f'{animation_path}/{q}_{i}.mp4')
 
@@ -63,7 +63,7 @@ def plot_animation_3d(path, q):
     if not os.path.exists(animation_path):
         os.makedirs(animation_path)
 
-    for i, r in enumerate(runs):
+    for i, r in enumerate(runs[:1]):
         images = []
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
@@ -81,11 +81,14 @@ def plot_animation_3d(path, q):
                 colors = 'black'
             ax.scatter(x, y, z, c=colors, marker='o', s=1)
             ax.set_title(f'Estado {j}')
+            start = (length//2-core//2)-0.5
+            end = (length//2+core//2)-0.5
+            ax.scatter([start, start, start, start, end, end, end, end], [start, end, start, end, start, end, start, end], [start, start, end, end,start, start, end, end], c='black', s=5, marker='x')
             ax.view_init(10, 3*j)
             fig.canvas.draw()
             image = np.array(fig.canvas.renderer.buffer_rgba())
             images.append(Image.fromarray(image))
-        images[0].save(f'{animation_path}/{q}_{i}.gif', save_all=True, append_images=images[1:], loop=0, interval=1000)
+        images[0].save(f'{animation_path}/{q}_{i}.gif', save_all=True, append_images=images[1:], loop=0, fps=1)
         clip = mp.VideoFileClip(f'{animation_path}/{q}_{i}.gif')
         clip.write_videofile(f'{animation_path}/{q}_{i}.mp4')
 
@@ -104,7 +107,9 @@ def analyze_rule(rulename, obs_function, obs_name):
     quantities = [int(f.replace(".txt","")) for f in os.listdir(path) if f.endswith('.txt')]
     quantities.sort()
     mass_fig, mass_ax = plt.subplots()
+    mass_ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     radius_fig, radius_ax = plt.subplots()
+    radius_ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     dict_msss = dict()
     _, length, core = get_runs(f'{path}/{quantities[0]}.txt')
     for q in quantities:
@@ -118,6 +123,7 @@ def analyze_rule(rulename, obs_function, obs_name):
         add_line(mass_ax, mss[0], f"{q} : {100 * q / core ** dim} %")
         add_line(radius_ax, rss[0], f"{q} : {100 * q / core ** dim} %")
         p_mass_fig, p_mass_ax = plt.subplots()
+        p_mass_ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         for i, ms in enumerate(mss):
             add_line(p_mass_ax, ms, f"muestra {i}")
         p_mass_ax.set_ylim(bottom=0)
@@ -162,27 +168,27 @@ if __name__ == '__main__':
     TEXT_LAST_MASS = ("Masa final", "final")
     TEXT_GENERATION_TO_STABILIZE = ("Generación en la que se estabiliza", "stable")
 
-    analyze_rule("fill2D",lambda x: x[-1], TEXT_LAST_MASS)
-    analyze_rule("fill2D",lambda xs: next(i for i, x in enumerate(xs) if x == xs[-1]), TEXT_GENERATION_TO_STABILIZE)
+    # analyze_rule("fill2D",lambda x: x[-1], TEXT_LAST_MASS)
+    # analyze_rule("fill2D",lambda xs: next(i for i, x in enumerate(xs) if x == xs[-1]), TEXT_GENERATION_TO_STABILIZE)
     # analyze_rule("gol2D", lambda x: x[-1], TEXT_LAST_MASS)
-    analyze_rule("gol2Dv2", lambda x: x[-1], TEXT_LAST_MASS)
-    analyze_rule("gol2Dv2", lambda xs: next(i for i, x in enumerate(xs) if x == xs[-1]), TEXT_GENERATION_TO_STABILIZE)
+    # analyze_rule("gol2Dv2", lambda x: x[-1], TEXT_LAST_MASS)
+    # analyze_rule("gol2Dv2", lambda xs: next(i for i, x in enumerate(xs) if x == xs[-1]), TEXT_GENERATION_TO_STABILIZE)
     # analyze_rule("seeds2D", lambda x: x[-1], TEXT_LAST_MASS)
-    analyze_rule("odd2D", lambda x: x[-1], TEXT_LAST_MASS)
+    # analyze_rule("odd2D", lambda x: x[-1], TEXT_LAST_MASS)
     # analyze_rule("even2D", lambda x: x[-1], TEXT_LAST_MASS)
 
-    analyze_rule("gol3D", lambda x: x[-1], TEXT_LAST_MASS)
-    analyze_rule("decay3D", lambda x: x[-1], TEXT_LAST_MASS)
-    analyze_rule("decay3Dv2", lambda xs: xs[-1], TEXT_LAST_MASS)
-    analyze_rule("decay3Dv2", lambda xs: next(i for i, x in enumerate(xs) if x == xs[-1]), TEXT_GENERATION_TO_STABILIZE)
+    # analyze_rule("gol3D", lambda x: x[-1], TEXT_LAST_MASS)
+    # analyze_rule("decay3D", lambda x: x[-1], TEXT_LAST_MASS)
+    # analyze_rule("decay3Dv2", lambda xs: xs[-1], TEXT_LAST_MASS)
+    # analyze_rule("decay3Dv2", lambda xs: next(i for i, x in enumerate(xs) if x == xs[-1]), TEXT_GENERATION_TO_STABILIZE)
 
 
 
     # plot_animation_3d(f"{BASE_PATH}/decay3D", 4000)
     # plot_animation_3d(f"{BASE_PATH}/decay3D", 6000)
-    # plot_animation_2d(f"{BASE_PATH}/decay3Dv2", 7200)
+    plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 7500)
     # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 500)
     # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 4000)
     # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 7200)
-    # plot_animation_2d(f"{BASE_PATH}/fill2D", 25)
+    plot_animation_2d(f"{BASE_PATH}/fill2D", 25)
     # plot_animation_2d(f"{BASE_PATH}/fill2D", 10)
