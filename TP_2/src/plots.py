@@ -30,7 +30,7 @@ def plot_animation_2d(path, q):
     if not os.path.exists(animation_path):
         os.makedirs(animation_path)
 
-    for i, r in enumerate(runs[:1]):
+    for i, r in enumerate(runs):
         images = []
         fig, ax = plt.subplots()
         for j, state in enumerate(r):
@@ -53,7 +53,7 @@ def plot_animation_2d(path, q):
             image = np.array(fig.canvas.renderer.buffer_rgba())
             images.append(Image.fromarray(image))
 
-        images[0].save(f'{animation_path}/{q}_{i}.gif', save_all=True, append_images=images[1:], loop=0, fps=1)
+        images[0].save(f'{animation_path}/{q}_{i}.gif', save_all=True, append_images=images[1:], loop=0, fps=0.1)
         clip = mp.VideoFileClip(f'{animation_path}/{q}_{i}.gif')
         clip.write_videofile(f'{animation_path}/{q}_{i}.mp4')
 
@@ -170,13 +170,13 @@ if __name__ == '__main__':
 
     # analyze_rule("fill2D",lambda x: x[-1], TEXT_LAST_MASS)
     # analyze_rule("fill2D",lambda xs: next(i for i, x in enumerate(xs) if x == xs[-1]), TEXT_GENERATION_TO_STABILIZE)
-    # analyze_rule("gol2D", lambda x: x[-1], TEXT_LAST_MASS)
+    # # analyze_rule("gol2D", lambda x: x[-1], TEXT_LAST_MASS)
     # analyze_rule("gol2Dv2", lambda x: x[-1], TEXT_LAST_MASS)
     # analyze_rule("gol2Dv2", lambda xs: next(i for i, x in enumerate(xs) if x == xs[-1]), TEXT_GENERATION_TO_STABILIZE)
-    # analyze_rule("seeds2D", lambda x: x[-1], TEXT_LAST_MASS)
+    # # analyze_rule("seeds2D", lambda x: x[-1], TEXT_LAST_MASS)
     # analyze_rule("odd2D", lambda x: x[-1], TEXT_LAST_MASS)
-    # analyze_rule("even2D", lambda x: x[-1], TEXT_LAST_MASS)
-
+    # # analyze_rule("even2D", lambda x: x[-1], TEXT_LAST_MASS)
+    #
     # analyze_rule("gol3D", lambda x: x[-1], TEXT_LAST_MASS)
     # analyze_rule("decay3D", lambda x: x[-1], TEXT_LAST_MASS)
     # analyze_rule("decay3Dv2", lambda xs: xs[-1], TEXT_LAST_MASS)
@@ -186,9 +186,10 @@ if __name__ == '__main__':
 
     # plot_animation_3d(f"{BASE_PATH}/decay3D", 4000)
     # plot_animation_3d(f"{BASE_PATH}/decay3D", 6000)
-    plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 7500)
+    # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 7500)
     # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 500)
     # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 4000)
     # plot_animation_3d(f"{BASE_PATH}/decay3Dv2", 7200)
-    plot_animation_2d(f"{BASE_PATH}/fill2D", 25)
-    # plot_animation_2d(f"{BASE_PATH}/fill2D", 10)
+    # plot_animation_2d(f"{BASE_PATH}/fill2D", 25)
+    plot_animation_2d(f"{BASE_PATH}/fill2D", 30)
+    plot_animation_2d(f"{BASE_PATH}/fill2D", 35)
