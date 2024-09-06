@@ -8,11 +8,11 @@ import java.util.Scanner;
 
 public class FileController {
 
-    public static void writeParticlesState(String filename, List<Particle> particles) {
+    public static void writeParticlesState(String filename, List<Particle> particles, boolean append) {
         try {
-            FileWriter writer = new FileWriter(filename, true);
+            FileWriter writer = new FileWriter(filename, append);
             for (Particle p : particles)
-                writer.write(p.getId() + " " + p.getX() + " " + p.getY() + " " + p.getR() + p.getVx() + " " + p.getVy() + "\n");
+                writer.write(p.getId() + " " + p.getX() + " " + p.getY() + " " + p.getR() + " " + p.getVx() + " " + p.getVy() + "\n");
             writer.close();
         } catch (IOException e) {
             System.err.println("An error occurred writing the initial state.");

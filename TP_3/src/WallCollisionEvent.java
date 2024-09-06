@@ -10,7 +10,7 @@ public class WallCollisionEvent implements Event{
 
     @Override
     public List<Particle> execute(float dt) {
-        p.updatePosition(dt);
+        //TODO: remove dt?
         p.bounceOffWall(L);
         return List.of(p);
     }

@@ -3,10 +3,19 @@ import java.util.List;
 import java.util.Random;
 
 public class Main {
+
+    private static final int N = 201;
+    private static final float L = 0.1f;
+    private static final float RADIUS = 0.001f;
+    private static final float OBS_RADIUS = 0.005f;
+
+    private static final String STATE_PATH = "output/initial_state.txt";
+
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-
-
+//        initParticles(N, L, new Obstacle(L/2, L/2, OBS_RADIUS));
+        List<Particle> particles = FileController.readParticlesState(STATE_PATH);
+        Field f = new Field(L, particles, new Obstacle(L/2, L/2, OBS_RADIUS));
+        f.loop(10);
     }
 
 
@@ -27,13 +36,13 @@ public class Main {
             boolean overlap;
             do {
                 float vAngle = rnd.nextFloat() * 2 * (float) Math.PI;
-                p = new Particle(i, rnd.nextFloat() * L, rnd.nextFloat() * L, (float) Math.sin(vAngle) * speed, (float) Math.cos(vAngle) * speed, r, mass);
+                p = new Particle(i, rnd.nextFloat() * (L - 2*r) + r, rnd.nextFloat() * (L - 2*r) + r, (float) Math.sin(vAngle) * speed, (float) Math.cos(vAngle) * speed, r, mass);
                 Particle p2 = p;
                 overlap = particles.stream().anyMatch(particle -> particle.distance(p2) <= 0) && obstacle.distance(p) > 0;
             } while(overlap);
             particles.add(p);
         }
-        FileController.writeParticlesState("initial_state.txt", particles);
+        FileController.writeParticlesState(STATE_PATH, particles, false);
     }
 
 }

@@ -34,21 +34,26 @@ public class Particle {
     }
 
     public float timeToHitWall(float L) {
-        float tX = (this.vx > 0) ? (L - this.r - this.x) / this.vx : (0 + this.r - this.x) / this.vx;
-        float tY = (this.vy > 0) ? (L - this.r - this.y) / this.vy : (0 + this.r - this.y) / this.vy;
-        return Math.min(tX, tY);
+        float dtX = (this.vx > 0) ? (L - this.r - this.x) / this.vx : (0 + this.r - this.x) / this.vx;
+        float dtY = (this.vy > 0) ? (L - this.r - this.y) / this.vy : (0 + this.r - this.y) / this.vy;
+        if (dtX < 0 || dtY < 0){
+            throw new IllegalStateException("Time cannot be negative");
+        }
+        return Math.min(dtX, dtY);
     }
 
-    public void updatePosition(float dt) {
-        this.x += this.vx * dt;
-        this.y += this.vy * dt;
+    public void updatePosition(float dt, float L) {
+        this.x = Math.min(L - this.r, Math.max(this.r, this.x + this.vx * dt));
+        this.y = Math.min(L - this.r, Math.max(this.r, this.y + this.vy * dt));
     }
 
     public void bounceOffWall(float L) {
-        if (this.x + this.r >= L || this.x - this.r <= 0) {
+        // get epsilon
+        float EPSILON = 1e-6f;
+        if (this.x + this.r >= L - EPSILON || this.x - this.r <= 0 + EPSILON) {
             this.vx = -this.vx;
         }
-        if (this.y + this.r >= L || this.y - this.r <= 0) {
+        if (this.y + this.r >= L - EPSILON|| this.y - this.r <= 0 + EPSILON) {
             this.vy = -this.vy;
         }
     }

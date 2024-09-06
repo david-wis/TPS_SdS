@@ -1,5 +1,5 @@
 import java.util.List;
 
 public interface Event {
-    List<Particle> execute(float t);
+    List<Particle> execute(float dt);
 }
