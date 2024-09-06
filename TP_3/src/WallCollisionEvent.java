@@ -15,4 +15,13 @@ public class WallCollisionEvent implements Event{
         return List.of(p);
     }
 
+    @Override
+    public boolean particleInEvent(Particle p) {
+        return p.equals(this.p);
+    }
+
+    @Override
+    public List<Particle> getParticles(){
+        return List.of(p);
+    }
 }

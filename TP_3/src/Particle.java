@@ -16,29 +16,48 @@ public class Particle {
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Particle particle = (Particle) o;
-        return id == particle.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
     public float distance(final Particle p) {
+//        System.out.println((float) Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2)) - this.r - p.r);
         return (float) Math.sqrt(Math.pow(this.x - p.x, 2) + Math.pow(this.y - p.y, 2)) - this.r - p.r;
+    }
+
+    public float timeToHitParticle(Particle p) {
+        if (this.equals(p)) {
+            throw new IllegalStateException("Cannot collide with itself");
+        }
+
+        float dx = p.x - this.x;
+        float dy = p.y - this.y;
+
+        float dvx = p.vx - this.vx;
+        float dvy = p.vy - this.vy;
+
+        float dvdr = dx * dvx + dy * dvy;
+        if (dvdr > 0) {
+            return Float.POSITIVE_INFINITY;
+        }
+
+        float dvdv = dvx * dvx + dvy * dvy;
+        float drdr = dx * dx + dy * dy;
+
+        float sigma = this.r + p.r;
+        float d = (dvdr * dvdr) - dvdv * (drdr - sigma * sigma);
+
+        if (d < 0) {
+            return Float.POSITIVE_INFINITY;
+        }
+        float dt = -(dvdr + (float) Math.sqrt(d)) / dvdv;
+//        System.out.println(dvdr + " " + Math.sqrt(d) + " " + dvdv + " " + dt);
+        if (dt < 0) {
+            throw new IllegalStateException("Time to hit particle cannot be negative");
+        }
+        return dt;
     }
 
     public float timeToHitWall(float L) {
         float dtX = (this.vx > 0) ? (L - this.r - this.x) / this.vx : (0 + this.r - this.x) / this.vx;
         float dtY = (this.vy > 0) ? (L - this.r - this.y) / this.vy : (0 + this.r - this.y) / this.vy;
-        if (dtX < 0 || dtY < 0){
-            throw new IllegalStateException("Time cannot be negative");
-        }
+        if (dtX < 0 || dtY < 0) throw new IllegalStateException("Time to hit wall cannot be negative");
         return Math.min(dtX, dtY);
     }
 
@@ -56,6 +75,11 @@ public class Particle {
         if (this.y + this.r >= L - EPSILON|| this.y - this.r <= 0 + EPSILON) {
             this.vy = -this.vy;
         }
+    }
+
+    public void bounceOffParticle(float Jx, float Jy) {
+        this.vx += Jx / m;
+        this.vy += Jy / m;
     }
 
     public int getId() {
@@ -84,5 +108,18 @@ public class Particle {
 
     public float getM() {
         return m;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Particle particle = (Particle) o;
+        return id == particle.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
