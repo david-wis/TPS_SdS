@@ -9,7 +9,8 @@ import numpy as np
 # x0, y0, vx0, vy0, x1, y1, vx1, vy1 = 0.039164454, 0.029445779, 0.3748837, -0.6442783, 0.059541274, 0.0643004, 1.1871109, 0.18744445
 
 
-x0, y0, vx0, vy0, x1, y1, vx1, vy1 = 0.020000089, 0.041878227, 1.127582, 0.62112474, 0.08, 0.03842919, 0.5273948, 0.2542078
+#x0, y0, vx0, vy0, x1, y1, vx1, vy1 = 0.020000089, 0.041878227, 1.127582, 0.62112474, 0.08, 0.03842919, 0.5273948, 0.2542078
+x0, y0, vx0, vy0, x1, y1, vx1, vy1 = 0.0070796, 0.025068538, -0.72501385, 0.6420197, 0.0077506364, 0.026081767, 0.40945965, -1.2719852
 
 # 0.0067917574: 0.027903782 0.02 -0.9441636 0.329477 | 0.04182867 0.07315684 0.61783105 0.78631085
 # 0.015162958: 0.02 0.022758117 0.9441636 0.329477 | 0.047000658 0.079739206 0.61783105 0.78631085
@@ -19,16 +20,15 @@ x0, y0, vx0, vy0, x1, y1, vx1, vy1 = 0.020000089, 0.041878227, 1.127582, 0.62112
 fig, ax = plt.subplots()
 # draw circles of radius 0.02
 circle0 = plt.Circle((x0, y0), 0.001)
-ax.scatter([x0+0.01],[y0+0.01], s=20)
-circle1 = plt.Circle((x1, y1), 0.02)
+circle1 = plt.Circle((x1, y1), 0.001)
 
 ax.add_artist(circle0)
-# ax.add_artist(circle1)
+ax.add_artist(circle1)
 
 ax.set_xlim(0,0.1)
 ax.set_ylim(0,0.1)
 # draw arrows
-ax.arrow(x0, y0, vx0, vy0, head_width=0.01, head_length=0.01, fc='r', ec='r')
-ax.arrow(x1, y1, vx1, vy1, head_width=0.01, head_length=0.01, fc='r', ec='r')
+# # ax.arrow(x0, y0, vx0, vy0, head_width=0.01, head_length=0.01, fc='r', ec='r')
+# ax.arrow(x1, y1, vx1, vy1, head_width=0.01, head_length=0.01, fc='r', ec='r')
 ax.set_aspect('equal', adjustable='datalim')
 plt.show()

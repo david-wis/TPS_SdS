@@ -60,17 +60,18 @@ public class Field {
         }
     }
 
-    public void loop(float duration) {
+    public void loop(float duration, float interval) {
         init();
         FileController.writeParticlesState("output/state.txt", particles, false);
 
         int count = 0;
         float universalTime = 0;
+        float lastSnapshotTime = 0;
         while (universalTime < duration) {
             count++;
-//            System.out.println("Iterations:" + count++);
-//            System.out.println(universalTime + ": " + particles.get(0).getX() + ", " + particles.get(0).getY() + ", " + particles.get(0).getVx() + ", " + particles.get(0).getVy() + ", " +
-//                    particles.get(1).getX() + ", " + particles.get(1).getY() + ", " + particles.get(1).getVx() + ", " + particles.get(1).getVy());
+            System.out.println("Iterations:" + count + " Time: " + universalTime);
+//            int P_1 = 40, P_2 = 176;
+//            System.out.println(universalTime + ": " + particles.get(P_1) + ", " + particles.get(P_2) + " Distance: " + particles.get(P_1).distance(particles.get(P_2)));
 
 
 
@@ -96,11 +97,11 @@ public class Field {
             Set<Particle> allAffectedParticles = new HashSet<>();
             for (Event event : entry.getValue()) {
 //                System.out.println(event.getClass().getName());
-                if (event instanceof ParticleCollisionEvent) {
-                    System.out.println("Particle collision: " + count + " between " + event.getParticles().get(0).getId() + " and " + event.getParticles().get(1).getId());
-                } else {
-                    System.out.println("Wall collision: " + count);
-                }
+//                if (event instanceof ParticleCollisionEvent) {
+//                    System.out.println("Particle collision: " + count + " between " + event.getParticles().get(0).getId() + " and " + event.getParticles().get(1).getId());
+//                } else {
+//                    System.out.println("Wall collision: " + count);
+//                }
 
                 List<Particle> affectedParticles = event.execute(dt);
                 allAffectedParticles.addAll(affectedParticles);
@@ -113,10 +114,12 @@ public class Field {
 
                 }
             }
-
-            FileController.writeParticlesState("output/state.txt", particles, allAffectedParticles, true); // TODO: indicate which particles/walls are colliding
+            if (universalTime > lastSnapshotTime + interval) {
+                FileController.writeParticlesState("output/state.txt", particles, allAffectedParticles, true);
+                lastSnapshotTime += interval;
+            }
             universalTime = t;
-//            System.out.println(universalTime);
+
         }
     }
 

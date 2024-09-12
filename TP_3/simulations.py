@@ -33,7 +33,7 @@ def update(frame, scatters, ax, history):
 
 
 
-LIMIT = 100
+LIMIT = 50
 
 if __name__ == "__main__":
     history = []
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # Create the animation
     anim = FuncAnimation(
         fig, update, frames=min(LIMIT, len(history)), fargs=(scatters, ax, history),
-        interval=100, blit=True  # interval is in milliseconds
+        interval=10, blit=True  # interval is in milliseconds
     )
 
     anim.save('output/animation.gif', writer='pillow', fps=10)

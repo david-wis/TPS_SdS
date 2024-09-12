@@ -18,7 +18,7 @@ public class Main {
         System.out.println("finished initialization");
         List<Particle> particles = FileController.readParticlesState(STATE_PATH);
         Field f = new Field(L, particles, new Obstacle(L/2, L/2, OBS_RADIUS));
-        f.loop(10);
+        f.loop(5f, 0.001f);
     }
 
 

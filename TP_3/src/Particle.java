@@ -51,7 +51,10 @@ public class Particle {
         float dt = -(dvdr + (float) Math.sqrt(d)) / dvdv;
 //        System.out.println(dvdr + " " + Math.sqrt(d) + " " + dvdv + " " + dt);
         if (dt < 0) {
-            throw new IllegalStateException("Time to hit particle cannot be negative");
+            return Float.POSITIVE_INFINITY;
+//            System.out.println(p.id + " - " + this.id);
+//            System.out.println(this + ", " + p + " Distance: " + this.distance(p.get(P_2)));
+//            throw new IllegalStateException("Time to hit particle cannot be negative");
         }
         return dt;
     }
@@ -113,6 +116,11 @@ public class Particle {
 
     public float getM() {
         return m;
+    }
+
+    @Override
+    public String toString() {
+        return this.getX() + ", " + this.getY() + ", " + this.getVx() + ", " + this.getVy();
     }
 
     @Override
