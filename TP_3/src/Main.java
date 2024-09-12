@@ -18,7 +18,7 @@ public class Main {
         System.out.println("finished initialization");
         List<Particle> particles = FileController.readParticlesState(STATE_PATH);
         Field f = new Field(L, particles, new Obstacle(L/2, L/2, OBS_RADIUS));
-        f.loop(5f, 0.001f);
+        f.loop(2f, 0.001f);
     }
 
 
@@ -42,7 +42,9 @@ public class Main {
                 p = new Particle(i, rnd.nextFloat() * (L - 2*RADIUS) + RADIUS, rnd.nextFloat() * (L - 2*RADIUS) + RADIUS,
                         (float) Math.sin(vAngle) * SPEED, (float) Math.cos(vAngle) * SPEED, RADIUS, MASS);
                 Particle p2 = p;
-                overlap = particles.stream().anyMatch(particle -> particle.distance(p2) <= EPSILON);// || obstacle.distance(p) <= 0;
+
+                boolean overlapWithObtacle = obstacle.distance(p) <= EPSILON;
+                overlap = overlapWithObtacle || particles.stream().anyMatch(particle -> particle.distance(p2) <= EPSILON);// || obstacle.distance(p) <= 0;
             } while(overlap);
             particles.add(p);
         }

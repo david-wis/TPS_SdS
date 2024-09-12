@@ -21,9 +21,11 @@ fig, ax = plt.subplots()
 # draw circles of radius 0.02
 circle0 = plt.Circle((x0, y0), 0.001)
 circle1 = plt.Circle((x1, y1), 0.001)
+obstacle = plt.Circle((0.05, 0.05), 0.01, color='r')
 
 ax.add_artist(circle0)
 ax.add_artist(circle1)
+ax.add_artist(obstacle)
 
 ax.set_xlim(0,0.1)
 ax.set_ylim(0,0.1)

@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class ParticleCollisionEvent implements Event{
+public class ParticleCollisionEvent implements Event {
     private final Particle p1, p2;
 
     public ParticleCollisionEvent(Particle p1, Particle p2) {

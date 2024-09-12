@@ -18,11 +18,19 @@ public class Field {
         eventTimesByParticle = new HashMap<>();
         for (int i = 0; i < particles.size(); i++) {
             Particle p = particles.get(i);
+
             float tWall = p.timeToHitWall(L);
             events.putIfAbsent(tWall, new ArrayList<>());
             events.get(tWall).add(new WallCollisionEvent(p, L));
             eventTimesByParticle.putIfAbsent(p, new ArrayList<>());
             eventTimesByParticle.get(p).add(tWall);
+
+            float tObstacle = p.timeToHitObstacle(obstacle);
+            events.putIfAbsent(tObstacle, new ArrayList<>());
+            events.get(tObstacle).add(new ObstacleCollisionEvent(p, obstacle));
+            eventTimesByParticle.putIfAbsent(p, new ArrayList<>());
+            eventTimesByParticle.get(p).add(tObstacle);
+
 
             for (int j = i+1; j < particles.size(); j++) {
                 Particle q = particles.get(j);
@@ -37,7 +45,7 @@ public class Field {
                 eventTimesByParticle.putIfAbsent(q, new ArrayList<>());
                 eventTimesByParticle.get(q).add(tParticle);
             }
-//            events.add(new ObstacleCollisionEvent(p, obstacle));
+//            events.add(new CollisionEvent.ObstacleCollisionEvent(p, obstacle));
         }
     }
 
@@ -97,7 +105,7 @@ public class Field {
             Set<Particle> allAffectedParticles = new HashSet<>();
             for (Event event : entry.getValue()) {
 //                System.out.println(event.getClass().getName());
-//                if (event instanceof ParticleCollisionEvent) {
+//                if (event instanceof CollisionEvent.ParticleCollisionEvent) {
 //                    System.out.println("Particle collision: " + count + " between " + event.getParticles().get(0).getId() + " and " + event.getParticles().get(1).getId());
 //                } else {
 //                    System.out.println("Wall collision: " + count);
@@ -106,12 +114,17 @@ public class Field {
                 List<Particle> affectedParticles = event.execute(dt);
                 allAffectedParticles.addAll(affectedParticles);
                 for (Particle p : affectedParticles) {
-                    float tToHit = p.timeToHitWall(L);
-                    float newt = tToHit + t;
+                    float tToHitW = p.timeToHitWall(L);
+                    float newt = tToHitW + t;
                     events.putIfAbsent(newt, new ArrayList<>());
                     events.get(newt).add(new WallCollisionEvent(p, L));
                     updateAssociatedTimes(p, universalTime);
 
+                    float tToHitO = p.timeToHitObstacle(obstacle);
+                    newt = tToHitO + t;
+                    events.putIfAbsent(newt, new ArrayList<>());
+                    events.get(newt).add(new ObstacleCollisionEvent(p, obstacle));
+                    updateAssociatedTimes(p, universalTime);
                 }
             }
             if (universalTime > lastSnapshotTime + interval) {

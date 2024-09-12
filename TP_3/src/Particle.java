@@ -66,6 +66,37 @@ public class Particle {
         return Math.min(dtX, dtY);
     }
 
+    public float timeToHitObstacle(Obstacle o) {
+        float EPSILON = 1e-6f;
+
+        float dx = x - o.getX();
+        float dy = y - o.getY();
+        float vdx = vx;
+        float vdy = vy;
+
+        float sigma = r + o.getR();
+
+        float A = vdx * vdx + vdy * vdy;
+        float B = 2 * (dx * vdx + dy * vdy);
+        float C = dx * dx + dy * dy - sigma*sigma;
+
+        float disc = B * B - 4 * A * C;
+
+        if (disc < 0)
+            return Float.POSITIVE_INFINITY;
+
+        float sqrtDiscr = (float) Math.sqrt(disc);
+        float t1 = (-B - sqrtDiscr) / (2 * A);
+        float t2 = (-B + sqrtDiscr) / (2 * A);
+
+        float t = Math.min(t1, t2);
+        if (t < EPSILON){
+            System.out.println("=================Time to hit obstacle is negative ");
+            return Float.POSITIVE_INFINITY;
+        }
+        return t;
+    }
+
     public void updatePosition(float dt, float L) {
         this.x = Math.min(L - this.r, Math.max(this.r, this.x + this.vx * dt));
         this.y = Math.min(L - this.r, Math.max(this.r, this.y + this.vy * dt));
@@ -74,20 +105,23 @@ public class Particle {
     public void bounceOffWall(float L) {
         // get epsilon
         float EPSILON = 1e-6f;
-//        System.out.println("bounce");
         if (this.x + this.r >= L - EPSILON || this.x - this.r <= 0 + EPSILON) {
             this.vx = -this.vx;
-//            System.out.println("collided x");
         }
         if (this.y + this.r >= L - EPSILON|| this.y - this.r <= 0 + EPSILON) {
             this.vy = -this.vy;
-//            System.out.println("collided y");
         }
     }
 
     public void bounceOffParticle(float Jx, float Jy) {
         this.vx += Jx / m;
         this.vy += Jy / m;
+    }
+
+    public void bounceOffObstacle(float nx, float ny) {
+        float dvdr = vx*nx + vy*ny;
+        this.vx -= 2 * dvdr * nx;
+        this.vy -= 2 * dvdr * ny;
     }
 
     public int getId() {

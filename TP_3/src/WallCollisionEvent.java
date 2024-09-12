@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class WallCollisionEvent implements Event{
+public class WallCollisionEvent implements Event {
     private final Particle p;
     private final float L;
     public WallCollisionEvent(Particle p, float L) {
@@ -10,7 +10,6 @@ public class WallCollisionEvent implements Event{
 
     @Override
     public List<Particle> execute(float dt) {
-        //TODO: remove dt?
         p.bounceOffWall(L);
         return List.of(p);
     }

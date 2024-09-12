@@ -10,4 +10,16 @@ public class Obstacle {
     public float distance(final Particle p) {
         return (float) Math.sqrt(Math.pow(this.x - p.getX(), 2) + Math.pow(this.y - p.getY(), 2)) - this.r - p.getR();
     }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getR() {
+        return r;
+    }
 }
