@@ -64,10 +64,28 @@ public class Field {
         init();
         FileController.writeParticlesState("output/state.txt", particles, false);
 
+        int count = 0;
         float universalTime = 0;
         while (universalTime < duration) {
-            System.out.println(universalTime + ": " + particles.get(0).getX() + " " + particles.get(0).getY() + " " + particles.get(0).getVx() + " " + particles.get(0).getVy() + " " +
-                    particles.get(1).getX() + " " + particles.get(1).getY() + " " + particles.get(1).getVx() + " " + particles.get(1).getVy());
+            count++;
+//            System.out.println("Iterations:" + count++);
+//            System.out.println(universalTime + ": " + particles.get(0).getX() + ", " + particles.get(0).getY() + ", " + particles.get(0).getVx() + ", " + particles.get(0).getVy() + ", " +
+//                    particles.get(1).getX() + ", " + particles.get(1).getY() + ", " + particles.get(1).getVx() + ", " + particles.get(1).getVy());
+
+
+
+            // print speed of particles
+//            float totalSpeed = 0;
+//            float totalSpeedSquared = 0;
+//            for (Particle p : particles) {
+//                System.out.println("Speed of particle " + p.getId() + ": " + Math.sqrt(p.getVx() * p.getVx() + p.getVy() * p.getVy()));
+//                totalSpeed += (float) Math.sqrt(p.getVx() * p.getVx() + p.getVy() * p.getVy());
+//                totalSpeedSquared += p.getVx() * p.getVx() + p.getVy() * p.getVy();
+//            }
+//            System.out.println("Total speed: " + totalSpeed);
+//            System.out.println("Total speed squared: " + totalSpeedSquared);
+
+
             if (universalTime < 0) {
                 throw new IllegalStateException("Time cannot be negative");
             }
@@ -75,11 +93,20 @@ public class Field {
             float t = entry.getKey();
             float dt = t - universalTime;
             particles.forEach(p -> p.updatePosition(dt, L));
+            Set<Particle> allAffectedParticles = new HashSet<>();
             for (Event event : entry.getValue()) {
-                System.out.println(event.getClass());
+//                System.out.println(event.getClass().getName());
+                if (event instanceof ParticleCollisionEvent) {
+                    System.out.println("Particle collision: " + count + " between " + event.getParticles().get(0).getId() + " and " + event.getParticles().get(1).getId());
+                } else {
+                    System.out.println("Wall collision: " + count);
+                }
+
                 List<Particle> affectedParticles = event.execute(dt);
+                allAffectedParticles.addAll(affectedParticles);
                 for (Particle p : affectedParticles) {
-                    float newt = p.timeToHitWall(L) + t;
+                    float tToHit = p.timeToHitWall(L);
+                    float newt = tToHit + t;
                     events.putIfAbsent(newt, new ArrayList<>());
                     events.get(newt).add(new WallCollisionEvent(p, L));
                     updateAssociatedTimes(p, universalTime);
@@ -87,7 +114,7 @@ public class Field {
                 }
             }
 
-            FileController.writeParticlesState("output/state.txt", particles, true); // TODO: indicate which particles/walls are colliding
+            FileController.writeParticlesState("output/state.txt", particles, allAffectedParticles, true); // TODO: indicate which particles/walls are colliding
             universalTime = t;
 //            System.out.println(universalTime);
         }

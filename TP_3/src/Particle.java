@@ -22,6 +22,8 @@ public class Particle {
     }
 
     public float timeToHitParticle(Particle p) {
+        float EPSILON = 1e-6f;
+
         if (this.equals(p)) {
             throw new IllegalStateException("Cannot collide with itself");
         }
@@ -33,7 +35,7 @@ public class Particle {
         float dvy = p.vy - this.vy;
 
         float dvdr = dx * dvx + dy * dvy;
-        if (dvdr > 0) {
+        if (dvdr > EPSILON) {
             return Float.POSITIVE_INFINITY;
         }
 
@@ -43,7 +45,7 @@ public class Particle {
         float sigma = this.r + p.r;
         float d = (dvdr * dvdr) - dvdv * (drdr - sigma * sigma);
 
-        if (d < 0) {
+        if (d < EPSILON) {
             return Float.POSITIVE_INFINITY;
         }
         float dt = -(dvdr + (float) Math.sqrt(d)) / dvdv;
@@ -69,11 +71,14 @@ public class Particle {
     public void bounceOffWall(float L) {
         // get epsilon
         float EPSILON = 1e-6f;
+//        System.out.println("bounce");
         if (this.x + this.r >= L - EPSILON || this.x - this.r <= 0 + EPSILON) {
             this.vx = -this.vx;
+//            System.out.println("collided x");
         }
         if (this.y + this.r >= L - EPSILON|| this.y - this.r <= 0 + EPSILON) {
             this.vy = -this.vy;
+//            System.out.println("collided y");
         }
     }
 

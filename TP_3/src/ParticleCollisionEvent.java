@@ -19,7 +19,8 @@ public class ParticleCollisionEvent implements Event{
 
         float dvdr = dx*dvx + dy*dvy;
 
-        float dist = p1.getR() + p2.getR();
+//        float dist = p1.getR() + p2.getR();
+        float dist = (float) Math.sqrt(dx*dx + dy*dy);
         float J = 2 * p1.getM() * p2.getM() * dvdr / ((p1.getM() + p2.getM()) * dist);
         float Jx = J * dx / dist;
         float Jy = J * dy / dist;

@@ -1,18 +1,19 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class FileController {
 
     public static void writeParticlesState(String filename, List<Particle> particles, boolean append) {
+        writeParticlesState(filename, particles, Collections.emptySet(), append);
+    }
+
+    public static void writeParticlesState(String filename, List<Particle> particles, Set<Particle> affected, boolean append) {
         try {
             FileWriter writer = new FileWriter(filename, append);
             for (Particle p : particles)
-                writer.write(p.getId() + " " + p.getX() + " " + p.getY() + " " + p.getR() + " " + p.getVx() + " " + p.getVy() + "\n");
+                writer.write(p.getId() + " " + p.getX() + " " + p.getY() + " " + p.getR() + " " + p.getVx() + " " + p.getVy() + " " + (affected.contains(p) ? "1" : "0") + "\n");
             writer.close();
         } catch (IOException e) {
             System.err.println("An error occurred writing the initial state.");
