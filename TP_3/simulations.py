@@ -18,20 +18,24 @@ def init_plot(history):
     ax.set_ylim(0, 0.1)
 
     scatters = []
+    labels = []
     for _ in range(len(history[0])):  # One scatter per particle
         scatter = ax.scatter([], [], s=20, color="blue")  # s sets size; customize if needed
         scatters.append(scatter)
+        text = ax.text(0, 0, "")
+        labels.append(text)
+    return fig, ax, scatters, labels
 
-    return fig, ax, scatters
 
-
-def update(frame, scatters, ax, history):
+def update(frame, scatters, labels, ax, history):
+    print(frame)
     particles = history[frame]
 
-    for scatter, particle in zip(scatters, particles):
+    for scatter, label, particle in zip(scatters, labels, particles):
         scatter.set_offsets([particle[1], particle[2]])  # particle[1] -> x, particle[2] -> y
         scatter.set_color("red" if particle[-1] == 1 else "blue")  # Change color if needed
-
+        # label.set_position((particle[1], particle[2]))
+        # label.set_text(f"{int(particle[0])}")
         # scatter.set_label(f"t: {frame}")
 
 
@@ -42,7 +46,7 @@ def update(frame, scatters, ax, history):
 
 
 
-LIMIT = 10
+LIMIT = 100
 
 if __name__ == "__main__":
     history = []
@@ -69,13 +73,13 @@ if __name__ == "__main__":
             particles.append(np.array([int(pid), float(x), float(y), float(r), float(vx), float(vy), int(marked)]))
         history.append(particles)
 
-    fig, ax, scatters = init_plot(history)
     print(len(history))
 
-    # Create the animation
+
+    fig, ax, scatters, labels = init_plot(history)
     anim = FuncAnimation(
-        fig, update, frames=min(LIMIT, len(history)), fargs=(scatters, ax, history),
+        fig, update, frames=min(LIMIT, len(history)), fargs=(scatters, labels, ax, history),
         interval=10, blit=True  # interval is in milliseconds
     )
-
     anim.save('output/animation.gif', writer='pillow', fps=10)
+

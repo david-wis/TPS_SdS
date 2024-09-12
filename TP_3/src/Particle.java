@@ -63,7 +63,8 @@ public class Particle {
         float dtX = (this.vx > 0) ? (L - this.r - this.x) / this.vx : (0 + this.r - this.x) / this.vx;
         float dtY = (this.vy > 0) ? (L - this.r - this.y) / this.vy : (0 + this.r - this.y) / this.vy;
         if (dtX < 0 || dtY < 0) throw new IllegalStateException("Time to hit wall cannot be negative");
-        return Math.min(dtX, dtY);
+        float dt = Math.min(dtX, dtY);
+        return dt;
     }
 
     public float timeToHitObstacle(Obstacle o) {
@@ -91,7 +92,7 @@ public class Particle {
 
         float t = Math.min(t1, t2);
         if (t < EPSILON){
-            System.out.println("=================Time to hit obstacle is negative ");
+//            System.out.println("=================Time to hit obstacle is negative, id: " + this.id);
             return Float.POSITIVE_INFINITY;
         }
         return t;
