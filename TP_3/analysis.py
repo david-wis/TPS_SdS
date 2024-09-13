@@ -55,7 +55,7 @@ if __name__ == "__main__":
             wall_evs.append((float(t), float(x), float(y), float(vx), float(vy)))
 
     print(len(history))
-    INTERVAL = 0.1
+    DT = 0.1
     MASS = 1
     L = 0.1
     RADIUS = 0.001
@@ -67,16 +67,16 @@ if __name__ == "__main__":
     obs_pressures = {}
     for i, s in enumerate(obst_evs):
         t, x, y, vx, vy = s
-        idx = int(t // INTERVAL)
+        idx = int(t // DT)
         if idx not in obs_pressures:
             obs_pressures[idx] = 0
         def get_normal_velocity(x, y, vx, vy):
             return abs((x - L / 2) * vx + (y - L / 2) * vy) / math.sqrt((x - L / 2) ** 2 + (y - L / 2) ** 2)
-        obs_pressures[idx] += 2 * MASS * get_normal_velocity(x, y, vx, vy) / (INTERVAL * math.pi * OBS_RADIUS * 2)
+        obs_pressures[idx] += 2 * MASS * get_normal_velocity(x, y, vx, vy) / (DT * math.pi * OBS_RADIUS * 2)
 
     for i, s in enumerate(wall_evs):
         t, x, y, vx, vy = s
-        idx = int(t // INTERVAL)
+        idx = int(t // DT)
         if idx not in wall_pressures:
             wall_pressures[idx] = 0
         def get_velocity_by_wall(x, y, vx, vy, r):
@@ -85,14 +85,20 @@ if __name__ == "__main__":
             if y - r <= EPSILON or y + r >= L - EPSILON:
                 return abs(vy)
             return 0
-        wall_pressures[idx] += 2 * MASS * get_velocity_by_wall(x, y, vx, vy, RADIUS) / (INTERVAL * 4 * L)
+        wall_pressures[idx] += 2 * MASS * get_velocity_by_wall(x, y, vx, vy, RADIUS) / (DT * 4 * L)
 
     print(len(wall_pressures))
 
-    plot([INTERVAL * i for i in range(len(wall_pressures))], list(wall_pressures.values()), "wall_pressure")
-    plot([INTERVAL * i for i in range(len(obs_pressures))], list(obs_pressures.values()), "obs_pressure")
+    plot([DT * i for i in range(len(wall_pressures))], list(wall_pressures.values()), "wall_pressure")
+    plot([DT * i for i in range(len(obs_pressures))], list(obs_pressures.values()), "obs_pressure")
 
+    INTERVAL = 0.01
+    temperatures = []
+    for state in history:
+        temperatures.append(MASS * sum([(p[VX_IDX] ** 2 + p[VY_IDX] ** 2) for p in state]) / (2 * len(state)))
 
+    temperatures = [round(t, 2) for t in temperatures]
+    plot([INTERVAL * i for i in range(len(temperatures))], temperatures, "temperature")
     # partitions = [history[x::PARTITION_SIZE] for x in range(len(history)//PARTITION_SIZE)]
     # wall_pressures = []
     # obs_pressures = []

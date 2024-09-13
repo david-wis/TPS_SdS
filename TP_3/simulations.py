@@ -46,7 +46,7 @@ def update(frame, scatters, labels, ax, history):
 
 
 
-START = 5000
+START = 9000
 LIMIT = 50
 
 if __name__ == "__main__":
