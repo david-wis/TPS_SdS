@@ -8,6 +8,9 @@ public class Field {
     private TreeMap<Float, List<Event>> events;
     private HashMap<Particle, List<Float>> eventTimesByParticle;
 
+    private TreeMap<Float, List<Event>> wallEvents = new TreeMap<>();
+    private TreeMap<Float, List<Event>> obstacleEvents = new TreeMap<>();
+
     public Field(float l, List<Particle> particles, Obstacle obstacle) {
         L = l;
         this.particles = particles;
@@ -85,13 +88,27 @@ public class Field {
         }
     }
 
+    private void registerEvent(Event e, float time) {
+        if (e instanceof WallCollisionEvent) {
+            wallEvents.putIfAbsent(time, new ArrayList<>());
+            wallEvents.get(time).add(e);
+        } else if (e instanceof ObstacleCollisionEvent) {
+            obstacleEvents.putIfAbsent(time, new ArrayList<>());
+            obstacleEvents.get(time).add(e);
+        }
+    }
+
     public void loop(float duration, float interval) {
         init();
         FileController.writeParticlesState("output/state.txt", particles, false);
+        FileController.createEmptyFile("output/wall_events.txt");
+        FileController.createEmptyFile("output/obstacle_events.txt");
+
 
         int count = 0;
         float universalTime = 0;
         float lastSnapshotTime = 0;
+
         while (universalTime < duration) {
 
             if (universalTime < 0) {
@@ -107,6 +124,7 @@ public class Field {
     //                throw new IllegalStateException("Time cannot be zero");
                     System.out.println("Time is zero " + event.getClass().getName());
                 }
+                registerEvent(event, currentTime);
 
                 List<Particle> affectedParticles = event.execute(dt);
                 allAffectedParticles.addAll(affectedParticles);
@@ -121,6 +139,10 @@ public class Field {
 
             if (universalTime > lastSnapshotTime + interval) {
                 FileController.writeParticlesState("output/state.txt", particles, allAffectedParticles, true);
+                FileController.writeEvent("output/wall_events.txt", wallEvents);
+                FileController.writeEvent("output/obstacle_events.txt", obstacleEvents);
+                wallEvents.clear();
+                obstacleEvents.clear();
                 count++;
                 lastSnapshotTime += interval;
             }

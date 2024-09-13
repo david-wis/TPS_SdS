@@ -48,5 +48,28 @@ public class FileController {
         return Collections.emptyList();
     }
 
+    public static void createEmptyFile(String filename) {
+        try {
+            FileWriter writer = new FileWriter(filename);
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("An error occurred creating the file.");
+        }
+    }
+
+    public static void writeEvent(String filename, TreeMap<Float, List<Event>> events) {
+        try {
+            FileWriter writer = new FileWriter(filename, true);
+            for (Map.Entry<Float, List<Event>> entry : events.entrySet()) {
+                for (Event e : entry.getValue()) {
+                    writer.write(entry.getKey() + " " + e.toString() + "\n");
+                }
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("An error occurred writing the events.");
+        }
+    }
+
 
 }

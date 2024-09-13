@@ -32,4 +32,9 @@ public class ObstacleCollisionEvent implements Event {
     public List<Particle> getParticles(){
         return List.of(p);
     }
+
+    @Override
+    public String toString() {
+        return p.toString().replace(",", "");
+    }
 }

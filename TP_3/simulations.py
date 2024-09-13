@@ -46,7 +46,8 @@ def update(frame, scatters, labels, ax, history):
 
 
 
-LIMIT = 100
+START = 5000
+LIMIT = 50
 
 if __name__ == "__main__":
     history = []
@@ -61,16 +62,21 @@ if __name__ == "__main__":
         particles = []
         counter = 0
         for line in f:
+
             pid, x, y, r, vx, vy, marked = line[:-1].split(" ")
-            if pid == '0' and len(particles) != 0:
-                history.append(particles)
+            if pid == '0':
+
+                if counter >= START:
+                    history.append(particles)
+
                 particles = []
-                if counter > LIMIT:
+                if counter - START > LIMIT:
                     break
                 else:
                     counter += 1
 
-            particles.append(np.array([int(pid), float(x), float(y), float(r), float(vx), float(vy), int(marked)]))
+            if counter >= START:
+                particles.append(np.array([int(pid), float(x), float(y), float(r), float(vx), float(vy), int(marked)]))
         history.append(particles)
 
     print(len(history))
