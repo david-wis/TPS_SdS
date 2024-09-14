@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Particle {
@@ -59,12 +60,42 @@ public class Particle {
         return dt;
     }
 
-    public float timeToHitWall(float L) {
-        float dtX = (this.vx > 0) ? (L - this.r - this.x) / this.vx : (0 + this.r - this.x) / this.vx;
-        float dtY = (this.vy > 0) ? (L - this.r - this.y) / this.vy : (0 + this.r - this.y) / this.vy;
+    public record WallHit(float dt, WallCollisionEvent.Wall[] ws) {}
+
+    public WallHit timeToHitWall(float L) {
+        float dtX = 0, dtY = 0;
+        WallCollisionEvent.Wall[] ws = new WallCollisionEvent.Wall[2];
+
+        if (this.vx >= 0) {
+            dtX = (L - this.r - this.x) / this.vx;
+            ws[0] = WallCollisionEvent.Wall.RIGHT;
+        } else if (this.vx < 0) {
+            dtX = (0 + this.r - this.x) / this.vx;
+            ws[0] = WallCollisionEvent.Wall.LEFT;
+        }
+
+        if (this.vy >= 0) {
+            dtY = (L - this.r - this.y) / this.vy;
+            ws[1] = WallCollisionEvent.Wall.TOP;
+        } else if (this.vy < 0) {
+            dtY = (0 + this.r - this.y) / this.vy;
+            ws[1] = WallCollisionEvent.Wall.BOTTOM;
+        }
+
         if (dtX < 0 || dtY < 0) throw new IllegalStateException("Time to hit wall cannot be negative");
-        float dt = Math.min(dtX, dtY);
-        return dt;
+
+        float EPSILON = 1e-6f;
+        float dt = dtX;
+        if (Math.abs(dtX - dtY) < EPSILON){
+        }
+        else if (dtX < dtY)
+            ws[1] = null;
+        else if (dtY < dtX) {
+            ws[0] = null;
+            dt = dtY;
+        }
+
+        return new WallHit(dt, ws);
     }
 
     public float timeToHitObstacle(Obstacle o) {
@@ -103,15 +134,11 @@ public class Particle {
         this.y = Math.min(L - this.r, Math.max(this.r, this.y + this.vy * dt));
     }
 
-    public void bounceOffWall(float L) {
-        // get epsilon
-        float EPSILON = 1e-6f;
-        if (this.x + this.r >= L - EPSILON || this.x - this.r <= 0 + EPSILON) {
+    public void bounceOffWall(float L, WallCollisionEvent.Wall[] ws) {
+        if (ws[0] == WallCollisionEvent.Wall.LEFT || ws[0] == WallCollisionEvent.Wall.RIGHT)
             this.vx = -this.vx;
-        }
-        if (this.y + this.r >= L - EPSILON|| this.y - this.r <= 0 + EPSILON) {
+        if (ws[1] == WallCollisionEvent.Wall.TOP || ws[1] == WallCollisionEvent.Wall.BOTTOM)
             this.vy = -this.vy;
-        }
     }
 
     public void bounceOffParticle(float Jx, float Jy) {

@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Main {
 
-    private static final int N = 200;
+    private static final int N = 250;
     private static final float L = 0.1f;
     private static final float RADIUS = 0.001f; // 0.02f; // 0.001
     private static final float OBS_RADIUS = 0.005f;
@@ -18,7 +18,7 @@ public class Main {
         System.out.println("finished initialization");
         List<Particle> particles = FileController.readParticlesState(STATE_PATH);
         Field f = new Field(L, particles, new Obstacle(L/2, L/2, OBS_RADIUS));
-        f.loop(100f, 0.01f);
+        f.loop(200f, 0.01f);
     }
 
 
@@ -29,7 +29,7 @@ public class Main {
 //        Particle p0 = new Particle(0, 19.9f, 19.8f, MAX_RADIUS);
 //        grid.addParticle(p0);
 //        particles.add(p0);
-        int seed = 0xCAC70;
+        int seed = 0xCAC71;
         Random rnd = new Random(seed);
 
         float EPSILON = 1e-6f;

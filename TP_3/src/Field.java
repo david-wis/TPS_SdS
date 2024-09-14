@@ -2,7 +2,6 @@ import java.util.*;
 
 public class Field {
     private final float L;
-    private final static float TIME_EPSILON = 1e-5f;
     private List<Particle> particles;
     private Obstacle obstacle;
     private TreeMap<Float, List<Event>> events;
@@ -56,9 +55,10 @@ public class Field {
         for (Particle q : particles) {
             if (p.equals(q)) continue;
 
-            float tParticle = p.timeToHitParticle(q) + currentTime;
+            float tParticle = p.timeToHitParticle(q);
             if (tParticle == Float.POSITIVE_INFINITY)
                 continue;
+            tParticle += currentTime;
             events.putIfAbsent(tParticle, new ArrayList<>());
             events.get(tParticle).add(new ParticleCollisionEvent(p,q));
             eventTimesByParticle.get(p).add(tParticle);
@@ -79,13 +79,13 @@ public class Field {
     }
 
     private void loadTimeToHitWall(Particle p, float currentTime) {
-        float tToHitW = p.timeToHitWall(L);
-        if (tToHitW > TIME_EPSILON) {
-            float newt = tToHitW + currentTime;
-            events.putIfAbsent(newt, new ArrayList<>());
-            events.get(newt).add(new WallCollisionEvent(p, L));
-            eventTimesByParticle.get(p).add(newt);
-        }
+        Particle.WallHit hit = p.timeToHitWall(L);
+        float tToHitW = hit.dt();
+
+        float newt = tToHitW + currentTime;
+        events.putIfAbsent(newt, new ArrayList<>());
+        events.get(newt).add(new WallCollisionEvent(p, L, hit.ws()));
+        eventTimesByParticle.get(p).add(newt);
     }
 
     private void registerEvent(Event e, float time) {
@@ -106,6 +106,7 @@ public class Field {
 
 
         int count = 0;
+        int writes = 0;
         float universalTime = 0;
         float lastSnapshotTime = 0;
 
@@ -126,27 +127,28 @@ public class Field {
                 }
                 registerEvent(event, currentTime);
 
+//                if (!(event instanceof WallCollisionEvent)) continue;
                 List<Particle> affectedParticles = event.execute(dt);
+
                 allAffectedParticles.addAll(affectedParticles);
                 for (Particle p : affectedParticles) {
                     updateAssociatedTimes(p, currentTime);
                 }
             }
             System.out.println("Iterations:" + count + " Time: " + universalTime);
-            if (count == 100) {
-                System.out.println();
-            }
 
             if (universalTime > lastSnapshotTime + interval) {
+                System.out.println(particles.get(49));
                 FileController.writeParticlesState("output/state.txt", particles, allAffectedParticles, true);
                 FileController.writeEvent("output/wall_events.txt", wallEvents);
                 FileController.writeEvent("output/obstacle_events.txt", obstacleEvents);
                 wallEvents.clear();
                 obstacleEvents.clear();
-                count++;
                 lastSnapshotTime += interval;
+                writes++;
             }
             universalTime = currentTime;
+            count++;
 
         }
         System.out.println("universal time: " + universalTime);

@@ -55,7 +55,7 @@ if __name__ == "__main__":
             wall_evs.append((float(t), float(x), float(y), float(vx), float(vy)))
 
     print(len(history))
-    DT = 0.1
+    DT = 1.0 # 0.1
     MASS = 1
     L = 0.1
     RADIUS = 0.001
@@ -95,6 +95,8 @@ if __name__ == "__main__":
     INTERVAL = 0.01
     temperatures = []
     for state in history:
+        if len(state) == 0:
+            continue
         temperatures.append(MASS * sum([(p[VX_IDX] ** 2 + p[VY_IDX] ** 2) for p in state]) / (2 * len(state)))
 
     temperatures = [round(t, 2) for t in temperatures]

@@ -3,14 +3,22 @@ import java.util.List;
 public class WallCollisionEvent implements Event {
     private final Particle p;
     private final float L;
-    public WallCollisionEvent(Particle p, float L) {
+
+    private final Wall[] ws;
+
+    public enum Wall {
+        LEFT, RIGHT, TOP, BOTTOM
+    };
+
+    public WallCollisionEvent(Particle p, float L, Wall[] ws) {
         this.p = p;
         this.L = L;
+        this.ws = ws;
     }
 
     @Override
     public List<Particle> execute(float dt) {
-        p.bounceOffWall(L);
+        p.bounceOffWall(L, ws);
         return List.of(p);
     }
 

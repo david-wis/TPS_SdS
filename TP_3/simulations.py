@@ -34,6 +34,7 @@ def update(frame, scatters, labels, ax, history):
     for scatter, label, particle in zip(scatters, labels, particles):
         scatter.set_offsets([particle[1], particle[2]])  # particle[1] -> x, particle[2] -> y
         scatter.set_color("red" if particle[-1] == 1 else "blue")  # Change color if needed
+
         # label.set_position((particle[1], particle[2]))
         # label.set_text(f"{int(particle[0])}")
         # scatter.set_label(f"t: {frame}")
@@ -46,7 +47,7 @@ def update(frame, scatters, labels, ax, history):
 
 
 
-START = 9000
+START = 9500
 LIMIT = 50
 
 if __name__ == "__main__":
