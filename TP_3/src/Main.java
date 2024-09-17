@@ -4,47 +4,40 @@ import java.util.Random;
 
 public class Main {
 
-    private static final int N = 250;
-    private static final float L = 0.1f;
-    private static final float RADIUS = 0.001f; // 0.02f; // 0.001
-    private static final float OBS_RADIUS = 0.005f;
-    private static final float SPEED = 10.0f;
-    private static final float MASS = 1.0f;
-
     private static final String STATE_PATH = "output/initial_state.txt";
 
     public static void main(String[] args) {
-        initParticles(N, L, new Obstacle(L/2, L/2, OBS_RADIUS));
+        Config config = FileController.getConfig();
+        Obstacle obs = new Obstacle(config.getL()/2, config.getL()/2, config.getOBSTACLE_RADIUS());
+
+        initParticles(config, obs);
         System.out.println("finished initialization");
         List<Particle> particles = FileController.readParticlesState(STATE_PATH);
-        Field f = new Field(L, particles, new Obstacle(L/2, L/2, OBS_RADIUS));
-        f.loop(100f, 1f);
+        Field f = new Field(config.getL(), particles, obs);
+        f.loop(config.getTOTAL_TIME(), config.getINTERVAL());
     }
 
 
-    public static void initParticles(int N, float L, Obstacle obstacle) {
+    public static void initParticles(Config config, Obstacle obstacle) {
 
         List<Particle> particles = new ArrayList<>();
 
-//        Particle p0 = new Particle(0, 19.9f, 19.8f, MAX_RADIUS);
-//        grid.addParticle(p0);
-//        particles.add(p0);
         int seed = 0xCAC71;
         Random rnd = new Random(seed);
 
         float EPSILON = 1e-6f;
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < config.getN(); i++) {
             Particle p;
             boolean overlap;
             do {
                 float vAngle = rnd.nextFloat() * 2 * (float) Math.PI;
-                p = new Particle(i, rnd.nextFloat() * (L - 2*RADIUS) + RADIUS, rnd.nextFloat() * (L - 2*RADIUS) + RADIUS,
-                        (float) Math.sin(vAngle) * SPEED, (float) Math.cos(vAngle) * SPEED, RADIUS, MASS);
+                p = new Particle(i, rnd.nextFloat() * (config.getL() - 2*config.getR()) + config.getR(), rnd.nextFloat() * (config.getL() - 2*config.getR()) + config.getR(),
+                        (float) Math.sin(vAngle) * config.getV(), (float) Math.cos(vAngle) * config.getV(), config.getR(), config.getM());
                 Particle p2 = p;
 
-                boolean overlapWithObtacle = obstacle.distance(p) <= EPSILON;
-                overlap = overlapWithObtacle || particles.stream().anyMatch(particle -> particle.distance(p2) <= EPSILON);// || obstacle.distance(p) <= 0;
+                boolean overlapWithObstacle = obstacle.distance(p) <= EPSILON;
+                overlap = overlapWithObstacle || particles.stream().anyMatch(particle -> particle.distance(p2) <= EPSILON);
             } while(overlap);
             particles.add(p);
         }

@@ -1,21 +1,28 @@
-import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.animation import FuncAnimation
-import sys
-
+import json
 mpl.use('Agg')
 
 BASE_PATH = "output"
 
+with open("./config.json", "r" ) as f:
+    config = json.load(f)
+    DT = config["DT"]
+    INTERVAL = config["INTERVAL"]
+    L = config["L"]
+    RADIUS = config["R"]
+    OBS_RADIUS = config["OBSTACLE_RADIUS"]
+    START = config["START"]
+    LIMIT = config["LIMIT"]
 
 def init_plot(history):
     fig, ax = plt.subplots()
     # make the plot square
     ax.set_aspect('equal')
-    ax.set_xlim(0, 0.1)
-    ax.set_ylim(0, 0.1)
+    ax.set_xlim(0, L)
+    ax.set_ylim(0, L)
 
     scatters = []
     labels = []
@@ -40,15 +47,11 @@ def update(frame, scatters, labels, ax, history):
         # scatter.set_label(f"t: {frame}")
 
 
-    obstacle = plt.Circle((0.05, 0.05), 0.005, color='grey')
+    obstacle = plt.Circle((L/2, L/2), OBS_RADIUS, color='grey')
     ax.add_artist(obstacle)
     ax.set_title(f"t: {frame}")
     return scatters
 
-
-
-START = 9500
-LIMIT = 50
 
 if __name__ == "__main__":
     history = []

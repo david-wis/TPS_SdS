@@ -183,7 +183,7 @@ public class Particle {
 
     @Override
     public String toString() {
-        return this.getX() + ", " + this.getY() + ", " + this.getVx() + ", " + this.getVy();
+        return this.getId() + ", " + this.getX() + ", " + this.getY() + ", " + this.getVx() + ", " + this.getVy();
     }
 
     @Override

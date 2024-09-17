@@ -1,8 +1,10 @@
+import com.google.gson.Gson;
+
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-
 public class FileController {
 
     public static void writeParticlesState(String filename, List<Particle> particles, boolean append) {
@@ -70,5 +72,22 @@ public class FileController {
             System.err.println("An error occurred writing the events.");
         }
     }
+
+    public static Config getConfig() {
+        String filePath = "config.json";
+
+        // Create a Gson instance
+        Gson gson = new Gson();
+
+        try (FileReader reader = new FileReader(filePath)) {
+            // Parse JSON file to Person object
+            Config config = gson.fromJson(reader, Config.class);
+            return config;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Config();
+    }
+
 
 }

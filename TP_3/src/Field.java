@@ -122,18 +122,14 @@ public class Field {
             Set<Particle> allAffectedParticles = new HashSet<>();
             for (Event event : entry.getValue()) {
                 if (dt == 0) {
-    //                throw new IllegalStateException("Time cannot be zero");
 //                    System.out.println("Time is zero " + event.getClass().getName() + " universal time: " + universalTime + " current time: " + currentTime);
                 }
                 registerEvent(event, currentTime);
 
-//                if (!(event instanceof WallCollisionEvent)) continue;
-                List<Particle> affectedParticles = event.execute(dt);
-
-                allAffectedParticles.addAll(affectedParticles);
-                for (Particle p : affectedParticles) {
-                    updateAssociatedTimes(p, currentTime);
-                }
+                allAffectedParticles.addAll(event.execute(dt));
+            }
+            for (Particle p : allAffectedParticles) {
+                updateAssociatedTimes(p, currentTime);
             }
 //            System.out.println("Iterations:" + count + " Time: " + universalTime);
 
