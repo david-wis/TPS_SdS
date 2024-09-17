@@ -2,6 +2,7 @@ import java.util.*;
 
 public class Field {
     private final float L;
+    private final float V;
     private List<Particle> particles;
     private Obstacle obstacle;
     private TreeMap<Float, List<Event>> events;
@@ -10,8 +11,11 @@ public class Field {
     private TreeMap<Float, List<Event>> wallEvents = new TreeMap<>();
     private TreeMap<Float, List<Event>> obstacleEvents = new TreeMap<>();
 
-    public Field(float l, List<Particle> particles, Obstacle obstacle) {
+    private List<Particle> movingObstaclePositions = new ArrayList<>();
+
+    public Field(float l, float v, List<Particle> particles, Obstacle obstacle) {
         L = l;
+        V = v;
         this.particles = particles;
         this.obstacle = obstacle;
     }
@@ -39,7 +43,6 @@ public class Field {
                 eventTimesByParticle.putIfAbsent(q, new ArrayList<>());
                 eventTimesByParticle.get(q).add(tParticle);
             }
-//            events.add(new CollisionEvent.ObstacleCollisionEvent(p, obstacle));
         }
     }
 
@@ -69,6 +72,8 @@ public class Field {
     }
 
     private void loadTimeToHitObstacle(Particle p, float currentTime) {
+        if (obstacle == null) return;
+
         float tToHitO = p.timeToHitObstacle(obstacle);
         if (tToHitO != Float.POSITIVE_INFINITY) {
             float newt = tToHitO + currentTime;
@@ -99,10 +104,19 @@ public class Field {
     }
 
     public void loop(float duration, float interval) {
+        final String stateDir = "output/state_" + (int) V + ".txt";
+        final String movObsDir = "output/moving_obstacle_positions_" + (int) V + ".txt";
+        final String wallDir = "output/wall_events_" + (int) V + ".txt";
+        final String obsDir = "output/obstacle_events_" + (int) V + ".txt";
         init();
-        FileController.writeParticlesState("output/state.txt", particles, false);
-        FileController.createEmptyFile("output/wall_events.txt");
-        FileController.createEmptyFile("output/obstacle_events.txt");
+
+        TreeMap<Float, Particle> movingObstaclePositions = new TreeMap<>();
+        movingObstaclePositions.put(0f, particles.get(0).clone());
+
+        FileController.writeParticlesState(stateDir, particles, false);
+        FileController.writeObstaclePositions(movObsDir, movingObstaclePositions, false);
+        FileController.createEmptyFile(wallDir);
+        FileController.createEmptyFile(obsDir);
 
 
         int count = 0;
@@ -121,9 +135,9 @@ public class Field {
             particles.forEach(p -> p.updatePosition(dt, L));
             Set<Particle> allAffectedParticles = new HashSet<>();
             for (Event event : entry.getValue()) {
-                if (dt == 0) {
+//                if (dt == 0) {
 //                    System.out.println("Time is zero " + event.getClass().getName() + " universal time: " + universalTime + " current time: " + currentTime);
-                }
+//                }
                 registerEvent(event, currentTime);
 
                 allAffectedParticles.addAll(event.execute(dt));
@@ -132,19 +146,27 @@ public class Field {
                 updateAssociatedTimes(p, currentTime);
             }
 //            System.out.println("Iterations:" + count + " Time: " + universalTime);
+            if (obstacle == null) {
+                movingObstaclePositions.put(currentTime, particles.get(0).clone());
+            }
 
             if (universalTime > lastSnapshotTime + interval) {
-                FileController.writeParticlesState("output/state.txt", particles, allAffectedParticles, true);
-                FileController.writeEvent("output/wall_events.txt", wallEvents);
-                FileController.writeEvent("output/obstacle_events.txt", obstacleEvents);
+                FileController.writeParticlesState(stateDir, particles, allAffectedParticles, true);
+                FileController.writeEvent(wallDir, wallEvents);
+                FileController.writeEvent(obsDir, obstacleEvents);
                 wallEvents.clear();
                 obstacleEvents.clear();
+                if (obstacle == null) {
+                    FileController.writeObstaclePositions(movObsDir, movingObstaclePositions, true);
+                    movingObstaclePositions.clear();
+                }
                 lastSnapshotTime += interval;
                 writes++;
                 System.out.println("iterations: " + count + " writes: " + writes + " time: " + universalTime);
             }
             universalTime = currentTime;
             count++;
+
 
         }
         System.out.println("universal time: " + universalTime);

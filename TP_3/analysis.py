@@ -13,15 +13,23 @@ VY_IDX = 5
 MARKED_IDX = 6
 BASE_PATH = "output"
 
+def plot_regr(xs, ys, filename, std, slope, intercept):
+    fig, ax = plt.subplots()
+    ax.errorbar(xs, ys, yerr=std, fmt='o')
+    ax.plot(xs, [slope * x + intercept for x in xs], color='red')
+    plt.savefig(f"{BASE_PATH}/{filename}.png")
+
+
+
 def plot(xs, ys, filename):
     fig, ax = plt.subplots()
     ax.scatter(xs, ys)
     plt.savefig(f"{BASE_PATH}/{filename}.png")
 
 
+
 if __name__ == "__main__":
     LIMIT = 10000
-    history = []
     with open("./config.json", "r" ) as f:
         config = json.load(f)
         DT = config["DT"]
@@ -31,8 +39,12 @@ if __name__ == "__main__":
         RADIUS = config["R"]
         OBS_RADIUS = config["OBSTACLE_RADIUS"]
         EPSILON = 1e-6
+        V = int(config["V"])
+        MOVING_OBSTACLE = config["MOVING_OBSTACLE"]
 
-    with open(f"{BASE_PATH}/state.txt", "r") as f:
+    #history ==================================================================================================================================
+    history = []
+    with open(f"{BASE_PATH}/state_{V}.txt", "r") as f:
         particles = []
         counter = 0
         for line in f:
@@ -46,26 +58,25 @@ if __name__ == "__main__":
                     counter += 1
             particles.append(np.array([int(pid), float(x), float(y), float(r), float(vx), float(vy), int(marked)]))
         history.append(particles)
+    print(len(history))
 
+    temperatures = []
+    for i, state in enumerate(history):
+        if len(state) == 0:
+            continue
+        temperatures.append(MASS * sum([(p[VX_IDX] ** 2 + p[VY_IDX] ** 2) for p in state]) / (2 * len(state)))
+
+    temperatures = [round(t, 2) for t in temperatures]
+    plot([INTERVAL * i for i in range(len(temperatures))], temperatures, "temperature")
+
+    #OBSTACLE==================================================================================================================================
+    obs_pressures = {}
+    obs_first_collisions = dict()
     obst_evs = []
-    with (open(f"{BASE_PATH}/obstacle_events.txt", "r") as f):
+    with (open(f"{BASE_PATH}/obstacle_events_{V}.txt", "r") as f):
         for line in f:
             t, id, x, y, vx, vy = line[:-1].split(" ")
             obst_evs.append((float(t), int(id), float(x), float(y), float(vx), float(vy)))
-
-    wall_evs = []
-    with (open(f"{BASE_PATH}/wall_events.txt", "r") as f):
-        for line in f:
-            t, id, x, y, vx, vy, dirs = line[:-1].split(" ")
-            wall_evs.append((float(t), int(id), float(x), float(y), float(vx), float(vy), dirs))
-
-    print(len(history))
-
-
-    # Group by partition, considering time interval (the first element of the tuple)
-    wall_pressures = {}
-    obs_pressures = {}
-    obs_first_collisions = dict()
 
     for i, s in enumerate(obst_evs):
         t, id, x, y, vx, vy = s
@@ -78,6 +89,20 @@ if __name__ == "__main__":
 
         if id not in obs_first_collisions.keys():
             obs_first_collisions[id] = t
+
+    plot([DT * i for i in range(len(obs_pressures))], list(obs_pressures.values()), "obs_pressure")
+    times = obs_first_collisions.values()
+    times = sorted(times)
+    plot(times, [i for i in range(len(times))], "first_collisions")
+    plot([e[0] for e in obst_evs], [i for i in range(len(obst_evs))], "all_collisions")
+
+    #WALL========================================================================================================================================
+    wall_pressures = {}
+    wall_evs = []
+    with (open(f"{BASE_PATH}/wall_events_{V}.txt", "r") as f):
+        for line in f:
+            t, id, x, y, vx, vy, dirs = line[:-1].split(" ")
+            wall_evs.append((float(t), int(id), float(x), float(y), float(vx), float(vy), dirs))
 
     for i, s in enumerate(wall_evs):
         t, id, x, y, vx, vy, dirs = s
@@ -93,22 +118,46 @@ if __name__ == "__main__":
             return 0
         wall_pressures[idx] += 2 * MASS * get_velocity_by_wall(x, y, vx, vy, RADIUS, dirs) / (DT * 4 * L)
 
-    print(len(wall_pressures))
-
     plot([DT * i for i in range(len(wall_pressures))], list(wall_pressures.values()), "wall_pressure")
-    plot([DT * i for i in range(len(obs_pressures))], list(obs_pressures.values()), "obs_pressure")
 
 
-    temperatures = []
-    for state in history:
-        if len(state) == 0:
-            continue
-        temperatures.append(MASS * sum([(p[VX_IDX] ** 2 + p[VY_IDX] ** 2) for p in state]) / (2 * len(state)))
+    #MOVING OBSTACLE===========================================================================================================================
+    if MOVING_OBSTACLE:
+        msds = dict()
+        msdsdevs = dict()
+        with open(f"{BASE_PATH}/moving_obstacle_positions_{V}.txt", "r") as f:
+            positions = []
+            for line in f:
+                t, x, y = line[:-1].split(" ")
+                positions.append((float(t), float(x), float(y)))
 
-    temperatures = [round(t, 2) for t in temperatures]
-    plot([INTERVAL * i for i in range(len(temperatures))], temperatures, "temperature")
+        displacements = dict()
+        for p in positions:
+            t, x, y = p
+            idx = int(t // DT)
 
-    times = obs_first_collisions.values()
-    times = sorted(times)
-    plot(times, [i for i in range(len(times))], "first_collisions")
-    plot([e[0] for e in obst_evs], [i for i in range(len(obst_evs))], "obstacle_events")
+            # Calculate the displacement squared
+            displacement = ((x - L / 2) ** 2 + (y - L / 2) ** 2) / DT
+
+            # Accumulate displacement squared values
+            if idx not in displacements:
+                displacements[idx] = []
+            displacements[idx].append(displacement)
+
+        times = []
+        mean_msd = []
+
+        for idx in sorted(displacements):  # Ensure time steps are sorted
+            msds[idx] = np.mean(displacements[idx])
+            msdsdevs[idx] = np.std(displacements[idx])
+            times.append(idx * DT)  # Convert the index back to time
+            mean_msd.append(msds[idx])
+
+        # Perform linear regression (fit a line to the data)
+        slope, intercept = np.polyfit(times, mean_msd, 1)
+
+        plot_regr([DT * (i + 1) for i in range(len(msds))], msds.values(), "msd", msdsdevs.values(), slope, intercept)
+
+
+
+

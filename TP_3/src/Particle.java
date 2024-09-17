@@ -198,4 +198,11 @@ public class Particle {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
+    @Override
+    public Particle clone() {
+        return new Particle(id, x, y, vx, vy, r, m);
+    }
+
 }

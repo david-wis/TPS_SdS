@@ -6,6 +6,13 @@ import json
 mpl.use('Agg')
 
 BASE_PATH = "output"
+ID_IDX = 0
+X_IDX = 1
+Y_IDX = 2
+R_IDX = 3
+VX_IDX = 4
+VY_IDX = 5
+MARKED_IDX = 6
 
 with open("./config.json", "r" ) as f:
     config = json.load(f)
@@ -16,6 +23,8 @@ with open("./config.json", "r" ) as f:
     OBS_RADIUS = config["OBSTACLE_RADIUS"]
     START = config["START"]
     LIMIT = config["LIMIT"]
+    MOVING_OBSTACLE = config["MOVING_OBSTACLE"]
+    V = int(config["V"])
 
 def init_plot(history):
     fig, ax = plt.subplots()
@@ -26,8 +35,8 @@ def init_plot(history):
 
     scatters = []
     labels = []
-    for _ in range(len(history[0])):  # One scatter per particle
-        scatter = ax.scatter([], [], s=20, color="blue")  # s sets size; customize if needed
+    for p in history[0]:  # One scatter per particle
+        scatter = ax.scatter([], [], s=25 * (p[R_IDX] / RADIUS)**2 , color="blue")  # s sets size; customize if needed
         scatters.append(scatter)
         text = ax.text(0, 0, "")
         labels.append(text)
@@ -46,9 +55,10 @@ def update(frame, scatters, labels, ax, history):
         # label.set_text(f"{int(particle[0])}")
         # scatter.set_label(f"t: {frame}")
 
+    if not MOVING_OBSTACLE:
+        obstacle = plt.Circle((L/2, L/2), OBS_RADIUS, color='grey')
+        ax.add_artist(obstacle)
 
-    obstacle = plt.Circle((L/2, L/2), OBS_RADIUS, color='grey')
-    ax.add_artist(obstacle)
     ax.set_title(f"t: {frame}")
     return scatters
 
@@ -62,7 +72,7 @@ if __name__ == "__main__":
     #         particles.append(np.array([int(pid), float(x), float(y), float(r), float(vx), float(vy)]))
     #     history.append(particles)
 
-    with open(f"{BASE_PATH}/state.txt", "r") as f:
+    with open(f"{BASE_PATH}/state_{V}.txt", "r") as f:
         particles = []
         counter = 0
         for line in f:

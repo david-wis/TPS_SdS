@@ -22,6 +22,17 @@ public class FileController {
         }
     }
 
+    public static void writeObstaclePositions(String filename, TreeMap<Float, Particle> obstacles, boolean append) {
+        try {
+            FileWriter writer = new FileWriter(filename, append);
+            for (Map.Entry<Float, Particle> p : obstacles.entrySet())
+                writer.write(p.getKey() + " " + p.getValue().getX() + " " + p.getValue().getY() + "\n");
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("An error occurred writing the initial state.");
+        }
+    }
+
     public static List<Particle> readParticlesState(String filename) {
         try {
             File file = new File(filename);

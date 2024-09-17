@@ -9,6 +9,7 @@ public class Config {
 
     private float DT;
     private float OBSTACLE_RADIUS;
+    private float OBSTACLE_MASS;
     private boolean MOVING_OBSTACLE;
 
 
@@ -90,5 +91,13 @@ public class Config {
 
     public void setTOTAL_TIME(float TOTAL_TIME) {
         this.TOTAL_TIME = TOTAL_TIME;
+    }
+
+    public float getOBSTACLE_MASS() {
+        return OBSTACLE_MASS;
+    }
+
+    public void setOBSTACLE_MASS(float OBSTACLE_MASS) {
+        this.OBSTACLE_MASS = OBSTACLE_MASS;
     }
 }
