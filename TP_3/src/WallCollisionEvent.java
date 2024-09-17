@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.List;
 
 public class WallCollisionEvent implements Event {
@@ -34,6 +35,11 @@ public class WallCollisionEvent implements Event {
 
     @Override
     public String toString() {
-        return p.toString().replace(",", "");
+        String output = p.toString().replace(",", "") + " ";
+        if (Arrays.stream(ws).anyMatch(w -> w == Wall.LEFT || w==Wall.RIGHT))
+            output += "x";
+        if (Arrays.stream(ws).anyMatch(w -> w == Wall.BOTTOM || w==Wall.TOP))
+            output += "y";
+        return output;
     }
 }

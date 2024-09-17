@@ -51,8 +51,8 @@ if __name__ == "__main__":
     wall_evs = []
     with (open(f"{BASE_PATH}/wall_events.txt", "r") as f):
         for line in f:
-            t, x, y, vx, vy = line[:-1].split(" ")
-            wall_evs.append((float(t), float(x), float(y), float(vx), float(vy)))
+            t, x, y, vx, vy, dirs = line[:-1].split(" ")
+            wall_evs.append((float(t), float(x), float(y), float(vx), float(vy), dirs))
 
     print(len(history))
     DT = 1.0 # 0.1
@@ -75,17 +75,18 @@ if __name__ == "__main__":
         obs_pressures[idx] += 2 * MASS * get_normal_velocity(x, y, vx, vy) / (DT * math.pi * OBS_RADIUS * 2)
 
     for i, s in enumerate(wall_evs):
-        t, x, y, vx, vy = s
+        t, x, y, vx, vy, dirs = s
         idx = int(t // DT)
         if idx not in wall_pressures:
             wall_pressures[idx] = 0
-        def get_velocity_by_wall(x, y, vx, vy, r):
-            if x - r <= EPSILON or x + r >= L - EPSILON:
+        def get_velocity_by_wall(x, y, vx, vy, r, dirs):
+            if "x" in dirs:
                 return abs(vx)
-            if y - r <= EPSILON or y + r >= L - EPSILON:
+            elif "y" in dirs:
                 return abs(vy)
+            print("zero")
             return 0
-        wall_pressures[idx] += 2 * MASS * get_velocity_by_wall(x, y, vx, vy, RADIUS) / (DT * 4 * L)
+        wall_pressures[idx] += 2 * MASS * get_velocity_by_wall(x, y, vx, vy, RADIUS, dirs) / (DT * 4 * L)
 
     print(len(wall_pressures))
 
@@ -101,30 +102,3 @@ if __name__ == "__main__":
 
     temperatures = [round(t, 2) for t in temperatures]
     plot([INTERVAL * i for i in range(len(temperatures))], temperatures, "temperature")
-    # partitions = [history[x::PARTITION_SIZE] for x in range(len(history)//PARTITION_SIZE)]
-    # wall_pressures = []
-    # obs_pressures = []
-    # for partition in partitions:
-    #     wall_pressure = 0
-    #     obs_pressure = 0
-    #     for i, s in enumerate(partition):
-    #         marked_particles = [p for p in s if p[MARKED_IDX] == 1]
-    #         if len(marked_particles) == 1:
-    #             p = marked_particles[0]
-    #             if math.sqrt((p[X_IDX] - L / 2)**2 + (p[X_IDX] - L / 2)**2) <= 1.5 * (RADIUS + OBS_RADIUS):
-    #                 def get_normal_velocity(x, y, vx, vy):
-    #                     return abs((x - L / 2) * vx + (y - L / 2) * vy) / math.sqrt((x - L / 2) ** 2 + (y - L / 2) ** 2)
-    #                 obs_pressure += 2 * MASS * get_normal_velocity(p[X_IDX], p[Y_IDX], p[VX_IDX], p[VY_IDX]) / (INTERVAL * PARTITION_SIZE * math.pi * OBS_RADIUS * 2)
-    #             else:
-    #                 def get_velocity_by_wall(x, y, vx, vy, r):
-    #                     if x - r <= EPSILON or x + r >= L - EPSILON:
-    #                         return abs(vx)
-    #                     if y - r <= EPSILON or y + r >= L - EPSILON:
-    #                         return abs(vy)
-    #                     return 0
-    #                 wall_pressure += 2 * MASS * get_velocity_by_wall(p[X_IDX], p[Y_IDX], p[VX_IDX], p[VY_IDX], RADIUS) / (INTERVAL * PARTITION_SIZE * 4 * L)
-    #     wall_pressures.append(wall_pressure)
-    #     obs_pressures.append(obs_pressure)
-    # print(len(partitions))
-    # plot([INTERVAL * PARTITION_SIZE * i for i in range(len(partitions))], wall_pressures, "wall_pressure")
-    # plot([INTERVAL * PARTITION_SIZE * i for i in range(len(partitions))], obs_pressures, "obs_pressure")

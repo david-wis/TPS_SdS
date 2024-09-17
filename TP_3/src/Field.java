@@ -123,7 +123,7 @@ public class Field {
             for (Event event : entry.getValue()) {
                 if (dt == 0) {
     //                throw new IllegalStateException("Time cannot be zero");
-                    System.out.println("Time is zero " + event.getClass().getName());
+//                    System.out.println("Time is zero " + event.getClass().getName() + " universal time: " + universalTime + " current time: " + currentTime);
                 }
                 registerEvent(event, currentTime);
 
@@ -135,10 +135,9 @@ public class Field {
                     updateAssociatedTimes(p, currentTime);
                 }
             }
-            System.out.println("Iterations:" + count + " Time: " + universalTime);
+//            System.out.println("Iterations:" + count + " Time: " + universalTime);
 
             if (universalTime > lastSnapshotTime + interval) {
-                System.out.println(particles.get(49));
                 FileController.writeParticlesState("output/state.txt", particles, allAffectedParticles, true);
                 FileController.writeEvent("output/wall_events.txt", wallEvents);
                 FileController.writeEvent("output/obstacle_events.txt", obstacleEvents);
@@ -146,6 +145,7 @@ public class Field {
                 obstacleEvents.clear();
                 lastSnapshotTime += interval;
                 writes++;
+                System.out.println("iterations: " + count + " writes: " + writes + " time: " + universalTime);
             }
             universalTime = currentTime;
             count++;

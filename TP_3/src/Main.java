@@ -8,7 +8,7 @@ public class Main {
     private static final float L = 0.1f;
     private static final float RADIUS = 0.001f; // 0.02f; // 0.001
     private static final float OBS_RADIUS = 0.005f;
-    private static final float SPEED = 1.0f;
+    private static final float SPEED = 10.0f;
     private static final float MASS = 1.0f;
 
     private static final String STATE_PATH = "output/initial_state.txt";
@@ -18,7 +18,7 @@ public class Main {
         System.out.println("finished initialization");
         List<Particle> particles = FileController.readParticlesState(STATE_PATH);
         Field f = new Field(L, particles, new Obstacle(L/2, L/2, OBS_RADIUS));
-        f.loop(200f, 0.01f);
+        f.loop(100f, 1f);
     }
 
 

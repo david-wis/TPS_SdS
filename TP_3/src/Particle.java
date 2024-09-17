@@ -23,7 +23,7 @@ public class Particle {
     }
 
     public float timeToHitParticle(Particle p) {
-        float EPSILON = 1e-6f;
+//        float EPSILON = 1e-6f;
 
         if (this.equals(p)) {
             throw new IllegalStateException("Cannot collide with itself");
@@ -36,7 +36,7 @@ public class Particle {
         float dvy = p.vy - this.vy;
 
         float dvdr = dx * dvx + dy * dvy;
-        if (dvdr > EPSILON) {
+        if (dvdr > 0) {
             return Float.POSITIVE_INFINITY;
         }
 
@@ -46,7 +46,7 @@ public class Particle {
         float sigma = this.r + p.r;
         float d = (dvdr * dvdr) - dvdv * (drdr - sigma * sigma);
 
-        if (d < EPSILON) {
+        if (d < 0) {
             return Float.POSITIVE_INFINITY;
         }
         float dt = -(dvdr + (float) Math.sqrt(d)) / dvdv;
@@ -88,7 +88,8 @@ public class Particle {
         float dt = dtX;
         if (Math.abs(dtX - dtY) < EPSILON){
         }
-        else if (dtX < dtY)
+        else
+        if (dtX < dtY)
             ws[1] = null;
         else if (dtY < dtX) {
             ws[0] = null;
