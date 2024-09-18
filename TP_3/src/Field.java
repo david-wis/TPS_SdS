@@ -3,6 +3,7 @@ import java.util.*;
 public class Field {
     private final float L;
     private final float V;
+    private final String BASE_PATH;
     private List<Particle> particles;
     private Obstacle obstacle;
     private TreeMap<Float, List<Event>> events;
@@ -18,6 +19,7 @@ public class Field {
         V = v;
         this.particles = particles;
         this.obstacle = obstacle;
+        BASE_PATH = (obstacle == null)? "output/moving/" : "output/" + (int) v + "/" ;
     }
 
     private void init() {
@@ -104,10 +106,10 @@ public class Field {
     }
 
     public void loop(float duration, float interval) {
-        final String stateDir = "output/state_" + (int) V + ".txt";
-        final String movObsDir = "output/moving_obstacle_positions_" + (int) V + ".txt";
-        final String wallDir = "output/wall_events_" + (int) V + ".txt";
-        final String obsDir = "output/obstacle_events_" + (int) V + ".txt";
+        final String stateDir = BASE_PATH + "state_" + (int) V + ".txt";
+        final String movObsDir = BASE_PATH + "moving_obstacle_positions_" + (int) V + ".txt";
+        final String wallDir = BASE_PATH + "wall_events_" + (int) V + ".txt";
+        final String obsDir = BASE_PATH + "obstacle_events_" + (int) V + ".txt";
         init();
 
         TreeMap<Float, Particle> movingObstaclePositions = new TreeMap<>();
@@ -117,7 +119,6 @@ public class Field {
         FileController.writeObstaclePositions(movObsDir, movingObstaclePositions, false);
         FileController.createEmptyFile(wallDir);
         FileController.createEmptyFile(obsDir);
-
 
         int count = 0;
         int writes = 0;

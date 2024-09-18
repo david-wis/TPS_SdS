@@ -5,7 +5,7 @@ import java.util.Random;
 public class Main {
 
     private static final String STATE_PATH(Config config){
-        return "output/initial_state_" + (int) config.getV() + ".txt";
+        return "output/"+ (config.isMOVING_OBSTACLE()? "moving" : (int) config.getV()) + "/initial_state_" + (int) config.getV() + ".txt";
     }
 
 
@@ -27,7 +27,7 @@ public class Main {
 
         List<Particle> particles = new ArrayList<>();
 
-        int seed = 0xCAC71;
+        int seed = 0xABCDEF;
         Random rnd = new Random(seed);
 
         float EPSILON = 1e-6f;
