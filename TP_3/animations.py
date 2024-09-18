@@ -5,7 +5,6 @@ from matplotlib.animation import FuncAnimation
 import json
 mpl.use('Agg')
 
-BASE_PATH = "output"
 ID_IDX = 0
 X_IDX = 1
 Y_IDX = 2
@@ -25,6 +24,7 @@ with open("./config.json", "r" ) as f:
     LIMIT = config["LIMIT"]
     MOVING_OBSTACLE = config["MOVING_OBSTACLE"]
     V = int(config["V"])
+    BASE_PATH = "output/" + ("moving" if MOVING_OBSTACLE else int(V)) + "/"
 
 def init_plot(history):
     fig, ax = plt.subplots()
@@ -101,5 +101,5 @@ if __name__ == "__main__":
         fig, update, frames=min(LIMIT, len(history)), fargs=(scatters, labels, ax, history),
         interval=10, blit=True  # interval is in milliseconds
     )
-    anim.save('output/animation.gif', writer='pillow', fps=10)
+    anim.save(f'{BASE_PATH}/animation.gif', writer='pillow', fps=10)
 

@@ -1,1 +1,1 @@
-{  "TOTAL_TIME": 0.5,  "INTERVAL": 0.005,  "L" : 0.1,  "N": 250,  "V": 1.0,  "DT": 0.02,  "M": 1.0,  "R": 0.001,  "OBSTACLE_RADIUS": 0.005,  "OBSTACLE_MASS": 3,  "MOVING_OBSTACLE" : true,  "START" : 1,  "LIMIT" : 50}
+{  "TOTAL_TIME": 100.0,  "INTERVAL": 1.0,  "L" : 0.1,  "N": 250,  "V": 10.0,  "DT": 1.0,  "M": 1.0,  "R": 0.001,  "OBSTACLE_RADIUS": 0.005,  "OBSTACLE_MASS": 3,  "MOVING_OBSTACLE" : false,  "START" : 1,  "LIMIT" : 50}

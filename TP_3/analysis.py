@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import math
 import json
 mpl.use('Agg')
 ID_IDX = 0
@@ -11,6 +10,8 @@ R_IDX = 3
 VX_IDX = 4
 VY_IDX = 5
 MARKED_IDX = 6
+TIME_UNIT = "s"
+ENERGY_UNIT = "J"
 
 with open("./config.json", "r" ) as f:
     config = json.load(f)
@@ -25,16 +26,25 @@ with open("./config.json", "r" ) as f:
     MOVING_OBSTACLE = config["MOVING_OBSTACLE"]
     BASE_PATH = f"output/moving/"
 
-def plot_regr(xs, ys, filename, std, slope, intercept):
+def plot_regr(xs, ys, x_label, y_label, filename, std, slope, intercept):
     fig, ax = plt.subplots()
     ax.errorbar(xs, ys, yerr=std, fmt='o')
     ax.plot(xs, [slope * x + intercept for x in xs], color='red')
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    #include regression in legend
+    ax.legend([f"y = {slope:.2g}t + {intercept:.2g}"])
+    plt.tight_layout()
     plt.savefig(f"{BASE_PATH}/{filename}.png")
 
 
-def plot(xs, ys, filename):
+
+def plot(xs, ys, x_label, y_label,filename):
     fig, ax = plt.subplots()
+    plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
     ax.scatter(xs, ys)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
     ax.set_ylim((0, 1.1 * max(ys)))
     plt.savefig(f"{BASE_PATH}/{filename}.png")
 
@@ -66,78 +76,37 @@ if __name__ == "__main__":
             continue
         temperatures.append(MASS * sum([(p[VX_IDX] ** 2 + p[VY_IDX] ** 2) for p in state]) / (2 * len(state)))
 
-    temperatures = [round(t, 2) for t in temperatures]
-    plot([INTERVAL * i for i in range(len(temperatures))], temperatures, "temperature")
-
-    #OBSTACLE==================================================================================================================================
-    # obs_pressures = {}
-    # obs_first_collisions = dict()
-    # obst_evs = []
-    # with (open(f"{BASE_PATH}/obstacle_events_{V}.txt", "r") as f):
-    #     for line in f:
-    #         t, id, x, y, vx, vy = line[:-1].split(" ")
-    #         obst_evs.append((float(t), int(id), float(x), float(y), float(vx), float(vy)))
-    #
-    # for i, s in enumerate(obst_evs):
-    #     t, id, x, y, vx, vy = s
-    #     idx = int(t // DT)
-    #     if idx not in obs_pressures:
-    #         obs_pressures[idx] = 0
-    #     def get_normal_velocity(x, y, vx, vy):
-    #         return abs((x - L / 2) * vx + (y - L / 2) * vy) / math.sqrt((x - L / 2) ** 2 + (y - L / 2) ** 2)
-    #     obs_pressures[idx] += 2 * MASS * get_normal_velocity(x, y, vx, vy) / (DT * math.pi * OBS_RADIUS * 2)
-    #
-    #     if id not in obs_first_collisions.keys():
-    #         obs_first_collisions[id] = t
-    #
-    # plot([DT * i for i in range(len(obs_pressures))], list(obs_pressures.values()), "obs_pressure")
-    # times = obs_first_collisions.values()
-    # times = sorted(times)
-    # plot(times, [i for i in range(len(times))], "first_collisions")
-    # plot([e[0] for e in obst_evs], [i for i in range(len(obst_evs))], "all_collisions")
-    #
-    # #WALL========================================================================================================================================
-    # wall_pressures = {}
-    # wall_evs = []
-    # with (open(f"{BASE_PATH}/wall_events_{V}.txt", "r") as f):
-    #     for line in f:
-    #         t, id, x, y, vx, vy, dirs = line[:-1].split(" ")
-    #         wall_evs.append((float(t), int(id), float(x), float(y), float(vx), float(vy), dirs))
-    #
-    # for i, s in enumerate(wall_evs):
-    #     t, id, x, y, vx, vy, dirs = s
-    #     idx = int(t // DT)
-    #     if idx not in wall_pressures:
-    #         wall_pressures[idx] = 0
-    #     def get_velocity_by_wall(x, y, vx, vy, r, dirs):
-    #         if "x" in dirs:
-    #             return abs(vx)
-    #         elif "y" in dirs:
-    #             return abs(vy)
-    #         print("zero")
-    #         return 0
-    #     wall_pressures[idx] += 2 * MASS * get_velocity_by_wall(x, y, vx, vy, RADIUS, dirs) / (DT * 4 * L)
-    #
-    # plot([DT * i for i in range(len(wall_pressures))], list(wall_pressures.values()), "wall_pressure")
-
+    temperatures = [t for t in temperatures]
+    plot([INTERVAL * i for i in range(len(temperatures))], temperatures, f"Tiempo ({TIME_UNIT})", f"Energía cinética del sistema ({ENERGY_UNIT})","temperature")
 
     #MOVING OBSTACLE===========================================================================================================================
     if MOVING_OBSTACLE:
-        msds = dict()
-        msdsdevs = dict()
+        final_t = 0
+        with open(f"{BASE_PATH}/wall_events_1.txt", "r") as f:
+            for line in f:
+                t, id, _, _, _, _, _ = line[:-1].split(" ")
+                if int(id) == 0:
+                    final_t = float(t)
+                    print("final time",final_t)
+                    break
+
         with open(f"{BASE_PATH}/moving_obstacle_positions_{V}.txt", "r") as f:
             positions = []
             for line in f:
                 t, x, y = line[:-1].split(" ")
                 positions.append((float(t), float(x), float(y)))
+                if float(t) >= final_t:
+                    break
 
+        msds = dict()
+        msdsdevs = dict()
         displacements = dict()
         for p in positions:
             t, x, y = p
             idx = int(t // DT)
 
             # Calculate the displacement squared
-            displacement = ((x - L / 2) ** 2 + (y - L / 2) ** 2) / DT
+            displacement = ((x - L / 2) ** 2 + (y - L / 2) ** 2)
 
             # Accumulate displacement squared values
             if idx not in displacements:
@@ -156,4 +125,4 @@ if __name__ == "__main__":
         # Perform linear regression (fit a line to the data)
         slope, intercept = np.polyfit(times, mean_msd, 1)
 
-        plot_regr([DT * (i + 1) for i in range(len(msds))], msds.values(), "msd", msdsdevs.values(), slope, intercept)
+        plot_regr([DT * (i + 1) for i in range(len(msds))], msds.values(), f"Tiempo ({TIME_UNIT})", "Desplazamiento cuadratico medio ($m^2$)", "msd", msdsdevs.values(), slope, intercept)

@@ -123,7 +123,7 @@ public class Particle {
         float t2 = (-B + sqrtDiscr) / (2 * A);
 
         float t = Math.min(t1, t2);
-        if (t < EPSILON){
+        if (t < 0){
 //            System.out.println("=================Time to hit obstacle is negative, id: " + this.id);
             return Float.POSITIVE_INFINITY;
         }
