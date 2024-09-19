@@ -17,8 +17,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-        staticObstacle();
-//        movingObstacle();
+//        staticObstacle();
+        movingObstacle();
     }
 
     public static void staticObstacle(){
@@ -40,7 +40,7 @@ public class Main {
         Obstacle obs = null;
         if (!config.isMOVING_OBSTACLE())
             obs = new Obstacle(config.getL() / 2, config.getL() / 2, config.getOBSTACLE_RADIUS());
-        for (int s : List.of(0xCAC71, 0xCAFEBABE, 0xDEADBEEF)){
+        for (int s : List.of(0xCAC71, 0xCAFEBABE, 0xDEADBEEF, 0xCAC72, 0xCAC73, 0xCAC74, 0xCAC75, 0x0CAC76, 0xCAC77, 0xCAC78)){
             FileController.createFolderIfNotExists(BASE_PATH(config, s));
             initParticles(config, obs, s);
             System.out.println("finished initialization" + s);
