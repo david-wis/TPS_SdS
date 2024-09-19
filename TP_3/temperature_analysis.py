@@ -42,6 +42,20 @@ def plot(xs, ys, x_label, y_label, filename):
     plt.savefig(f"{BASE_PATH}/{filename}.png")
     plt.close()
 
+def plot_aggregated(xss, yss, ls, x_label, y_label, filename):
+    fig, ax = plt.subplots()
+    plt.ticklabel_format(style='sci', axis='both', scilimits=(-5,5))
+    for xs, ys, l in zip(xss, yss, ls):
+        ax.scatter(xs, ys, label=l, s=10)
+    ax.set_ylim((0, 1.1 * max([max(ys) for ys in yss])))
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    ax.yaxis.set_major_formatter(formatter)
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig(f"{BASE_PATH}/{filename}.png")
+    plt.close()
+
 with open("config/static_config.json", "r") as f:
     config = json.load(f)
     DT = config["DT"]
@@ -77,7 +91,7 @@ def analyze_velocity(v):
         temperatures.append(MASS * sum([(p[VX_IDX] ** 2 + p[VY_IDX] ** 2) for p in state]) / (2 * len(state)))
 
     temperatures = [t for t in temperatures]
-    plot([INTERVAL * i for i in range(len(temperatures))], temperatures, f"Tiempo ({TIME_UNIT})", f"Energía cinética del sistema ({ENERGY_UNIT})","temperature")
+    plot([INTERVAL * i for i in range(len(temperatures))], temperatures, f"Tiempo ({TIME_UNIT})", f"Energía cinética del sistema ({ENERGY_UNIT})",f"{v}/temperature")
 
    #WALL========================================================================================================================================
     wall_pressures = {}
@@ -94,7 +108,7 @@ def analyze_velocity(v):
             wall_pressures[idx] = 0
         def get_velocity_by_wall(x, y, vx, vy, r, dirs):
             total_v = 0
-            if dirs == "xy": print("double")
+            # if dirs == "xy": print("double")
             if "x" in dirs:
                 total_v += abs(vx)
             elif "y" in dirs:
@@ -127,15 +141,25 @@ def analyze_velocity(v):
            obs_first_collisions[id] = t
 
     plot([DT * i for i in range(len(obs_pressures))], list(obs_pressures.values()), f"Tiempo ({TIME_UNIT})",f"Presión sobre el obstáculo ({PRESSURE_UNIT})", f"{v}/obs_pressure")
-    times = obs_first_collisions.values()
-    times = sorted(times)
-    plot(times, [i for i in range(len(times))], f"Tiempo ({TIME_UNIT})", "Cantidad de primeras colisiones", f"{v}/first_collisions")
-    plot([e[0] for e in obst_evs], [i for i in range(len(obst_evs))], f"Tiempo ({TIME_UNIT})", "Cantidad de colisiones", f"{v}/all_collisions", )
+    first_times = obs_first_collisions.values()
+    first_times = sorted(first_times)
+    first_collisions = [i for i in range(len(first_times))]
+    plot(first_times, first_collisions, f"Tiempo ({TIME_UNIT})", "Cantidad de primeras colisiones", f"{v}/first_collisions")
+    all_collisions = [i for i in range(len(obst_evs))]
+    all_times = [e[0] for e in obst_evs]
+    plot(all_times, all_collisions, f"Tiempo ({TIME_UNIT})", "Cantidad de colisiones", f"{v}/all_collisions", )
 
     time_10000 = obst_evs[1000][0]
-    time_half = times[len(times) // 2]
-    time_all = times[-1]
-    return (np.mean(np.array(list(wall_pressures.values()))) + np.mean(np.array(list(obs_pressures.values())))) / 2, time_10000, time_half, time_all
+    time_half = first_times[len(first_times) // 2]
+    time_all = first_times[-1]
+    return (
+            (np.mean(np.array(list(wall_pressures.values()))) + np.mean(np.array(list(obs_pressures.values())))) / 2,
+            wall_pressures, obs_pressures,
+            first_times, first_collisions,
+            all_times, all_collisions,
+            time_10000, time_half, time_all
+    )
+
 
 if __name__ == "__main__":
     velocities = [1,3,6,10]
@@ -144,15 +168,35 @@ if __name__ == "__main__":
     times_10000 = []
     times_half = []
     times_all = []
+    wpss = []
+    opss = []
+    ftss = []
+    fcss = []
+    atss = []
+    acss = []
     for v in velocities:
         print(v)
-        mean_pressure, time_10000, time_half, time_all = analyze_velocity(v)
+        (mean_pressure, wall_pressures, obs_pressures,
+         first_times, first_collisions,
+         all_times, all_collisions,
+         time_10000, time_half, time_all) = analyze_velocity(v)
+        wpss.append(wall_pressures)
+        opss.append(obs_pressures)
+        fcss.append(first_collisions)
+        ftss.append(first_times)
+        acss.append(all_collisions)
+        atss.append(all_times)
         pressures.append(mean_pressure)
         times_10000.append(time_10000)
         times_half.append(time_half)
         times_all.append(time_all)
+    plot_aggregated([[DT * i for i in range(len(wps))] for wps in wpss], [list(wps.values()) for wps in wpss], velocities, f"Tiempo ({TIME_UNIT})",f"Presión sobre las paredes ({PRESSURE_UNIT})",f"wall_pressure")
+    plot_aggregated([[DT * i for i in range(len(ops))] for ops in opss], [list(ops.values()) for ops in opss], velocities, f"Tiempo ({TIME_UNIT})",f"Presión sobre el obstáculo ({PRESSURE_UNIT})", f"obs_pressure")
+    plot_aggregated(ftss, fcss, velocities, f"Tiempo ({TIME_UNIT})", "Cantidad de primeras colisiones", f"first_collisions")
+    plot_aggregated(atss, acss, velocities, f"Tiempo ({TIME_UNIT})", "Cantidad de colisiones", f"all_collisions", )
 
     plot(temperatures, pressures, f"Energía cinética del sistema ({ENERGY_UNIT})",f"Presión del sistema ({ENERGY_UNIT})","temperature_pressure")
     plot(temperatures, times_10000, f"Energía cinética del sistema ({ENERGY_UNIT})",f"Tiempo para 10000 colisiones ({TIME_UNIT})","temperature_time_10000")
     plot(temperatures, times_half, f"Energía cinética del sistema ({ENERGY_UNIT})",f"Tiempo para el 50% de las primeras partículas ({TIME_UNIT})","temperature_time_half")
     plot(temperatures, times_all, f"Energía cinética del sistema ({ENERGY_UNIT})",f"Tiempo para el 100% de las primeras partículas ({TIME_UNIT})","temperature_time_all")
+
