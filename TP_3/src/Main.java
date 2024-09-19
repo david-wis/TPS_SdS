@@ -17,8 +17,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-//        staticObstacle();
-        movingObstacle();
+        staticObstacle();
+//        movingObstacle();
     }
 
     public static void staticObstacle(){
