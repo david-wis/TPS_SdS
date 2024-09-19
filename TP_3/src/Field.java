@@ -12,14 +12,12 @@ public class Field {
     private TreeMap<Float, List<Event>> wallEvents = new TreeMap<>();
     private TreeMap<Float, List<Event>> obstacleEvents = new TreeMap<>();
 
-    private List<Particle> movingObstaclePositions = new ArrayList<>();
-
-    public Field(float l, float v, List<Particle> particles, Obstacle obstacle) {
+    public Field(float l, float v, List<Particle> particles, Obstacle obstacle, String base_path) {
         L = l;
         V = v;
         this.particles = particles;
         this.obstacle = obstacle;
-        BASE_PATH = (obstacle == null)? "output/moving/" : "output/" + (int) v + "/" ;
+        BASE_PATH = base_path;
     }
 
     private void init() {
@@ -106,10 +104,10 @@ public class Field {
     }
 
     public void loop(float duration, float interval) {
-        final String stateDir = BASE_PATH + "state_" + (int) V + ".txt";
-        final String movObsDir = BASE_PATH + "moving_obstacle_positions_" + (int) V + ".txt";
-        final String wallDir = BASE_PATH + "wall_events_" + (int) V + ".txt";
-        final String obsDir = BASE_PATH + "obstacle_events_" + (int) V + ".txt";
+        final String stateDir = BASE_PATH + "/state.txt";
+        final String movObsDir = BASE_PATH + "/moving_obstacle_positions.txt";
+        final String wallDir = BASE_PATH + "/wall_events.txt";
+        final String obsDir = BASE_PATH + "/obstacle_events.txt";
         init();
 
         TreeMap<Float, Particle> movingObstaclePositions = new TreeMap<>();

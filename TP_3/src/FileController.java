@@ -84,8 +84,7 @@ public class FileController {
         }
     }
 
-    public static Config getConfig() {
-        String filePath = "config.json";
+    public static Config getConfig(String filePath) {
 
         // Create a Gson instance
         Gson gson = new Gson();
@@ -101,4 +100,9 @@ public class FileController {
     }
 
 
+    public static void createFolderIfNotExists(String path) {
+        File file = new File(path);
+        if (!file.exists() && file.mkdir())
+            System.out.println(path + " directory is created!");
+    }
 }

@@ -4,30 +4,55 @@ import java.util.Random;
 
 public class Main {
 
-    private static final String STATE_PATH(Config config){
-        return "output/"+ (config.isMOVING_OBSTACLE()? "moving" : (int) config.getV()) + "/initial_state_" + (int) config.getV() + ".txt";
+    private static String BASE_PATH(Config config, int seed){
+        if (config.isMOVING_OBSTACLE())
+            return "output/moving/" + String.format("%x", seed);
+        else
+            return "output/" + (int) config.getV();
+    }
+
+    private static String STATE_PATH(Config config, int seed){
+        return BASE_PATH(config, seed) + "/initial_state.txt";
     }
 
 
     public static void main(String[] args) {
-        Config config = FileController.getConfig();
+        staticObstacle();
+//        movingObstacle();
+    }
+
+    public static void staticObstacle(){
+        Config config = FileController.getConfig("config/static_config.json");
         Obstacle obs = null;
         if (!config.isMOVING_OBSTACLE())
             obs = new Obstacle(config.getL() / 2, config.getL() / 2, config.getOBSTACLE_RADIUS());
-
-        initParticles(config, obs);
+        int seed = 0xCAC71;
+        initParticles(config, obs, seed);
         System.out.println("finished initialization");
-        List<Particle> particles = FileController.readParticlesState(STATE_PATH(config));
-        Field f = new Field(config.getL(), config.getV(), particles, obs);
+        List<Particle> particles = FileController.readParticlesState(STATE_PATH(config, seed));
+        Field f = new Field(config.getL(), config.getV(), particles, obs, BASE_PATH(config, seed));
         f.loop(config.getTOTAL_TIME(), config.getINTERVAL());
     }
 
+    public static void movingObstacle(){
+        Config config = FileController.getConfig("config/moving_config.json");
+        Obstacle obs = null;
+        if (!config.isMOVING_OBSTACLE())
+            obs = new Obstacle(config.getL() / 2, config.getL() / 2, config.getOBSTACLE_RADIUS());
+        for (int s : List.of(0xCAC71, 0xCAFEBABE, 0xDEADBEEF)){
+            FileController.createFolderIfNotExists(BASE_PATH(config, s));
+            initParticles(config, obs, s);
+            System.out.println("finished initialization" + s);
+            List<Particle> particles = FileController.readParticlesState(STATE_PATH(config, s));
+            Field f = new Field(config.getL(), config.getV(), particles, obs, BASE_PATH(config, s));
+            f.loop(config.getTOTAL_TIME(), config.getINTERVAL());
+        }
+    }
 
-    public static void initParticles(Config config, Obstacle obstacle) {
+
+    public static void initParticles(Config config, Obstacle obstacle, int seed) {
 
         List<Particle> particles = new ArrayList<>();
-
-        int seed = 0xABCDEF;
         Random rnd = new Random(seed);
 
         float EPSILON = 1e-6f;
@@ -55,7 +80,8 @@ public class Main {
             } while(overlap);
             particles.add(p);
         }
-        FileController.writeParticlesState(STATE_PATH(config), particles, false);
+
+        FileController.writeParticlesState(STATE_PATH(config, seed), particles, false);
     }
 
 }

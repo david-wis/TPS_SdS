@@ -13,7 +13,7 @@ VX_IDX = 4
 VY_IDX = 5
 MARKED_IDX = 6
 
-with open("./config.json", "r" ) as f:
+with open("config/moving_config.json", "r") as f:
     config = json.load(f)
     DT = config["DT"]
     INTERVAL = config["INTERVAL"]
