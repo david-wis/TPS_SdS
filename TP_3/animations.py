@@ -60,7 +60,7 @@ def update(frame, scatters, labels, ax, history):
         obstacle = plt.Circle((L/2, L/2), OBS_RADIUS, color='grey')
         ax.add_artist(obstacle)
 
-    ax.set_title(f"t = {frame * INTERVAL} s")
+    ax.set_title(f"t = {(frame * INTERVAL):.2g} s")
     return scatters
 
 
