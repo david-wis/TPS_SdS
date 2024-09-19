@@ -22,6 +22,7 @@ public class Main {
     }
 
     public static void staticObstacle(){
+//        Config config = FileController.getConfig("config/animation_config.json");
         Config config = FileController.getConfig("config/static_config.json");
         Obstacle obs = null;
         if (!config.isMOVING_OBSTACLE())

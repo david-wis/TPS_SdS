@@ -14,7 +14,7 @@ VX_IDX = 4
 VY_IDX = 5
 MARKED_IDX = 6
 
-with open("config/moving_config.json", "r") as f:
+with open("config/animation_config.json", "r") as f:
     config = json.load(f)
     DT = config["DT"]
     INTERVAL = config["INTERVAL"]
@@ -25,7 +25,7 @@ with open("config/moving_config.json", "r") as f:
     LIMIT = config["LIMIT"]
     MOVING_OBSTACLE = config["MOVING_OBSTACLE"]
     V = int(config["V"])
-    BASE_PATH = "output/" + ("moving/cac71" if MOVING_OBSTACLE else int(V)) + "/"
+    BASE_PATH = "output/" + ("moving/cac71" if MOVING_OBSTACLE else str(int(V))) + "/"
 
 def init_plot(history):
     fig, ax = plt.subplots()
@@ -60,7 +60,7 @@ def update(frame, scatters, labels, ax, history):
         obstacle = plt.Circle((L/2, L/2), OBS_RADIUS, color='grey')
         ax.add_artist(obstacle)
 
-    ax.set_title(f"t = {(frame * INTERVAL):.2g} s")
+    ax.set_title(f"t = {(frame * INTERVAL):.3f} s")
     return scatters
 
 
@@ -102,7 +102,7 @@ if __name__ == "__main__":
         fig, update, frames=min(LIMIT, len(history)), fargs=(scatters, labels, ax, history),
         interval=10, blit=True  # interval is in milliseconds
     )
-    anim.save(f'{BASE_PATH}/animation.gif', writer='pillow', fps=10)
+    anim.save(f'{BASE_PATH}/animation.gif', writer='pillow', fps=20)
     clip = mp.VideoFileClip(f'{BASE_PATH}/animation.gif')
     clip.write_videofile(f'{BASE_PATH}/animation.mp4')
 
