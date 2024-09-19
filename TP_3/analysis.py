@@ -97,7 +97,7 @@ if __name__ == "__main__":
                         final_ts.append(final_t)
                         break
     final_t = np.mean(final_ts)
-
+    print(final_t)
     msdss = []
     for s in seeds:
         SEED_PATH = BASE_PATH + "/" + s
@@ -118,6 +118,6 @@ if __name__ == "__main__":
 
     # Perform linear regression
     slope, intercept = np.polyfit(times , msds, 1)
-    plot_regr(times, msds, f"Time ({TIME_UNIT})", f"Mean Squared Displacement ({D2_UNIT})", "msd", stds, slope, intercept)
+    plot_regr(times, msds, f"Tiempo ({TIME_UNIT})", f"Desplazamiento cuadrático medio ({D2_UNIT})", "msd", stds, slope, intercept)
     print(slope/4)
-    plot_aggregated([times for i in range(len(seeds))], [msds for msds in msdss], seeds, f"Time ({TIME_UNIT})", f"Mean Squared Displacement ({D2_UNIT})", "msd_agg")
+    plot_aggregated([times for i in range(len(seeds))], [msds for msds in msdss], seeds, f"Tiempo ({TIME_UNIT})", f"Desplazamiento cuadrático medio ({D2_UNIT})", "msd_agg")
