@@ -1,56 +1,56 @@
 public class Config {
-    private float dt;
-    private float m;
-    private float k;
-    private float gamma;
-    private float tf;
-    private float r0;
+    private double dt;
+    private double m;
+    private double k;
+    private double g;
+    private double tf;
+    private double r0;
 
-    public float getDt() {
+    public double getDt() {
         return dt;
     }
 
-    public void setDt(float dt) {
+    public void setDt(double dt) {
         this.dt = dt;
     }
 
-    public float getM() {
+    public double getM() {
         return m;
     }
 
-    public void setM(float m) {
+    public void setM(double m) {
         this.m = m;
     }
 
-    public float getK() {
+    public double getK() {
         return k;
     }
 
-    public void setK(float k) {
+    public void setK(double k) {
         this.k = k;
     }
 
-    public float getGamma() {
-        return gamma;
+    public double getG() {
+        return g;
     }
 
-    public void setGamma(float gamma) {
-        this.gamma = gamma;
+    public void setG(double g) {
+        this.g = g;
     }
 
-    public float getTf() {
+    public double getTf() {
         return tf;
     }
 
-    public void setTf(float tf) {
+    public void setTf(double tf) {
         this.tf = tf;
     }
 
-    public float getR0() {
+    public double getR0() {
         return r0;
     }
 
-    public void setR0(float r0) {
+    public void setR0(double r0) {
         this.r0 = r0;
     }
 

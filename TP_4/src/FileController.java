@@ -8,19 +8,19 @@ import java.io.IOException;
 import java.util.*;
 public class FileController {
 
-    public static void writeParticlesState(String filename, List<Particle1D> particles, boolean append) {
+    public static void writeParticlesState(String filename, List<Particle1D> particles, double t, boolean append) {
         try {
             FileWriter writer = new FileWriter(filename, append);
             for (Particle1D p : particles)
-                writer.write(p.getR() + " " + p.getV() + "\n");
+                writer.write(t + " " + p.getR() + " " + p.getV() + "\n");
             writer.close();
         } catch (IOException e) {
             System.err.println("An error occurred writing the initial state.");
         }
     }
 
-    public static void writeParticlesState(String filename, Particle1D particles, boolean append) {
-        writeParticlesState(filename, Collections.singletonList(particles), append);
+    public static void writeParticlesState(String filename, Particle1D particles, double t, boolean append) {
+        writeParticlesState(filename, Collections.singletonList(particles), t, append);
     }
 
 

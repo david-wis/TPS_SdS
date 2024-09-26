@@ -1,22 +1,21 @@
 package Integrators;
 
 public class Verlet extends Integrator {
-    private float rPrev;
-    private float rCurr;
-    public Verlet(Particle1D p, float r0, float r1) {
+    private double rPrev;
+    public Verlet(Particle1D p, double r0) {
         super(p);
         rPrev = r0;
-        rCurr = r1;
     }
     @Override
-    public void update(float dt, float k, float gamma) {
-        float vCurr = particle.getV();
-        float rNext = 2 * rCurr - rPrev + dt * dt * particle.getAcceleration(rCurr, vCurr, k, gamma);
-        float vNext = (rNext - rPrev) / (2 * dt);
-        rPrev = rCurr;
-        rCurr = rNext;
-        particle.setR(rCurr);
+    public void update(double dt, double k, double g) {
+        double rCurr = particle.getR();
+        double vCurr = particle.getV();
+        double rNext = 2 * rCurr - rPrev + dt * dt * particle.getAcceleration(rCurr, vCurr, k, g);
+        double vNext = (rNext - rPrev) / (2 * dt);
+        particle.setR(rNext);
         particle.setV(vNext);
+        rPrev = rCurr;
     }
+
 
 }

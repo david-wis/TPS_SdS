@@ -1,17 +1,41 @@
-import Integrators.Particle1D;
-import Integrators.Verlet;
+import Integrators.*;
+
+import java.util.List;
 
 public class DampedOscilator {
     public static void run(Config config) {
-        FileController.createEmptyFile("output/verlet_state.txt");
-        Particle1D p = new Particle1D(config.getR0(), -config.getR0() *config.getGamma() / 2, config.getM());
-        float r1 = (float) (config.getR0() * Math.exp(-config.getGamma() * config.getDt() / (2 * config.getM()) ) * Math.cos(Math.sqrt(config.getK() / config.getM() - Math.pow(config.getGamma() / (2 * config.getM()), 2)) * config.getDt()));
-        Verlet verlet = new Verlet(p, p.getR(), r1);
-        float t = config.getDt();
-        while (t <= config.getTf()) {
-            verlet.update(config.getDt(), config.getK(), config.getGamma());
-            FileController.writeParticlesState("output/verlet_state.txt", p, true);
-            t += config.getDt();
+
+        double R0 = config.getR0();
+        double V0 = -config.getR0() *config.getG() / (2 * config.getM());
+        double DT = config.getDt();
+        Particle1D p = new Particle1D(config.getM(), (double) DT, R0, config.getK(), config.getG());
+        double k_m = config.getK() / config.getM();
+
+        Verlet verlet = new Verlet(p.copy(), R0);
+        Beeman beeman = new Beeman(p.copy(), (-config.getK() * R0 - config.getG() * V0) / config.getM());
+        GPC gpc = new GPC(p.copy(),
+                p.getR(),
+                p.getV(),
+                -k_m * (p.getR() - R0),
+                -k_m * p.getV(),
+                k_m * k_m * (p.getR() - R0),
+                k_m * k_m * p.getV());
+        List<Integrator> integrators = List.of(verlet, beeman, gpc);
+
+        for (Integrator integrator : integrators) {
+            System.out.println("\n\nRunning " + integrator.getClass().getSimpleName() + " integrator");
+            String filename = "output/state_" + integrator.getClass().getSimpleName().toLowerCase() + ".txt";
+            FileController.createEmptyFile(filename);
+            FileController.writeParticlesState(filename, new Particle1D(R0, V0, config.getM()), 0, true);
+            FileController.writeParticlesState(filename, integrator.getParticle(), DT, true);
+
+            double t = 2 * config.getDt();
+            while (t <= config.getTf()) {
+                integrator.update((double) DT, config.getK(), config.getG());
+                FileController.writeParticlesState(filename, integrator.getParticle(), t, true);
+                t += DT;
+
+            }
         }
     }
 }

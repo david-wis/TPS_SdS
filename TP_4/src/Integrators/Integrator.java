@@ -8,5 +8,9 @@ public abstract class Integrator {
         this.particle = particle;
     }
 
-    public abstract void update(float dt, float k, float gamma);
+    public abstract void update(double dt, double k, double g);
+
+    public Particle1D getParticle() {
+        return particle;
+    }
 }
