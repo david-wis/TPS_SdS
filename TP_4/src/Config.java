@@ -1,17 +1,15 @@
+import java.util.List;
+
 public class Config {
-    private double dt;
+    private List<Double> dts;
     private double m;
     private double k;
     private double g;
     private double tf;
     private double r0;
 
-    public double getDt() {
-        return dt;
-    }
-
-    public void setDt(double dt) {
-        this.dt = dt;
+    public List<Double> getDts() {
+        return dts;
     }
 
     public double getM() {
