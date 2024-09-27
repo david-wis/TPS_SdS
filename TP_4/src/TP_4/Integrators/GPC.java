@@ -1,4 +1,6 @@
-package Integrators;
+package TP_4.Integrators;
+
+import TP_4.Particle;
 
 public class GPC extends Integrator {
 
@@ -10,7 +12,7 @@ public class GPC extends Integrator {
     private static final double alpha5 = 1.0 / 60.0;
     private double r0, r1, r2, r3, r4, r5;
 
-    public GPC(Particle1D p, double r0, double r1, double r2, double r3, double r4, double r5) {
+    public GPC(Particle p, double r0, double r1, double r2, double r3, double r4, double r5) {
         super(p);
         this.r0 = r0;
         this.r1 = r1;
@@ -21,7 +23,8 @@ public class GPC extends Integrator {
     }
 
     @Override
-    public void update(double dt, double k, double g) {
+    public void update(double t, double dt) {
+
         double r0pNext = r0 + r1 * dt + r2 * Math.pow(dt, 2) / 2 + r3 * Math.pow(dt, 3) / 6 + r4 * Math.pow(dt, 4) / 24 + r5 * Math.pow(dt, 5) / 120;
         double r1pNext = r1 + r2 * dt + r3 * Math.pow(dt, 2) / 2 + r4 * Math.pow(dt, 3) / 6 + r5 * Math.pow(dt, 4) / 24;
         double r2pNext = r2 + r3 * dt + r4 * Math.pow(dt, 2) / 2 + r5 * Math.pow(dt, 3) / 6;
@@ -29,7 +32,7 @@ public class GPC extends Integrator {
         double r4pNext = r4 + r5 * dt;
         double r5pNext = r5;
 
-        double r2Next = particle.getAcceleration(r0pNext, r1pNext, k, g);
+        double r2Next = particle.getAcceleration(r0pNext, r1pNext, t + dt);
         double DR2 = (r2Next - r2pNext) * dt * dt / 2;
 
         r0 = r0pNext + alpha0 * DR2;

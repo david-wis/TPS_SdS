@@ -67,32 +67,3 @@ def analytic_v(t):
 if __name__ == "__main__":
     # Load data
     integrators = ["analytic", "verlet", "beeman", "gpc"]
-    msep_by_integrators = { i : [] for i in integrators[1:]}
-    msev_by_integrators = { i : [] for i in integrators[1:]}
-    for integrator in integrators[1:]:
-        for dt in DTS:
-            BASE_PATH = f"output/{dt:.2g}"
-            data = np.loadtxt(f"{BASE_PATH}/state_{integrator}.txt")
-            ts = data[:, 0]
-            xs = data[:, 1]
-            analytic_xs = np.array([ analytic_x(t) for t in ts])
-            plot_aggregated(ts, [analytic_xs, xs], ["analytic", integrator], "Tiempo (s)", "Posición (m)", f"positions_{integrator}")
-            msep = np.mean((analytic_xs - xs)**2)
-            msep_by_integrators[integrator].append(msep)
-            print(f"MSEP {integrator} dt {dt:.2g}: {msep}")
-
-            vs = data[:, 2]
-            analytic_vs = np.array([ analytic_v(t) for t in ts])
-            plot_aggregated(ts, [analytic_vs, vs], ["analytic", integrator], "Tiempo (s)", "Velocidad (m/s)", f"velocities_{integrator}")
-            msev = np.mean((analytic_vs - vs)**2)
-            msev_by_integrators[integrator].append(msev)
-            print(f"MSEV {integrator} dt {dt:.2g}: {msev}")
-
-            # plot(ts, analytic_vs, "Tiempo (s)", "Velocidad (m/s)", f"velocities_analytic")
-            np.savetxt(f"{BASE_PATH}/state_analytic.txt", np.array([ts, analytic_xs, analytic_vs]).T, delimiter=" ")
-        BASE_PATH = "output"
-        plot(DTS, msep_by_integrators[integrator], "dt (s)", "MSEP", f"msep_{integrator}", True, True)
-        plot(DTS, msev_by_integrators[integrator], "dt (s)", "MSEV", f"msev_{integrator}", True, True)
-    plot_aggregated(DTS, [msep_by_integrators[i] for i in integrators[1:]], integrators[1:], "dt (s)", "MSEP", f"msep_aggregated", True, True)
-    plot_aggregated(DTS, [msev_by_integrators[i] for i in integrators[1:]], integrators[1:], "dt (s)", "MSEV", f"msev_aggregated", True, True)
-

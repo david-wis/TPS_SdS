@@ -1,4 +1,5 @@
-import Integrators.Particle1D;
+package TP_4;
+
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -8,10 +9,10 @@ import java.io.IOException;
 import java.util.*;
 public class FileController {
 
-    public static void writeParticlesState(String filename, List<Particle1D> particles, double t, boolean append) {
+    public static void writeParticlesState(String filename, List<Particle> particles, double t, boolean append) {
         try {
             FileWriter writer = new FileWriter(filename, append);
-            for (Particle1D p : particles)
+            for (Particle p : particles)
                 writer.write(t + " " + p.getR() + " " + p.getV() + "\n");
             writer.close();
         } catch (IOException e) {
@@ -19,7 +20,7 @@ public class FileController {
         }
     }
 
-    public static void writeParticlesState(String filename, Particle1D particles, double t, boolean append) {
+    public static void writeParticlesState(String filename, Particle particles, double t, boolean append) {
         writeParticlesState(filename, Collections.singletonList(particles), t, append);
     }
 

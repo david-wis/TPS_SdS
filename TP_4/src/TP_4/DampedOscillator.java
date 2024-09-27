@@ -1,31 +1,33 @@
-import Integrators.*;
+package TP_4;
+
+import TP_4.Integrators.*;
 
 import java.util.List;
 
-public class DampedOscilator {
+public class DampedOscillator {
     public static void run(Config config, double DT) {
 
         double R0 = config.getR0();
         double V0 = -config.getR0() *config.getG() / (2 * config.getM());
-        Particle1D p = new Particle1D(config.getM(), (double) DT, R0, config.getK(), config.getG());
+        Particle p = new Particle(DT);
 
 
         Verlet verlet = new Verlet(p.copy(), R0);
         Beeman beeman = new Beeman(p.copy(), (-config.getK() * R0 - config.getG() * V0) / config.getM());
-        GPC gpc = initializeGPC(config, p, R0);
+        GPC gpc = initializeGPC(config, p, R0, DT);
         List<Integrator> integrators = List.of(verlet, beeman, gpc);
-        String basePath = "output/"  + String.format("%.1g",DT);
+        String basePath = "output/1/"  + String.format("%.1g",DT);
         FileController.createFolderIfNotExists(basePath);
         for (Integrator integrator : integrators) {
             System.out.println("Running " + integrator.getClass().getSimpleName() + " integrator");
             String filename = basePath + "/state_" + integrator.getClass().getSimpleName().toLowerCase() + ".txt";
             FileController.createEmptyFile(filename);
-            FileController.writeParticlesState(filename, new Particle1D(R0, V0, config.getM()), 0, true);
+            FileController.writeParticlesState(filename, new Particle(R0, V0), 0, true);
             FileController.writeParticlesState(filename, integrator.getParticle(), DT, true);
 
             double t = 2 * DT;
             while (t <= config.getTf()) {
-                integrator.update((double) DT, config.getK(), config.getG());
+                integrator.update(t, DT);
                 FileController.writeParticlesState(filename, integrator.getParticle(), t, true);
                 t += DT;
 
@@ -33,10 +35,10 @@ public class DampedOscilator {
         }
     }
 
-    public static GPC initializeGPC(Config config, Particle1D p, double R0) {
+    public static GPC initializeGPC(Config config, Particle p, double R0, double dt) {
         double k_m = config.getK() / config.getM();
         double g_m = config.getG() / config.getM();
-        double a = p.getAcceleration(p.getR(), p.getV(), config.getK(), config.getG());
+        double a = p.getAcceleration(p.getR(), p.getV(), dt);
         double r3 = - k_m * p.getV() - g_m * a;
         double r4 = - k_m * a - g_m * r3;
         double r5 = - k_m * r3 - g_m * r4;
