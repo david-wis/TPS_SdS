@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.ticker import FuncFormatter
 import json
+mpl.use('Agg')
+
 def scientific_notation(x, pos):
     if x == 0:
         return '0'

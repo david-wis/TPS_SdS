@@ -8,17 +8,11 @@ public class DampedOscilator {
         double R0 = config.getR0();
         double V0 = -config.getR0() *config.getG() / (2 * config.getM());
         Particle1D p = new Particle1D(config.getM(), (double) DT, R0, config.getK(), config.getG());
-        double k_m = config.getK() / config.getM();
+
 
         Verlet verlet = new Verlet(p.copy(), R0);
         Beeman beeman = new Beeman(p.copy(), (-config.getK() * R0 - config.getG() * V0) / config.getM());
-        GPC gpc = new GPC(p.copy(),
-                p.getR(),
-                p.getV(),
-                -k_m * (p.getR() - R0),
-                -k_m * p.getV(),
-                k_m * k_m * (p.getR() - R0),
-                k_m * k_m * p.getV());
+        GPC gpc = initializeGPC(config, p, R0);
         List<Integrator> integrators = List.of(verlet, beeman, gpc);
         String basePath = "output/"  + String.format("%.1g",DT);
         FileController.createFolderIfNotExists(basePath);
@@ -37,5 +31,21 @@ public class DampedOscilator {
 
             }
         }
+    }
+
+    public static GPC initializeGPC(Config config, Particle1D p, double R0) {
+        double k_m = config.getK() / config.getM();
+        double g_m = config.getG() / config.getM();
+        double a = p.getAcceleration(p.getR(), p.getV(), config.getK(), config.getG());
+        double r3 = - k_m * p.getV() - g_m * a;
+        double r4 = - k_m * a - g_m * r3;
+        double r5 = - k_m * r3 - g_m * r4;
+        return new GPC(p.copy(),
+                p.getR(),
+                p.getV(),
+                a,
+                r3,
+                r4,
+                r5);
     }
 }
