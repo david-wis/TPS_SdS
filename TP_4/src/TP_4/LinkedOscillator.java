@@ -32,19 +32,26 @@ public class LinkedOscillator {
 
        double t = dt;
        double t2 = t;
-       while (t <= tf) {
+       double tStationary = Double.MAX_VALUE;
+       while (t <= tf + tStationary) {
            for(int i = 1; i <= N; i++) {
                 integrators[i].update(t, dt);
+           }
+           if (tStationary == Double.MAX_VALUE && integrators[1].getParticle().getR() != 0) {
+               tStationary = t;
+               System.out.println("\n\nStationary at " + tStationary);
            }
            for(int i = 1; i <= N; i++) {
                particlesCopy[i] = (LinkedParticle) integrators[i].getParticle().copy();
            }
-           FileController.writeParticlesState(statePath, particlesCopy[N], t, true);
+//           FileController.writeParticlesState(statePath, particlesCopy[N], t, true);
 
            if (t >= t2) {
-               FileController.writeParticlesState(animationPath, Arrays.asList(particlesCopy), t, true);
+               if (t >= tStationary) {
+                   FileController.writeParticlesState(animationPath, Arrays.asList(particlesCopy), t, true);
+               }
+               System.out.println(t + " " + t2);
                t2 += dt2;
-//               System.out.println(t + " " + t2);
            }
            t += dt;
        }
@@ -60,7 +67,23 @@ public class LinkedOscillator {
        double a = A; // A * cos(w * 0)
        double r3 = 0; // -A * w * sen(w * 0)
        double r4 = -A * w * w; // -A * w^2 * cos(w * 0)
-       double r5 = 0;
+       double r5 = 0; // A w^3 sen(w * 0)
        return new GPC(p, r, v, a, r3, r4, r5);
     }
+
+//    public static GPC initializeGPC2(Particle p) {
+//        Config config = Config.getConfig2();
+//        double A = config.getA();
+//        double k = config.getK();
+//        double m = config.getM();
+//        double k_m = k / m;
+//
+//        double r = A;
+//        double v = 0;
+//        double a = -k_m * config.getA(); // A * cos(w * 0)
+//        double r3 = 0; // -A * w * sen(w * 0)
+//        double r4 = k_m * k_m * A; // -A * w^2 * cos(w * 0)
+//        double r5 = 0; // A w^3 sen(w * 0)
+//        return new GPC(p, r, v, a, r3, r4, r5);
+//    }
 }

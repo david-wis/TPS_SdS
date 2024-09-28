@@ -37,11 +37,12 @@ public class LinkedParticle extends Particle {
         if (position == 0) return 0;
         if (position == N) {
             double armForce = A * Math.cos(w * t);
-            return armForce -k * (r - particles[position - 1].r) / m;
+//            System.out.println("arm " + armForce / m + " elastic" + - k * (r - particles[position - 1].r) / m + " total " + (armForce - k * (r - particles[position - 1].r)) / m);
+            return (armForce - k * (r - particles[position - 1].r)) / m;
         }
-        return -k * (2*r - particles[position - 1].r - particles[position + 1].r) / m;
-    }
 
+        return (-k * (r - particles[position - 1].r) - k * (r - particles[position + 1].r)) / m;
+    }
 
     @Override
     public Particle copy() {

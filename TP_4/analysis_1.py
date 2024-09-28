@@ -71,7 +71,7 @@ if __name__ == "__main__":
     msev_by_integrators = { i : [] for i in integrators[1:]}
     for integrator in integrators[1:]:
         for dt in DTS:
-            BASE_PATH = f"output/{dt:.2g}"
+            BASE_PATH = f"output/1/{dt:.2g}"
             data = np.loadtxt(f"{BASE_PATH}/state_{integrator}.txt")
             ts = data[:, 0]
             xs = data[:, 1]
@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
             # plot(ts, analytic_vs, "Tiempo (s)", "Velocidad (m/s)", f"velocities_analytic")
             np.savetxt(f"{BASE_PATH}/state_analytic.txt", np.array([ts, analytic_xs, analytic_vs]).T, delimiter=" ")
-        BASE_PATH = "output"
+        BASE_PATH = "output/1"
         plot(DTS, msep_by_integrators[integrator], "dt (s)", "MSEP", f"msep_{integrator}", True, True)
         plot(DTS, msev_by_integrators[integrator], "dt (s)", "MSEV", f"msev_{integrator}", True, True)
     plot_aggregated(DTS, [msep_by_integrators[i] for i in integrators[1:]], integrators[1:], "dt (s)", "MSEP", f"msep_aggregated", True, True)
