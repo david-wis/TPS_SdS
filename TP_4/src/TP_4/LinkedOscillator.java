@@ -1,6 +1,8 @@
 package TP_4;
 
+import TP_4.Integrators.Beeman;
 import TP_4.Integrators.GPC;
+import TP_4.Integrators.Verlet;
 
 import java.io.File;
 import java.util.Arrays;
@@ -18,17 +20,18 @@ public class LinkedOscillator {
        FileController.createEmptyFile(statePath);
        FileController.createEmptyFile(animationPath);
 
-       GPC[] integrators = new GPC[N+1];
+       Beeman[] integrators = new Beeman[N+1];
        LinkedParticle[] particlesCopy = new LinkedParticle[N+1];
        particlesCopy[0] = new LinkedParticle(0, null);
-       for (int i = 1; i < N; i++) {
+       for (int i = 1; i < N ; i++) {
           LinkedParticle p = new LinkedParticle(i, particlesCopy);
           particlesCopy[i] = (LinkedParticle) p.copy();
-          integrators[i] = new GPC(p, 0,0,0,0,0,0);
+          integrators[i] = new Beeman(p, 0);
        }
        LinkedParticle lastParticle = new LinkedParticle(N, particlesCopy);
        particlesCopy[N] = (LinkedParticle) lastParticle.copy();
-       integrators[N] = initializeGPC(lastParticle);
+       lastParticle.setR(1.5 * dt * dt * config.getA());
+       integrators[N] = new Beeman(lastParticle, config.getA());//initializeGPC(lastParticle);
 
        double t = dt;
        double t2 = t;
