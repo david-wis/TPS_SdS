@@ -17,4 +17,12 @@ public class Main {
         Config config = FileController.getConfig("config/config2.json");
         LinkedOscillator.run();
     }
+
+    private static void runSim22(){
+        Config config = FileController.getConfig("config/config2.json");
+//        for (double w : config.getWs()) {
+        // FileCotroller.
+//        LinkedOscillator.run();
+        //}
+    }
 }

@@ -45,15 +45,14 @@ if __name__ == "__main__":
     scat = ax.scatter(np.arange(N), pss[0], s=1)
     plot = ax.plot(np.arange(N), pss[0])
     time_text = ax.text(0.02, 0.95, '', transform=ax.transAxes)
-    ylim = 0
+    ylim = 0.02 * 1.1
 
     # Step 4: Function to update the scatter plot for each frame
     def update(frame):
         global ylim
         ps = pss[frame]
-        ylim = max(np.max(np.abs(ps)) * 1.1, ylim)
+        # ylim = max(np.max(np.abs(ps)) * 1.1, ylim)
         ax.set_ylim(-ylim, ylim)  # y-axis represents particle positions
-        # ax.set_ylim(-0.05, 0.05)
         scat.set_offsets(np.c_[np.arange(N), pss[frame]])  # Update particle positions
         plot[0].set_ydata(pss[frame])
         print(frame * DT2, ylim)
