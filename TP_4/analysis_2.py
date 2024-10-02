@@ -69,7 +69,7 @@ if __name__ == "__main__":
             data = np.loadtxt(f'{BASE_PATH}/{w}/animation.txt')
             ts = np.unique(data[:, 0])
             ps = data[0:N, 1]
-            max_ys.append(np.max(ps))
+            max_ys.append(np.max(np.abs(ps)))
         plot(WS, max_ys, "w", "Max Position", f"max_position", scatter=True)
         max_yss.append(max_ys)
     BASE_PATH = "output/2"
