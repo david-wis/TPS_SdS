@@ -1,17 +1,14 @@
 package TP_4;
 
-import TP_4.Integrators.Beeman;
-import TP_4.Integrators.GPC;
-import TP_4.Integrators.Verlet;
+import TP_4.Integrators.*;
 
-import java.io.File;
 import java.util.Arrays;
 
 public class LinkedOscillator {
    public static void run() {
        Config config = Config.getConfig2();
        int N = config.getN();
-       double dt = config.getDt();
+       double dt = 1 / (config.getW() * 100);
        double dt2 = config.getDt2();
        double tf = config.getTf();
 
@@ -20,31 +17,41 @@ public class LinkedOscillator {
        FileController.createEmptyFile(statePath);
        FileController.createEmptyFile(animationPath);
 
-       Beeman[] integrators = new Beeman[N+1];
+       Integrator[] integrators = new Verlet[N+1];
        LinkedParticle[] particlesCopy = new LinkedParticle[N+1];
        particlesCopy[0] = new LinkedParticle(0, null);
+       LinkedParticle lastParticle = new LinkedParticle(N, null);
+       particlesCopy[N] = (LinkedParticle) lastParticle.copy();
+
        for (int i = 1; i < N ; i++) {
           LinkedParticle p = new LinkedParticle(i, particlesCopy);
           particlesCopy[i] = (LinkedParticle) p.copy();
-          integrators[i] = new Beeman(p, 0);
+          integrators[i] = new Verlet(p, 0);
        }
-       LinkedParticle lastParticle = new LinkedParticle(N, particlesCopy);
-       particlesCopy[N] = (LinkedParticle) lastParticle.copy();
-       lastParticle.setR(1.5 * dt * dt * config.getA());
-       integrators[N] = new Beeman(lastParticle, config.getA());//initializeGPC(lastParticle);
 
-       double t = dt;
+
+       double t = 2*dt;
        double t2 = t;
-       double tStationary = Double.MAX_VALUE;
+       double tStationary = 0;// Double.MAX_VALUE;
+       double yMax = 0;
+       double tMax = 0;
        while (t <= tf + tStationary) {
-           for(int i = 1; i <= N; i++) {
+           particlesCopy[N].r = config.getA() * Math.sin(config.getW() * t);
+           for(int i = 1; i < N; i++) {
                 integrators[i].update(t, dt);
            }
-           if (tStationary == Double.MAX_VALUE && integrators[1].getParticle().getR() != 0) {
+           if (integrators[N/2].getParticle().getR() > yMax) {
+               yMax = integrators[N/2].getParticle().getR();
+               tMax = t;
+           }
+           if (tStationary == Double.MAX_VALUE
+                   && Math.abs(integrators[N/2].getParticle().getR() - yMax) < 1e-6
+                   && yMax != 0
+                   && tMax > t) {
                tStationary = t;
                System.out.println("\n\nStationary at " + tStationary);
            }
-           for(int i = 1; i <= N; i++) {
+           for(int i = 1; i < N; i++) {
                particlesCopy[i] = (LinkedParticle) integrators[i].getParticle().copy();
            }
 //           FileController.writeParticlesState(statePath, particlesCopy[N], t, true);

@@ -11,7 +11,6 @@ public class Config {
     private double r0; // Sist 1
 
 
-    private double dt; // Sist 2
     private double dt2; // Sist 2
     private double A; // Sist 2
     private double l0; // Sist 2
@@ -78,14 +77,6 @@ public class Config {
 
     public void setDts(List<Double> dts) {
         this.dts = dts;
-    }
-
-    public double getDt() {
-        return dt;
-    }
-
-    public void setDt(double dt) {
-        this.dt = dt;
     }
 
     public double getA() {

@@ -30,6 +30,7 @@ if __name__ == "__main__":
     for i, t in enumerate(ts):
         # ps = data[data[:, 0] == t][:, 1]  # Extract y positions for the current time step
         ps = data[i * N:(i + 1) * N, 1]
+        ps = ps[::-1]
         if np.isnan(ps).any():
             print("nan found")
             break
@@ -52,6 +53,7 @@ if __name__ == "__main__":
         ps = pss[frame]
         ylim = max(np.max(np.abs(ps)) * 1.1, ylim)
         ax.set_ylim(-ylim, ylim)  # y-axis represents particle positions
+        # ax.set_ylim(-0.05, 0.05)
         scat.set_offsets(np.c_[np.arange(N), pss[frame]])  # Update particle positions
         plot[0].set_ydata(pss[frame])
         print(frame * DT2, ylim)
