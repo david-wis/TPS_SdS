@@ -21,7 +21,7 @@ with open("config/config2.json", "r") as f:
 
 if __name__ == "__main__":
     # Step 1: Load the data from the file
-    data = np.loadtxt(f'{BASE_PATH}/animation.txt')  # Replace 'animation.txt' with your actual file name
+    data = np.loadtxt(f'{BASE_PATH}/{K}/5/animation.txt')  # Replace 'animation.txt' with your actual file name
     print("data read", len(data))
     # Step 2: Get the unique time steps and corresponding particle positions
     ts = np.unique(data[:, 0])  # Extract unique time steps

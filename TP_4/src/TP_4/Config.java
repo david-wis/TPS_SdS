@@ -15,6 +15,8 @@ public class Config {
     private double A; // Sist 2
     private double l0; // Sist 2
     private int N; // Sist 2
+    private List<Double> ks;
+    private List<Double> ws;
     private double w; // Sist 2
 
     private static Config config1, config2;
@@ -117,5 +119,13 @@ public class Config {
 
     public void setDt2(double dt2) {
         this.dt2 = dt2;
+    }
+
+    public List<Double> getKs() {
+        return ks;
+    }
+
+    public List<Double> getWs() {
+        return ws;
     }
 }

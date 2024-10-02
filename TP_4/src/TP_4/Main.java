@@ -1,5 +1,6 @@
 package TP_4;
 
+
 public class Main {
     public static void main(String[] args) {
         runSim2();
@@ -14,15 +15,17 @@ public class Main {
     }
 
     private static void runSim2(){
-        Config config = FileController.getConfig("config/config2.json");
-        LinkedOscillator.run();
+        Config config = Config.getConfig2();
+        FileController.createFolderIfNotExists("output/2");
+        for (double k : config.getKs()) {
+            config.setK(k);
+            System.out.println("Starting k: " + config.getK());
+            for (double w : config.getWs()){
+                config.setW(w);
+                System.out.println("Starting w: " + config.getW());
+                LinkedOscillator.run();
+            }
+        }
     }
 
-    private static void runSim22(){
-        Config config = FileController.getConfig("config/config2.json");
-//        for (double w : config.getWs()) {
-        // FileCotroller.
-//        LinkedOscillator.run();
-        //}
-    }
 }

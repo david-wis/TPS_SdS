@@ -18,14 +18,16 @@ def scientific_notation(x, pos):
         return f"{x:.2g}"
 formatter = FuncFormatter(scientific_notation)
 
-with open("config/config1.json", "r") as f:
+with open("config/config2.json", "r") as f:
     config = json.load(f)
-    DTS = config["dts"]
     M = config["m"]
-    K = config["k"]
-    G = config["g"]
+    KS = config["ks"]
+    A = config["A"]
+    L0 = config["l0"]
+    N = config["N"]
+    DT2 = config["dt2"]
     TF = config["tf"]
-    R0 = config["r0"]
+    WS = config["ws"]
 
 def plot(xs, ys, x_label, y_label,filename, logarithmic=False, scatter=False):
     fig, ax = plt.subplots()
@@ -35,7 +37,6 @@ def plot(xs, ys, x_label, y_label,filename, logarithmic=False, scatter=False):
         ax.scatter(xs, ys)
     ax.set_xlabel(x_label)
     if logarithmic:
-        ax.set_xscale('log')
         ax.set_yscale('log')
     ax.set_ylabel(y_label)
     plt.savefig(f"{BASE_PATH}/{filename}.png")
@@ -53,17 +54,26 @@ def plot_aggregated(xs, yss, ls, x_label, y_label, filename, logarithmic=False, 
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles=handles[::2], labels=labels[::2])
     if logarithmic:
-        ax.set_xscale('log')
         ax.set_yscale('log')
     plt.savefig(f"{BASE_PATH}/{filename}.png")
     plt.close()
 
-def analytic_x(t):
-    return R0 * np.exp(-G*t/(2*M)) * np.cos(np.sqrt(K/M - G**2/(4*M**2))*t)
-
-def analytic_v(t):
-    return (-(G / (2 * M)) * R0 * np.exp(-G * t / (2 * M)) * np.cos(np.sqrt(K / M - (G / (2 * M)) ** 2) * t) - R0 * np.exp(-G * t / (2 * M)) * np.sin(np.sqrt(K / M - (G / (2 * M)) ** 2) * t) * np.sqrt(K / M - (G / (2 * M)) ** 2))
 
 if __name__ == "__main__":
     # Load data
-    integrators = ["analytic", "verlet", "beeman", "gpc"]
+    max_yss = []
+    for k in KS:
+        max_ys = []
+        BASE_PATH = f'output/2/{k}'
+        for w in WS:
+            data = np.loadtxt(f'{BASE_PATH}/{w}/animation.txt')
+            ts = np.unique(data[:, 0])
+            ps = data[0:N, 1]
+            max_ys.append(np.max(ps))
+        plot(WS, max_ys, "w", "Max Position", f"max_position", scatter=True)
+        max_yss.append(max_ys)
+    BASE_PATH = "output/2"
+    plot_aggregated(WS, max_yss, KS, "w", "Max Position", f"max_position_aggregated", scatter=True)
+
+
+

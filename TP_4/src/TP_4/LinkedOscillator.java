@@ -11,10 +11,14 @@ public class LinkedOscillator {
        double dt = 1 / (config.getW() * 100);
        double dt2 = config.getDt2();
        double tf = config.getTf();
+       String BASE_PATH = "output/2/" + (int) config.getK();
+       FileController.createFolderIfNotExists(BASE_PATH);
+       BASE_PATH += "/" + (int) config.getW();
+       FileController.createFolderIfNotExists(BASE_PATH);
+//       String statePath = BASE_PATH + "/state.txt";
+       String animationPath = BASE_PATH + "/animation.txt";
 
-       String statePath = "output/2/state.txt";
-       String animationPath = "output/2/animation.txt";
-       FileController.createEmptyFile(statePath);
+//       FileController.createEmptyFile(statePath);
        FileController.createEmptyFile(animationPath);
 
        Integrator[] integrators = new Verlet[N+1];
@@ -28,7 +32,6 @@ public class LinkedOscillator {
           particlesCopy[i] = (LinkedParticle) p.copy();
           integrators[i] = new Verlet(p, 0);
        }
-
 
        double t = 2*dt;
        double t2 = t;
@@ -75,40 +78,10 @@ public class LinkedOscillator {
                if (t >= tStationary) {
                    FileController.writeParticlesState(animationPath, Arrays.asList(particlesCopy), t, true);
                }
-//               System.out.println(t + " " + t2);
+               System.out.println(t + " " + t2);
                t2 += dt2;
            }
            t += dt;
        }
    }
-
-    public static GPC initializeGPC(Particle p) {
-       Config config = Config.getConfig2();
-       double A = config.getA();
-       double w = config.getW();
-
-       double r = 0;
-       double v = 0;
-       double a = A; // A * cos(w * 0)
-       double r3 = 0; // -A * w * sen(w * 0)
-       double r4 = -A * w * w; // -A * w^2 * cos(w * 0)
-       double r5 = 0; // A w^3 sen(w * 0)
-       return new GPC(p, r, v, a, r3, r4, r5);
-    }
-
-//    public static GPC initializeGPC2(Particle p) {
-//        Config config = Config.getConfig2();
-//        double A = config.getA();
-//        double k = config.getK();
-//        double m = config.getM();
-//        double k_m = k / m;
-//
-//        double r = A;
-//        double v = 0;
-//        double a = -k_m * config.getA(); // A * cos(w * 0)
-//        double r3 = 0; // -A * w * sen(w * 0)
-//        double r4 = k_m * k_m * A; // -A * w^2 * cos(w * 0)
-//        double r5 = 0; // A w^3 sen(w * 0)
-//        return new GPC(p, r, v, a, r3, r4, r5);
-//    }
 }
