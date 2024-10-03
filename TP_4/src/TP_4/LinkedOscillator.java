@@ -13,12 +13,9 @@ public class LinkedOscillator {
        double tf = config.getTf();
        String BASE_PATH = "output/2/" + (int) config.getK();
        FileController.createFolderIfNotExists(BASE_PATH);
-       BASE_PATH += "/" + (int) config.getW();
+       BASE_PATH += "/" + config.getW();
        FileController.createFolderIfNotExists(BASE_PATH);
-//       String statePath = BASE_PATH + "/state.txt";
        String animationPath = BASE_PATH + "/animation.txt";
-
-//       FileController.createEmptyFile(statePath);
        FileController.createEmptyFile(animationPath);
 
        Integrator[] integrators = new Verlet[N+1];

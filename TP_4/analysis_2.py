@@ -1,8 +1,11 @@
+import os
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib.ticker import FuncFormatter
 import json
+import math
 mpl.use('Agg')
 
 def scientific_notation(x, pos):
@@ -24,7 +27,7 @@ with open("config/config2.json", "r") as f:
     KS = config["ks"]
     A = config["A"]
     L0 = config["l0"]
-    N = config["N"]
+    N = config["N"]+1
     DT2 = config["dt2"]
     TF = config["tf"]
     WS = config["ws"]
@@ -42,17 +45,17 @@ def plot(xs, ys, x_label, y_label,filename, logarithmic=False, scatter=False):
     plt.savefig(f"{BASE_PATH}/{filename}.png")
     plt.close()
 
-def plot_aggregated(xs, yss, ls, x_label, y_label, filename, logarithmic=False, scatter=False):
+def plot_aggregated(xss, yss, ls, x_label, y_label, filename, legend_title=None, logarithmic=False, scatter=False):
     fig, ax = plt.subplots()
     plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
-    for ys, l in zip(yss, ls):
+    for xs, ys, l in zip(xss, yss, ls):
         ax.plot(xs, ys, label=l)
         if scatter:
             ax.scatter(xs, ys, label=l)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles=handles[::2], labels=labels[::2])
+    ax.legend(handles=handles[::2], labels=labels[::2], title = legend_title)
     if logarithmic:
         ax.set_yscale('log')
     plt.savefig(f"{BASE_PATH}/{filename}.png")
@@ -62,18 +65,33 @@ def plot_aggregated(xs, yss, ls, x_label, y_label, filename, logarithmic=False, 
 if __name__ == "__main__":
     # Load data
     max_yss = []
+    wss = []
     for k in KS:
+        print(f"K:{k}")
         max_ys = []
         BASE_PATH = f'output/2/{k}'
-        for w in WS:
+        ws = sorted([ float(d) for d in os.listdir(BASE_PATH) if os.path.isdir(f"{BASE_PATH}/{d}")])
+        wss.append(ws)
+        for w in ws:
+            print(f"W:{w}")
             data = np.loadtxt(f'{BASE_PATH}/{w}/animation.txt')
             ts = np.unique(data[:, 0])
-            ps = data[0:N, 1]
-            max_ys.append(np.max(np.abs(ps)))
-        plot(WS, max_ys, "w", "Max Position", f"max_position", scatter=True)
+            pss = []
+            for i, t in enumerate(ts):
+                # ps = data[data[:, 0] == t][:, 1]  # Extract y positions for the current time step
+                ps = data[i * N:(i + 1) * N, 1]
+                ps = ps[::-1]
+                if np.isnan(ps).any():
+                    print("nan found")
+                    break
+                pss.append(ps)
+            max_ys.append(np.max(np.abs(pss)))
+        plot(ws, max_ys, "$\omega\ (s^{-1})$", "Posición máxima (m)", f"max_position", scatter=True)
         max_yss.append(max_ys)
     BASE_PATH = "output/2"
-    plot_aggregated(WS, max_yss, KS, "w", "Max Position", f"max_position_aggregated", scatter=True)
+    plot_aggregated(wss, max_yss, KS, "$\omega\ (s^{-1})$", "Posición máxima (m)", f"max_position_aggregated", legend_title="k", scatter=True)
 
+    max_ws = [max([yw for yw in zip(ys, ws)])[1] for ys, ws in zip(max_yss, wss)]
+    plot([math.sqrt(k) for k in KS], max_ws, "$k^{1/2}\ (Kg/s)$", "$\omega_0\ (s^{-1})$", f"max_w", scatter=True)
 
 

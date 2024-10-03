@@ -19,10 +19,10 @@ public class Main {
         FileController.createFolderIfNotExists("output/2");
         for (double k : config.getKs()) {
             config.setK(k);
-            System.out.println("Starting k: " + config.getK());
+            System.out.println("\n\nStarting k: " + config.getK());
             for (double w : config.getWs()){
-                config.setW(w);
-                System.out.println("Starting w: " + config.getW());
+                config.setW(Math.sqrt(k) * w);
+                System.out.println("\nStarting w = " + w + "√" + k + " = " + config.getW());
                 LinkedOscillator.run();
             }
         }
