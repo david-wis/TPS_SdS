@@ -3,11 +3,12 @@ package TP_4;
 
 public class Main {
     public static void main(String[] args) {
-        runSim2();
+        runSim1();
     }
 
     private static void runSim1(){
         Config config = FileController.getConfig("config/config1.json");
+        FileController.createFolderIfNotExists("output/1");
         for (double dt : config.getDts()) {
             System.out.println("Running with dt = " + dt + " " + String.format("%.1g", dt));
             DampedOscillator.run(config, dt);
