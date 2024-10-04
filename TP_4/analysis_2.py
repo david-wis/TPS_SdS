@@ -45,6 +45,34 @@ def plot(xs, ys, x_label, y_label,filename, logarithmic=False, scatter=False):
     plt.savefig(f"{BASE_PATH}/{filename}.png")
     plt.close()
 
+def plot_linear_regression_error(ks, ws, x_label, y_label, filename):
+    fig, ax = plt.subplots()
+    plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
+
+    a = np.sum(ks)
+    b = np.sum(-2 * np.dot(np.sqrt(ks), ws))
+    c = np.sum(np.square(ws))
+    print(f"C* = {-b/(2*a)}")
+
+    vx = -b / (2 * a)
+    vy = a * vx ** 2 + b * vx + c
+
+    # Plot cuadratic curve ax^2 + bx + c
+    x = np.linspace(0, 2, 100)
+    y = a * x**2 + b * x + c
+    ax.plot(x, y)
+
+    ax.axhline(y=vy, color='lightgrey', linestyle='--')
+    ax.axvline(x=vx, color='lightgrey', linestyle='--')
+
+    # zorder
+    ax.scatter(vx, vy, color='red', zorder=5)
+    ax.annotate(f"({vx:.2f}, {vy:.2e})", (vx, vy), textcoords="offset points", xytext=(0,15), ha='center', color='red')
+
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    plt.savefig(f"{BASE_PATH}/{filename}.png")
+
 def plot_aggregated(xss, yss, ls, x_label, y_label, filename, legend_title=None, logarithmic=False, scatter=False):
     fig, ax = plt.subplots()
     plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
@@ -88,6 +116,7 @@ if __name__ == "__main__":
     plot_aggregated(wss, max_yss, [f"{k} kg/$s^2$" for k in KS], "$\omega\ (s^{-1})$", "Posición máxima (m)", f"max_position_aggregated", legend_title="k", scatter=True)
 
     max_ws = [max([yw for yw in zip(ys, ws)])[1] for ys, ws in zip(max_yss, wss)]
-    plot([math.sqrt(k) for k in KS], max_ws, "$k^{1/2}\ (Kg/s)$", "$\omega_0\ (s^{-1})$", f"max_w", scatter=True)
+    plot(np.sqrt(KS), max_ws, "$k^{1/2}\ (Kg/s)$", "$\omega_0\ (s^{-1})$", f"max_w", scatter=True)
+    plot_linear_regression_error(KS, max_ws, "$k^{1/2}\ (Kg/s)$", "$\omega_0\ (s^{-1})$", f"max_w_error")
 
 
