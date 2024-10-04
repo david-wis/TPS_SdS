@@ -74,20 +74,16 @@ if __name__ == "__main__":
         wss.append(ws)
         for w in ws:
             print(f"W:{w}")
-            data = np.loadtxt(f'{BASE_PATH}/{w}/animation.txt')
-            ts = np.unique(data[:, 0])
-            pss = []
-            for i, t in enumerate(ts):
-                # ps = data[data[:, 0] == t][:, 1]  # Extract y positions for the current time step
-                ps = data[i * N:(i + 1) * N, 1]
-                ps = ps[::-1]
-                if np.isnan(ps).any():
-                    print("nan found")
-                    break
-                pss.append(ps)
-            max_ys.append(np.max(np.abs(pss)))
+            BASE_PATH = f'output/2/{k}/{w}'
+            data = np.loadtxt(f'{BASE_PATH}/max.txt')
+            ts = data[:, 0]
+            ys = np.abs(data[:, 1])
+            max_ys.append(np.max(ys))
+            plot(ts, ys, "Tiempo (s)", "Posición máxima (m)", f"max_position_{w}", scatter=False)
+        BASE_PATH = f'output/2/{k}'
         plot(ws, max_ys, "$\omega\ (s^{-1})$", "Posición máxima (m)", f"max_position", scatter=True)
         max_yss.append(max_ys)
+
     BASE_PATH = "output/2"
     plot_aggregated(wss, max_yss, KS, "$\omega\ (s^{-1})$", "Posición máxima (m)", f"max_position_aggregated", legend_title="k", scatter=True)
 

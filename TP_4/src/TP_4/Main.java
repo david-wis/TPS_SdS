@@ -3,7 +3,7 @@ package TP_4;
 
 public class Main {
     public static void main(String[] args) {
-        runSim1();
+        runSim2();
     }
 
     private static void runSim1(){
@@ -18,13 +18,15 @@ public class Main {
     private static void runSim2(){
         Config config = Config.getConfig2();
         FileController.createFolderIfNotExists("output/2");
+        int N = config.getN();
+        double m = config.getM();
         for (double k : config.getKs()) {
             config.setK(k);
             System.out.println("\n\nStarting k: " + config.getK());
-            for (double w : config.getWs()){
-                config.setW(Math.sqrt(k) * w);
-                System.out.println("\nStarting w = " + w + "√" + k + " = " + config.getW());
-                LinkedOscillator.run();
+            for (double wp : config.getWs()){
+                config.setW(wp * Math.PI * Math.sqrt(k/m) / (N));
+                System.out.println("\nStarting w = " + wp + "√" + k + " = " + config.getW());
+//                LinkedOscillator.run();
             }
         }
     }
