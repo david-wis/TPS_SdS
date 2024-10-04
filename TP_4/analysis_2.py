@@ -85,7 +85,7 @@ if __name__ == "__main__":
         max_yss.append(max_ys)
 
     BASE_PATH = "output/2"
-    plot_aggregated(wss, max_yss, KS, "$\omega\ (s^{-1})$", "Posición máxima (m)", f"max_position_aggregated", legend_title="k", scatter=True)
+    plot_aggregated(wss, max_yss, [f"{k} kg/$s^2$" for k in KS], "$\omega\ (s^{-1})$", "Posición máxima (m)", f"max_position_aggregated", legend_title="k", scatter=True)
 
     max_ws = [max([yw for yw in zip(ys, ws)])[1] for ys, ws in zip(max_yss, wss)]
     plot([math.sqrt(k) for k in KS], max_ws, "$k^{1/2}\ (Kg/s)$", "$\omega_0\ (s^{-1})$", f"max_w", scatter=True)
