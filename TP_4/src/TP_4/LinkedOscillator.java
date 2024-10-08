@@ -20,7 +20,7 @@ public class LinkedOscillator {
        String maxPath = BASE_PATH + "/max.txt";
        FileController.createEmptyFile(maxPath);
 
-       Integrator[] integrators = new Verlet[N+1];
+       Integrator[] integrators = new Integrator[N+1];
        LinkedParticle[] particlesCopy = new LinkedParticle[N+1];
        particlesCopy[0] = new LinkedParticle(0, null);
        LinkedParticle lastParticle = new LinkedParticle(N, null);
@@ -46,7 +46,8 @@ public class LinkedOscillator {
            }
 
            if (t >= t2) {
-               FileController.writeParticlesState(animationPath, Arrays.asList(particlesCopy), t, true);
+               if (config.isAnimation())
+                FileController.writeParticlesState(animationPath, Arrays.asList(particlesCopy), t, true);
                Particle maxParticle = Arrays.stream(integrators).filter(Objects::nonNull)
                        .max((i1, i2) -> Math.abs(i1.getParticle().getR()) > Math.abs(i2.getParticle().getR()) ? 1 : -1)
                        .map(i -> i.getParticle()).get();

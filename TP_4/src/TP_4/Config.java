@@ -19,6 +19,12 @@ public class Config {
     private List<Double> ws;
     private double w; // Sist 2
 
+    private boolean animation;
+
+    public boolean isAnimation() {
+        return animation;
+    }
+
     private static Config config1, config2;
 
     public static Config getConfig1() {

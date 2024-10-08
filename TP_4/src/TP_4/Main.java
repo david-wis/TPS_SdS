@@ -24,9 +24,10 @@ public class Main {
             config.setK(k);
             System.out.println("\n\nStarting k: " + config.getK());
             for (double wp : config.getWs()){
-                config.setW(wp * Math.PI * Math.sqrt(k/m) / (N));
+//                config.setW(wp * Math.PI * Math.sqrt(k/m) / (N+1));
+                config.setW(Math.sqrt(k) * wp);
                 System.out.println("\nStarting w = " + wp + "√" + k + " = " + config.getW());
-//                LinkedOscillator.run();
+                LinkedOscillator.run();
             }
         }
     }

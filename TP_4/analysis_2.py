@@ -32,16 +32,35 @@ with open("config/config2.json", "r") as f:
     TF = config["tf"]
     WS = config["ws"]
 
-def plot(xs, ys, x_label, y_label,filename, logarithmic=False, scatter=False):
+def plot(xs, ys, x_label, y_label,filename, logarithmic=False, scatter=False, plot=True, s=20):
     fig, ax = plt.subplots()
     plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
-    ax.plot(xs, ys)
+    if plot:
+        ax.plot(xs, ys)
     if scatter:
-        ax.scatter(xs, ys)
+        ax.scatter(xs, ys, s=s)
+
     ax.set_xlabel(x_label)
     if logarithmic:
         ax.set_yscale('log')
     ax.set_ylabel(y_label)
+    plt.savefig(f"{BASE_PATH}/{filename}.png")
+    plt.close()
+
+def plot_aggregated(xss, yss, ls, x_label, y_label, filename, legend_title=None, logarithmic=False, scatter=False, plot=True, s=20):
+    fig, ax = plt.subplots()
+    plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
+    for xs, ys, l in zip(xss, yss, ls):
+        if plot:
+            ax.plot(xs, ys, label=l)
+        if scatter:
+            ax.scatter(xs, ys, label=l, s=s)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(handles=handles[::2], labels=labels[::2], title = legend_title)
+    if logarithmic:
+        ax.set_yscale('log')
     plt.savefig(f"{BASE_PATH}/{filename}.png")
     plt.close()
 
@@ -67,26 +86,23 @@ def plot_linear_regression_error(ks, ws, x_label, y_label, filename):
 
     # zorder
     ax.scatter(vx, vy, color='red', zorder=5)
-    ax.annotate(f"({vx:.2f}, {vy:.2e})", (vx, vy), textcoords="offset points", xytext=(0,15), ha='center', color='red')
+    ax.annotate(f"({vx:.2f}, {vy:.2g})", (vx, vy), textcoords="offset points", xytext=(0,15), ha='center', color='red')
 
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     plt.savefig(f"{BASE_PATH}/{filename}.png")
+    plt.close()
 
-def plot_aggregated(xss, yss, ls, x_label, y_label, filename, legend_title=None, logarithmic=False, scatter=False):
+    ks_star = np.linspace(np.sqrt(min(KS)), np.sqrt(max(KS)), 100)
+    ws_star = vx * ks_star
     fig, ax = plt.subplots()
     plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
-    for xs, ys, l in zip(xss, yss, ls):
-        ax.plot(xs, ys, label=l)
-        if scatter:
-            ax.scatter(xs, ys, label=l)
-    ax.set_xlabel(x_label)
-    ax.set_ylabel(y_label)
-    handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles=handles[::2], labels=labels[::2], title = legend_title)
-    if logarithmic:
-        ax.set_yscale('log')
-    plt.savefig(f"{BASE_PATH}/{filename}.png")
+    ax.plot(ks_star, ws_star)
+    ax.scatter(np.sqrt(ks), ws, c="red", zorder=5)
+    ax.set_xlabel("$k^{1/2}\ (Kg/s)$")
+    ax.set_ylabel("$\omega_0\ (s^{-1})$")
+    ax.legend([f"$y = {vx:.3g}*x$"])
+    plt.savefig(f"{BASE_PATH}/max_ws.png")
     plt.close()
 
 
@@ -107,16 +123,15 @@ if __name__ == "__main__":
             ts = data[:, 0]
             ys = np.abs(data[:, 1])
             max_ys.append(np.max(ys))
-            plot(ts, ys, "Tiempo (s)", "Posición máxima (m)", f"max_position_{w}", scatter=False)
+            plot(ts, ys, "Tiempo (s)", "$y_{max}$ (m)", f"max_position_{w}", scatter=True, plot=False, s=2)
         BASE_PATH = f'output/2/{k}'
-        plot(ws, max_ys, "$\omega\ (s^{-1})$", "Posición máxima (m)", f"max_position", scatter=True)
+        plot(ws, max_ys, "$\omega\ (s^{-1})$", "$A_{max}$ (m)", f"max_position", scatter=True, plot=True)
         max_yss.append(max_ys)
 
     BASE_PATH = "output/2"
-    plot_aggregated(wss, max_yss, [f"{k} kg/$s^2$" for k in KS], "$\omega\ (s^{-1})$", "Posición máxima (m)", f"max_position_aggregated", legend_title="k", scatter=True)
+    plot_aggregated(wss, max_yss, [f"{k} kg/$s^2$" for k in KS], "$\omega\ (s^{-1})$", "$A_{max}$ (m)", f"max_position_aggregated", legend_title="k", scatter=True, plot=True)
 
     max_ws = [max([yw for yw in zip(ys, ws)])[1] for ys, ws in zip(max_yss, wss)]
-    plot(np.sqrt(KS), max_ws, "$k^{1/2}\ (Kg/s)$", "$\omega_0\ (s^{-1})$", f"max_w", scatter=True)
     plot_linear_regression_error(KS, max_ws, "$k^{1/2}\ (Kg/s)$", "$\omega_0\ (s^{-1})$", f"max_w_error")
 
 
