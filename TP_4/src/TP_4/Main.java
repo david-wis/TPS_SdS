@@ -22,11 +22,12 @@ public class Main {
         double m = config.getM();
         for (double k : config.getKs()) {
             config.setK(k);
+            double dw = config.getDws().get((int) k + "");
             System.out.println("\n\nStarting k: " + config.getK());
-            for (double wp : config.getWs()){
+            for (int offset=-config.getSteps()/2 - 1; offset <= config.getSteps()/2 + 1; offset++){
 //                config.setW(wp * Math.PI * Math.sqrt(k/m) / (N+1));
-                config.setW(Math.sqrt(k) * wp);
-                System.out.println("\nStarting w = " + wp + "√" + k + " = " + config.getW());
+                config.setW(Math.sqrt(k) + dw * offset);
+                System.out.println("\nStarting w = " + Math.sqrt(k) + "+" + offset + " * " + dw + " * " + " = " + config.getW());
                 LinkedOscillator.run();
             }
         }

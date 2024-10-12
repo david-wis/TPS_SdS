@@ -1,6 +1,7 @@
 package TP_4;
 
 import java.util.List;
+import java.util.Map;
 
 public class Config {
     private List<Double> dts; // Sist 1
@@ -16,8 +17,9 @@ public class Config {
     private double l0; // Sist 2
     private int N; // Sist 2
     private List<Double> ks;
-    private List<Double> ws;
+    private Map<String, Double> dws;
     private double w; // Sist 2
+    private int steps; // Sist 2
 
     private boolean animation;
 
@@ -131,7 +133,11 @@ public class Config {
         return ks;
     }
 
-    public List<Double> getWs() {
-        return ws;
+    public Map<String, Double> getDws() {
+        return dws;
+    }
+
+    public int getSteps() {
+        return steps;
     }
 }

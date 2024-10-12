@@ -30,7 +30,6 @@ with open("config/config2.json", "r") as f:
     N = config["N"]+1
     DT2 = config["dt2"]
     TF = config["tf"]
-    WS = config["ws"]
 
 def plot(xs, ys, x_label, y_label,filename, logarithmic=False, scatter=False, plot=True, s=20):
     fig, ax = plt.subplots()
@@ -57,6 +56,7 @@ def plot_aggregated(xss, yss, ls, x_label, y_label, filename, legend_title=None,
             ax.scatter(xs, ys, label=l, s=s)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
+    ax.set_ylim(0, np.max(yss) * 2)
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles=handles[::2], labels=labels[::2], title = legend_title)
     if logarithmic:
