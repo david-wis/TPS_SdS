@@ -25,7 +25,6 @@ public class Main {
             double dw = config.getDws().get((int) k + "");
             System.out.println("\n\nStarting k: " + config.getK());
             for (int offset=-config.getSteps()/2 - 1; offset <= config.getSteps()/2 + 1; offset++){
-//                config.setW(wp * Math.PI * Math.sqrt(k/m) / (N+1));
                 config.setW(Math.sqrt(k) + dw * offset);
                 System.out.println("\nStarting w = " + Math.sqrt(k) + "+" + offset + " * " + dw + " * " + " = " + config.getW());
                 LinkedOscillator.run();

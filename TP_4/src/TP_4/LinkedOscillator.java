@@ -52,7 +52,6 @@ public class LinkedOscillator {
                        .max((i1, i2) -> Math.abs(i1.getParticle().getR()) > Math.abs(i2.getParticle().getR()) ? 1 : -1)
                        .map(i -> i.getParticle()).get();
                FileController.writeParticlesState(maxPath, maxParticle, t, true);
-//               System.out.println(t + " " + t2);
                t2 += dt2;
            }
            t += dt;

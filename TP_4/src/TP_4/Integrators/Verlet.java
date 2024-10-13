@@ -12,7 +12,7 @@ public class Verlet extends Integrator {
     public void update(double t, double dt) {
         double rCurr = particle.getR();
         double vCurr = particle.getV();
-        double rNext = 2 * rCurr - rPrev + dt * dt * particle.getAcceleration(rCurr, vCurr, t); // TODO: Check if this is correct
+        double rNext = 2 * rCurr - rPrev + dt * dt * particle.getAcceleration(rCurr, vCurr, t);
         double vNext = (rNext - rPrev) / (2 * dt);
         particle.setR(rNext);
         particle.setV(vNext);

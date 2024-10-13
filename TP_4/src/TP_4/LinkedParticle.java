@@ -37,7 +37,6 @@ public class LinkedParticle extends Particle {
         if (position == 0) return 0;
         if (position == N) {
             double armForce = A * Math.cos(w * t);
-//            System.out.println("arm " + armForce / m + " elastic" + - k * (r - particles[position - 1].r) / m + " total " + (armForce - k * (r - particles[position - 1].r)) / m);
             return (armForce - k * (r - particles[position - 1].r)) / m;
         }
 

@@ -35,12 +35,9 @@ public class FileController {
     }
 
     public static Config getConfig(String filePath) {
-
-        // Create a Gson instance
         Gson gson = new Gson();
 
         try (FileReader reader = new FileReader(filePath)) {
-            // Parse JSON file to Person object
             Config config = gson.fromJson(reader, Config.class);
             return config;
         } catch (IOException e) {
@@ -48,7 +45,6 @@ public class FileController {
         }
         return new Config();
     }
-
 
     public static void createFolderIfNotExists(String path) {
         File file = new File(path);
