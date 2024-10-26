@@ -24,25 +24,26 @@ public class PeriodicGrid {
         this.total = total;
         this.rows = (int) Math.floor(config.getW() / maxD);
         this.cols = (int) Math.floor(config.getL() / maxD);
-        System.out.println("cell_width: " + (config.getW() / rows) + " cell_heigth:" + (config.getL() / cols) + " dist: " + maxD);
         this.rc = 0;
 
-        this.grid = (Set<Obstacle>[][]) new Set[rows][cols];
-        for (int i = 0; i < rows; i++)
-            for (int j = 0; j < cols; j++)
+        this.grid = (Set<Obstacle>[][]) new Set[cols][rows];
+        for (int i = 0; i < cols; i++)
+            for (int j = 0; j < rows; j++)
                 grid[i][j] = new HashSet<>();
         collisionMap = new HashMap<>();
     }
 
     private Point getObstacleCellPosition(final Obstacle o) {
         Config config = Config.getConfig();
-        final int x = (int) (o.getX() / (config.getW() / rows));
-        final int y = (int) (o.getY() / (config.getL() / cols));
+        final int x = (int) (o.getX() / (config.getL() / cols));
+        final int y = (int) (o.getY() / (config.getW() / rows));
         return new Point(x, y);
     }
 
     public void addEntity(final Obstacle o) {
         final Point cell = getObstacleCellPosition(o);
+        if (cell.x > cols || cell.y > rows)
+            System.out.println();
         grid[cell.x][cell.y].add(o);
     }
 

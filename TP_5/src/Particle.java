@@ -3,25 +3,22 @@ import java.util.List;
 import java.util.Objects;
 
 public class Particle extends Obstacle{
-    private double vx, vy;
     private double m;
     private ParticleProjection XProjection, YProjection;
     private Beeman integratorX, integratorY;
     private PeriodicGrid grid;
     public Particle(int id, double x, double y, double r, double m) {
         super(id, x, y, r);
-        this.vx = 0;
-        this.vy = 0;
         this.m = m;
         XProjection = new ParticleProjection() {
             @Override
             public double getR() { return x; }
 
             @Override
-            public double getV() { return vx; }
+            public double getV() { return v.getX(); }
 
             @Override
-            public double getA() { return ax; }
+            public double getA(boolean current) { return Particle.this.getA(current).getX(); }
 
             @Override
             public void setR(double r) { setX(r); }
@@ -35,10 +32,10 @@ public class Particle extends Obstacle{
             public double getR() { return y; }
 
             @Override
-            public double getV() { return vy; }
+            public double getV() { return v.getY(); }
 
             @Override
-            public double getA() { return ay; }
+            public double getA(boolean current) { return Particle.this.getA(current).getY(); }
 
             @Override
             public void setR(double r) { setY(r); }
@@ -52,85 +49,84 @@ public class Particle extends Obstacle{
         this.integratorY = new Beeman(YProjection, 0);
     }
 
+    public Vector2D getA(boolean current) {
+        Config config = Config.getConfig();
+        List<Obstacle> entities = grid.getCollisionMap().get(this);
+        Vector2D a = new Vector2D(config.getA0(), 0);
+        a = a.add(getCollisionForce(new Obstacle(-1, this.getX(), Math.min(0, this.getY() - this.r), Math.abs(Math.min(0, this.getY() - this.r))), current).scale(1.0/m));
+        a = a.add(getCollisionForce(new Obstacle(-1, this.getX(), Math.max(config.getW(), this.getY() + this.r), Math.abs(Math.min(0, config.getW() - this.getY() - this.r))), current).scale(1.0/m));
 
-    public int getId() {
-        return id;
+        for (Obstacle e : entities) {
+            a = a.add(getCollisionForce(e, current).scale(1.0/m));
+        }
+        return a;
     }
 
-    public double getX() {
-        return x;
+    public Vector2D getCollisionForce(Obstacle e, boolean current) {
+        Config config = Config.getConfig();
+        Vector2D dr = e.getPos().subtract(this.pos);
+        double dt = config.getDT();
+        double kN = config.getKN();
+        double kT = kN * 2;
+        double distance = dr.magnitude();
+        double overlap = this.r + e.getR() - distance;
+
+        if (overlap > 0) {
+            Vector2D normal = dr.unitVector(); // Dirección normal
+            Vector2D relV = current? e.getV().subtract(this.v) : e.getPredictedV().subtract(this.getPredictedV());
+
+            // Calcular la fuerza normal (usando la opción N.2)
+            double FN_magnitude = -config.getKN() * overlap; // TODO : Gamma?
+            Vector2D FN = normal.scale(FN_magnitude);
+
+            // Calcular la fuerza tangencial (usando la opción T.3)
+            Vector2D tangential = normal.normal(); // Dirección tangencial
+            double FT_magnitude = -kT * overlap * relV.dot(tangential); // T.3
+            Vector2D FT = tangential.scale(FT_magnitude);
+
+            // Fuerza total
+            return FN.add(FT);
+        } else {
+            return new Vector2D(0, 0);
+        }
     }
 
-    public double getY() {
-        return y;
-    }
 
-    public double getVx() {
-        return vx;
-    }
-
-    public double getVy() {
-        return vy;
-    }
-
-    public double getR() {
-        return r;
-    }
 
     public double getM() {
         return m;
     }
 
     public void setX(double x) {
-        this.x = x;
+        Config config = Config.getConfig();
+        if (x >= config.getL())
+            x -= config.getL();
+        else if(x < 0)
+            x += config.getL();
+        pos.setX(x);
     }
 
     public void setY(double y) {
-        this.y = y;
+//        if (y < r || y + r >= Config.getConfig().getW())
+//            throw new IllegalArgumentException("Particle " + this.getId() + " is out of bounds");
+        pos.setY(y);
     }
 
     public void setVx(double vx) {
-        this.vx = vx;
+        v.setX(vx);
     }
 
     public void setVy(double vy) {
-        this.vy = vy;
-    }
-
-    public double getAxCurr() {
-        Config config = Config.getConfig();
-        List<Obstacle> entities = grid.getCollisionMap().get(this);
-        double collisionA = 0;
-        for (Obstacle e : entities) {
-            if (e instanceof Particle) {
-//                Particle p = (Particle) e;
-//                double distance = distance(p);
-//                double overlap = r + p.getR() - distance;
-//                double normalX = (p.getX() - x) / distance;
-//                double normalY = (p.getY() - y) / distance;
-//                double relativeVx = vx - p.getVx();
-//                double relativeVy = vy - p.getVy();
-//                double relativeVn = relativeVx * normalX + relativeVy * normalY;
-//                double J = (1 + config.getE()) * relativeVn / (1 / m + 1 / p.getM());
-//                collisionA += J / m;
-
-            }
-        }
-        return config.getA0();
-    }
-
-    public double getAxNext() {
-        return 0;
-    }
-    public double getAyCurr() {
-        return 0;
-    }
-    public double getAyNext() {
-        return 0;
+        v.setY(vy);
     }
 
     public PeriodicGrid getGrid() {
         return grid;
+    }
+
+    @Override
+    public Vector2D getPredictedV() {
+        return new Vector2D(integratorX.vpNext, integratorY.vpNext);
     }
 
     public void setGrid(PeriodicGrid grid) {
@@ -149,7 +145,7 @@ public class Particle extends Obstacle{
 
     @Override
     public String toString() {
-        return this.getId() + ", " + this.getX() + ", " + this.getY() + ", " + this.getVx() + ", " + this.getVy();
+        return this.getId() + ", " + this.getX() + ", " + this.getY();
     }
 
     @Override
@@ -166,15 +162,10 @@ public class Particle extends Obstacle{
     }
 
 
-    @Override
-    public Particle clone() {
-        return new Particle(id, x, y, r, m);
-    }
-
     public abstract class ParticleProjection{
         public abstract double getR();
         public abstract double getV();
-        public abstract double getA();
+        public abstract double getA(boolean current);
         public abstract void setR(double r);
         public abstract void setV(double r);
 

@@ -4,30 +4,26 @@ import java.util.Random;
 
 public class Main {
 
-
-    private static String STATE_PATH(int seed, String fileName){
-        return "output/" + seed + "/" + fileName + ".txt";
+    private static String BASE_PATH(int seed){
+        return String.format("output/%x", seed);
     }
 
 
     public static void main(String[] args) {
-        staticObstacles();
-    }
-
-    public static void staticObstacles() {
         Config config = FileController.getConfig("config/config.json");
         int seed = 0xCAC71;
         init(config, seed);
         System.out.println("finished initialization");
-        List<Particle> particles = FileController.readParticlesState(STATE_PATH(seed, "particles"));
-        List<Obstacle> obstacles = FileController.readObstaclesState(STATE_PATH(seed, "obstacles"));
-//        Field f = new Field(config.getL(), config.getV(), particles, obs, BASE_PATH(config, seed));
-//        f.loop(config.getTOTAL_TIME(), config.getINTERVAL());
+        List<Particle> particles = FileController.readParticlesState(BASE_PATH(seed) + "/particles.txt");
+        List<Obstacle> obstacles = FileController.readObstaclesState(BASE_PATH(seed) + "/obstacles.txt");
+        Field f = new Field(particles, obstacles);
+        System.out.println("Starting " + seed);
+        f.loop(particles, obstacles, BASE_PATH(seed));
     }
 
 
     public static void init(Config config, int seed) {
-        FileController.createFolderIfNotExists("output/" + seed);
+        FileController.createFolderIfNotExists(BASE_PATH(seed));
         List<Particle> particles = new ArrayList<>();
         List<Obstacle> obstacles = new ArrayList<>();
         Random rnd = new Random(seed);
@@ -45,12 +41,13 @@ public class Main {
             boolean overlap;
             do {
                 p = new Particle(i+offset, rnd.nextDouble() * (L - 2*config.getR()) + config.getR(), rnd.nextDouble() * (W - 2*config.getR()) + config.getR(),
-                        config.getR(), config.getM());
+                        config.getR(), config.getMASS());
                 Particle p2 = p;
 
-                overlap = particles.stream().anyMatch(particle -> particle.distance(p2) <= EPSILON);
+                overlap = particles.stream().anyMatch(particle -> particle.distance(p2) <= particle.getR() + p2.getR() + EPSILON);
             } while(overlap);
             particles.add(p);
+            System.out.println("added particle " + i + " at " + p.getX() + " " + p.getY());
         }
 
         // Create obstacles
@@ -61,13 +58,14 @@ public class Main {
                 o = new Obstacle(i+offset, rnd.nextDouble() * (L - 2*config.getOBSTACLE_RADIUS()) + config.getOBSTACLE_RADIUS(), rnd.nextDouble() * (W - 2*config.getOBSTACLE_RADIUS()) + config.getOBSTACLE_RADIUS(),
                         config.getOBSTACLE_RADIUS());
                 Obstacle o2 = o;
-                overlap = particles.stream().anyMatch(particle -> o2.distance(particle) <= EPSILON) || obstacles.stream().anyMatch(obs -> obs.distance(o2) <= EPSILON);
+                overlap = particles.stream().anyMatch(particle -> o2.distance(particle) <= particle.getR() + o2.getR() + EPSILON) || obstacles.stream().anyMatch(obs -> obs.distance(o2) <= EPSILON);
             } while(overlap);
             obstacles.add(o);
+            System.out.println("added particle " + i + " at " + o.getX() + " " + o.getY());
         }
 
-        FileController.writeParticlesState(STATE_PATH(seed, "particles"), particles, false);
-        FileController.writeObstacleState(STATE_PATH(seed, "obstacles"), obstacles, false);
+        FileController.writeParticlesState(BASE_PATH(seed) + "/particles.txt", particles, false);
+        FileController.writeObstacleState(BASE_PATH(seed) + "/obstacles.txt", obstacles, false);
     }
 
 }

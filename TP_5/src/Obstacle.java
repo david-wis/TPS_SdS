@@ -1,11 +1,14 @@
 public class Obstacle {
     protected int id;
-    protected double x, y, r;
+    protected double r;
+    protected Vector2D pos;
+    protected Vector2D v;
 
     public Obstacle(int id, double x, double y, double r) {
-        this.x = x;
-        this.y = y;
+        this.id = id;
+        this.pos = new Vector2D(x, y);
         this.r = r;
+        this.v = new Vector2D(0, 0);
     }
 
     public double distance(final Obstacle o) {
@@ -18,25 +21,37 @@ public class Obstacle {
 
         double dy = o.getY() - this.getY();
         double dist = Math.sqrt(dx * dx + dy * dy);
-        dist = Math.max(0, dist - (this.getR() + o.getR()));
+        dist = dist - (this.getR() + o.getR());
 
         return dist;
     }
 
 
     public double getX() {
-        return x;
+        return pos.getX();
     }
 
     public double getY() {
-        return y;
+        return pos.getY();
     }
 
     public double getR() {
         return r;
     }
 
+    public Vector2D getPos() {
+        return pos;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public Vector2D getV() {
+        return v;
+    }
+
+    public Vector2D getPredictedV() {
+        return v;
     }
 }

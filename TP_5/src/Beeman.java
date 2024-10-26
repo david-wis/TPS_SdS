@@ -12,7 +12,7 @@ public class Beeman{
     public void updatePrediction(double t, double dt){
         double rCurr = p.getR();
         vCurr = p.getV();
-        aCurr = p.getA();
+        aCurr = p.getA(true);
         double rNext = rCurr + vCurr * dt + ((2.0/3) * aCurr - (1.0/6) * aPrev) * dt * dt;
         vpNext = vCurr + (3.0/2) * aCurr * dt - (1.0/2) * aPrev * dt;
         p.setR(rNext);
@@ -20,14 +20,9 @@ public class Beeman{
 
 
     public void updateCorrection(double t, double dt) {
-        double acNext = p.getAcceleration(rNext, vpNext, t + dt);
+        double acNext = p.getA(false);
         double vcNext = vCurr + (1.0/3) * acNext * dt + (5.0/6) * aCurr * dt - (1.0/6) * aPrev * dt;
-
         p.setV(vcNext);
         aPrev = aCurr;
-
-        // Y
-
-
     }
 }

@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
+
 public class FileController {
 
 
@@ -23,10 +25,21 @@ public class FileController {
         try {
             FileWriter writer = new FileWriter(filename, append);
             for (Particle p : particles)
-                writer.write(p.getId() + " " + p.getX() + " " + p.getY() + " " + p.getR() + " " + p.getVx() + " " + p.getVy() + "\n");
+                writer.write(p.getId() + " " + p.getX() + " " + p.getY() + " " + p.getR() + "\n");
             writer.close();
         } catch (IOException e) {
             System.err.println("An error occurred writing the initial state.");
+        }
+    }
+
+    public static void writeAnalysis(String filename, List<Particle> particles, double t, boolean append) {
+        try {
+            FileWriter writer = new FileWriter(filename, append);
+            if (!particles.isEmpty())
+                writer.write(t + " " + particles.stream().map(Particle::getId).toList() + "\n");
+            writer.close();
+        } catch (IOException e) {
+            System.err.println("An error occurred writing the analysis.");
         }
     }
 
