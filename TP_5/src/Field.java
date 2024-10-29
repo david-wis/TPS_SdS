@@ -4,7 +4,7 @@ import java.util.List;
 public class Field {
 
     public Field(List<Particle> particles, List<Obstacle> obstacles) {
-        PeriodicGrid grid = new PeriodicGrid(particles.size() + obstacles.size());
+        PeriodicGrid grid = new PeriodicGrid();
         for (Particle p : particles) {
             grid.addEntity(p);
             p.setGrid(grid);
@@ -27,10 +27,7 @@ public class Field {
             FileController.writeParticlesState(animationPath, particles, false);
 
         while(t < config.getT()) {
-            if (t >= 87) {
-                System.out.println("");
-            }
-            PeriodicGrid nextGrid = new PeriodicGrid(particles.size() + obstacles.size());
+            PeriodicGrid nextGrid = new PeriodicGrid();
             obstacles.forEach(nextGrid::addEntity);
             List<Particle> crossingParticles = new ArrayList<>();
             for(Particle p : particles) {
@@ -57,8 +54,9 @@ public class Field {
                 if (config.isANIMATION())
                     FileController.writeParticlesState(animationPath, particles, true);
                 t2 += config.getDT2();
-                System.out.println("Time: " + t);
+
             }
+            System.out.println(t + ": " + particles.get(0));
             t += config.getDT();
         }
     }

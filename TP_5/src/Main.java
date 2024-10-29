@@ -23,6 +23,7 @@ public class Main {
 
 
     public static void init(Config config, int seed) {
+
         FileController.createFolderIfNotExists(BASE_PATH(seed));
         List<Particle> particles = new ArrayList<>();
         List<Obstacle> obstacles = new ArrayList<>();
@@ -34,34 +35,39 @@ public class Main {
         double W = config.getW();
 
         int offset = 0;
-
+        PeriodicGrid grid = new PeriodicGrid();
         // Create particles
         for (int i = 0; i < config.getN(); i++) {
             Particle p;
             boolean overlap;
+            int tries = 0;
             do {
                 p = new Particle(i+offset, rnd.nextDouble() * (L - 2*config.getR()) + config.getR(), rnd.nextDouble() * (W - 2*config.getR()) + config.getR(),
                         config.getR(), config.getMASS());
                 Particle p2 = p;
-
-                overlap = particles.stream().anyMatch(particle -> particle.distance(p2) <= particle.getR() + p2.getR() + EPSILON);
+                List<Obstacle> collisions = grid.getSingleEntityCollisions(p);
+                overlap = collisions.stream().anyMatch(e -> e.distance(p2) <= e.getR() + p2.getR() + EPSILON);
+                tries++;
             } while(overlap);
             particles.add(p);
-            System.out.println("added particle " + i + " at " + p.getX() + " " + p.getY());
+            grid.addEntity(p);
         }
 
         // Create obstacles
         for (int i = 0; i < config.getM(); i++) {
             Obstacle o;
             boolean overlap;
+            int tries = 0;
             do {
                 o = new Obstacle(i+offset, rnd.nextDouble() * (L - 2*config.getOBSTACLE_RADIUS()) + config.getOBSTACLE_RADIUS(), rnd.nextDouble() * (W - 2*config.getOBSTACLE_RADIUS()) + config.getOBSTACLE_RADIUS(),
                         config.getOBSTACLE_RADIUS());
                 Obstacle o2 = o;
-                overlap = particles.stream().anyMatch(particle -> o2.distance(particle) <= particle.getR() + o2.getR() + EPSILON) || obstacles.stream().anyMatch(obs -> obs.distance(o2) <= EPSILON);
+                List<Obstacle> collisions = grid.getSingleEntityCollisions(o);
+                overlap = collisions.stream().anyMatch(particle -> o2.distance(particle) <= particle.getR() + o2.getR() + EPSILON);
+                tries++;
             } while(overlap);
             obstacles.add(o);
-            System.out.println("added particle " + i + " at " + o.getX() + " " + o.getY());
+            grid.addEntity(o);
         }
 
         FileController.writeParticlesState(BASE_PATH(seed) + "/particles.txt", particles, false);

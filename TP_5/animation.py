@@ -20,7 +20,7 @@ with open("config/config.json", "r") as f:
     OBS_RADIUS = config["OBSTACLE_RADIUS"]
     BASE_PATH = "output/cac71"
     START = 0
-    LIMIT = 1000
+    LIMIT = 50
 
 def init_plot(history, obstacles):
     fig, ax = plt.subplots()

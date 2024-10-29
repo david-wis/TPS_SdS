@@ -4,7 +4,6 @@ import java.util.List;
 
 public class PeriodicGrid {
     private final Set<Obstacle>[][] grid;
-    private final int total; // Number of Particles
     private final int rows; // Number of cells of a row
     private final int cols; // Number of cells of a column
     private final double rc; // Interaction radius
@@ -18,13 +17,25 @@ public class PeriodicGrid {
             new Point(-1,1)
     };
 
-    public PeriodicGrid(int total) {
+    private static final Point[] allDirections = new Point[] {
+            new Point(0, 0),
+            new Point(0, 1),
+            new Point(1, 0),
+            new Point(1, 1),
+            new Point(-1,1),
+            new Point(0, -1),
+            new Point(-1, 0),
+            new Point(-1, -1),
+            new Point(1, -1)
+    };
+
+
+    public PeriodicGrid() {
         Config config = Config.getConfig();
         double maxD = Math.max(2*config.getOBSTACLE_RADIUS(), 2* config.getR());
-        this.total = total;
         this.rows = (int) Math.floor(config.getW() / maxD);
         this.cols = (int) Math.floor(config.getL() / maxD);
-        this.rc = 0;
+        this.rc = maxD;
 
         this.grid = (Set<Obstacle>[][]) new Set[cols][rows];
         for (int i = 0; i < cols; i++)
@@ -42,8 +53,8 @@ public class PeriodicGrid {
 
     public void addEntity(final Obstacle o) {
         final Point cell = getObstacleCellPosition(o);
-        if (cell.x > cols || cell.y > rows)
-            System.out.println();
+        if (cell.x >= cols || cell.y >= rows || cell.x < 0 || cell.y < 0)
+            return;
         grid[cell.x][cell.y].add(o);
     }
 
@@ -58,6 +69,7 @@ public class PeriodicGrid {
         }
     }
 
+
     private void checkNeighborsOfCell(final Point cell, final Point d, final Obstacle e1) {
         if (isInBounds(cell, d)) {
             for (Obstacle e2 : grid[modularSum(cell.x, d.x)][d.y+cell.y]) {
@@ -71,13 +83,27 @@ public class PeriodicGrid {
         }
     }
 
+    public List<Obstacle> getSingleEntityCollisions(Obstacle e) {
+        final Point cell = getObstacleCellPosition(e);
+        List<Obstacle> collisions = new ArrayList<>();
+        for (Point d : allDirections)
+            addNeighborsOfCell(cell, d, e, collisions);
+        return collisions;
+    }
+
+    private void addNeighborsOfCell(final Point cell, final Point d, final Obstacle e1, List<Obstacle> collisions) {
+        if (isInBounds(cell, d)) {
+            for (Obstacle e2 : grid[modularSum(cell.x, d.x)][d.y+cell.y]) {
+                if (insideInteractionRadius(e1, e2) && !e1.equals(e2)) {
+                    collisions.add(e2);
+                }
+            }
+        }
+    }
     public Set<Obstacle>[][] getGrid() {
         return grid;
     }
 
-    public int getTotal() {
-        return total;
-    }
 
     public int getRows() {
         return rows;
@@ -100,11 +126,11 @@ public class PeriodicGrid {
     }
 
     protected boolean isInBounds(final Point p1, final Point p2) {
-        double pos = p1.y + p2.y;
+        double pos = p1.y + p2. y;
         return pos >= 0 && pos < this.getRows();
     }
 
     protected int modularSum(final int a, final int b) {
-        return (a + b + this.getCols()) % this.getCols();
+        return Math.floorMod(a + b, this.getCols());
     }
 }

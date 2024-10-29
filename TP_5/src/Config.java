@@ -12,6 +12,8 @@ public class Config {
     private double OBSTACLE_RADIUS;
     private double T;
     private double KN;
+
+    private double G;
     private boolean ANIMATION;
 
     private double DT2;
@@ -46,7 +48,7 @@ public class Config {
     }
 
     public double getDT() {
-        return 0.05 * Math.sqrt(getM()/getKN());
+        return DT * Math.sqrt(getM()/getKN());
     }
 
     public void setDT(double DT) {
@@ -71,6 +73,10 @@ public class Config {
 
     public double getKN() {
         return KN;
+    }
+
+    public double getG() {
+        return G;
     }
 
     public boolean isANIMATION() {

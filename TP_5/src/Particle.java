@@ -12,10 +12,10 @@ public class Particle extends Obstacle{
         this.m = m;
         XProjection = new ParticleProjection() {
             @Override
-            public double getR() { return x; }
+            public double getR() { return Particle.this.getX(); }
 
             @Override
-            public double getV() { return v.getX(); }
+            public double getV() { return Particle.this.getV().getX(); }
 
             @Override
             public double getA(boolean current) { return Particle.this.getA(current).getX(); }
@@ -29,10 +29,10 @@ public class Particle extends Obstacle{
 
         YProjection = new ParticleProjection() {
             @Override
-            public double getR() { return y; }
+            public double getR() { return Particle.this.getY(); }
 
             @Override
-            public double getV() { return v.getY(); }
+            public double getV() { return Particle.this.getV().getY(); }
 
             @Override
             public double getA(boolean current) { return Particle.this.getA(current).getY(); }
@@ -53,12 +53,20 @@ public class Particle extends Obstacle{
         Config config = Config.getConfig();
         List<Obstacle> entities = grid.getCollisionMap().get(this);
         Vector2D a = new Vector2D(config.getA0(), 0);
-        a = a.add(getCollisionForce(new Obstacle(-1, this.getX(), Math.min(0, this.getY() - this.r), Math.abs(Math.min(0, this.getY() - this.r))), current).scale(1.0/m));
-        a = a.add(getCollisionForce(new Obstacle(-1, this.getX(), Math.max(config.getW(), this.getY() + this.r), Math.abs(Math.min(0, config.getW() - this.getY() - this.r))), current).scale(1.0/m));
+        Vector2D upperWallForce = getCollisionForce(new Obstacle(-1, this.getX(), Math.min(0, this.getY() - this.r), Math.abs(Math.min(0, this.getY() - this.r))), current).scale(1.0/m);
+        a = a.add(upperWallForce);
+        if (upperWallForce.magnitude() > 1E-6)
+            System.out.println("    upperWallForce: f " + upperWallForce.toString() + " magnitude: " + upperWallForce.magnitude() + " pos " + this.getPos());
+        Vector2D lowerWallForce = getCollisionForce(new Obstacle(-1, this.getX(), Math.max(config.getW(), this.getY() + this.r), Math.abs(Math.min(0, config.getW() - this.getY() - this.r))), current).scale(1.0/m);
+        if (lowerWallForce.magnitude() > 1E-6)
+            System.out.println("    lowerWallForce: f " + lowerWallForce.toString() + " magnitude: " + lowerWallForce.magnitude() + " pos " + this.getPos());
+        a = a.add(lowerWallForce);
 
         for (Obstacle e : entities) {
             a = a.add(getCollisionForce(e, current).scale(1.0/m));
         }
+        if (!entities.isEmpty())
+            System.out.println("    a: " + a.toString() + " entities: " + entities.size() + " id: " + this.getId() + " x: " + this.getX() + " y: " + this.getY() + " r: " + this.getR() + " v: " + this.getV().magnitude());
         return a;
     }
 
@@ -67,29 +75,34 @@ public class Particle extends Obstacle{
         Vector2D dr = e.getPos().subtract(this.pos);
         double dt = config.getDT();
         double kN = config.getKN();
-        double kT = kN * 2;
+        double kT = kN * 2; // Constante elástica tangencial
+        double gamma = config.getG(); // Coeficiente de amortiguamiento
         double distance = dr.magnitude();
         double overlap = this.r + e.getR() - distance;
 
         if (overlap > 0) {
             Vector2D normal = dr.unitVector(); // Dirección normal
-            Vector2D relV = current? e.getV().subtract(this.v) : e.getPredictedV().subtract(this.getPredictedV());
+            Vector2D relV = current ? e.getV().subtract(this.v) : e.getPredictedV().subtract(this.getPredictedV());
 
-            // Calcular la fuerza normal (usando la opción N.2)
-            double FN_magnitude = -config.getKN() * overlap; // TODO : Gamma?
+            // Descomposición de la velocidad relativa en componentes normal y tangencial
+            double relV_normal = relV.dot(normal); // Proyección en la dirección normal
+            Vector2D tangential = normal.normal(); // Dirección tangencial
+
+            // Calcular la fuerza normal (usando la opción N.1)
+            double FN_magnitude = -kN * overlap - gamma * relV_normal;
             Vector2D FN = normal.scale(FN_magnitude);
 
             // Calcular la fuerza tangencial (usando la opción T.3)
-            Vector2D tangential = normal.normal(); // Dirección tangencial
             double FT_magnitude = -kT * overlap * relV.dot(tangential); // T.3
             Vector2D FT = tangential.scale(FT_magnitude);
 
             // Fuerza total
             return FN.add(FT);
         } else {
-            return new Vector2D(0, 0);
-        }
+            return new Vector2D(0, 0); // No hay contacto
+        }   
     }
+
 
 
 
@@ -99,11 +112,7 @@ public class Particle extends Obstacle{
 
     public void setX(double x) {
         Config config = Config.getConfig();
-        if (x >= config.getL())
-            x -= config.getL();
-        else if(x < 0)
-            x += config.getL();
-        pos.setX(x);
+        pos.setX(x - config.getL() * Math.floor(x / config.getL()));
     }
 
     public void setY(double y) {
@@ -145,15 +154,7 @@ public class Particle extends Obstacle{
 
     @Override
     public String toString() {
-        return this.getId() + ", " + this.getX() + ", " + this.getY();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Particle particle = (Particle) o;
-        return id == particle.id;
+        return this.getId() + ", " + this.getPos() + ", " + this.getV().toString();
     }
 
     @Override

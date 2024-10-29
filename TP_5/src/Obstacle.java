@@ -21,7 +21,7 @@ public class Obstacle {
 
         double dy = o.getY() - this.getY();
         double dist = Math.sqrt(dx * dx + dy * dy);
-        dist = dist - (this.getR() + o.getR());
+//        dist = dist - (this.getR() + o.getR());
 
         return dist;
     }
@@ -54,4 +54,5 @@ public class Obstacle {
     public Vector2D getPredictedV() {
         return v;
     }
+
 }
