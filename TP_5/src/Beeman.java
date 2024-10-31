@@ -14,7 +14,7 @@ public class Beeman{
         vCurr = p.getV();
         aCurr = p.getA(true);
         double rNext = rCurr + vCurr * dt + ((2.0/3) * aCurr - (1.0/6) * aPrev) * dt * dt;
-        vpNext = vCurr + (3.0/2) * aCurr * dt - (1.0/2) * aPrev * dt;
+        vpNext = p.capV(vCurr + (3.0/2) * aCurr * dt - (1.0/2) * aPrev * dt, rNext);
         return rNext;
 //        p.setR(rNext);
     }

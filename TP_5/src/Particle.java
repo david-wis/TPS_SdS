@@ -26,6 +26,11 @@ public class Particle extends Obstacle{
 
             @Override
             public void setV(double v) { setVx(v); }
+
+            @Override
+            public double capV(double v, double r) {
+                return v;
+            }
         };
 
         YProjection = new ParticleProjection() {
@@ -43,6 +48,13 @@ public class Particle extends Obstacle{
 
             @Override
             public void setV(double v) { setVy(v); }
+
+            @Override
+            public double capV(double v, double y) {
+//                if (y < 0 || y > Config.getConfig().getW())
+//                    return 0;
+                return v;
+            }
         };
         Config config = Config.getConfig();
 
@@ -50,24 +62,25 @@ public class Particle extends Obstacle{
         this.integratorY = new Beeman(YProjection, 0);
     }
 
+    private static int PARTICLE_DEBUG = 7;
     public Vector2D getA(boolean current) {
         Config config = Config.getConfig();
         List<Obstacle> entities = grid.getCollisionMap().getOrDefault(this, Collections.emptyList());
         Vector2D f = new Vector2D(config.getA0() * m, 0);
         Vector2D upperWallForce = getCollisionForce(new Obstacle(-1, this.getX(), Math.min(0, this.getY() - this.r), Math.abs(Math.min(0, this.getY() - this.r))), current);
         f = f.add(upperWallForce);
-        if (config.isDEBUG() && upperWallForce.magnitude() > 1E-6)
+        if (config.isDEBUG() && upperWallForce.magnitude() > 1E-6 && this.id == PARTICLE_DEBUG)
             System.out.println("    upperWallForce: f " + upperWallForce.toString() + " magnitude: " + upperWallForce.magnitude() + " pos " + this.getPos());
         Vector2D lowerWallForce = getCollisionForce(new Obstacle(-1, this.getX(), Math.max(config.getW(), this.getY() + this.r), Math.abs(Math.min(0, config.getW() - this.getY() - this.r))), current);
-        if (config.isDEBUG() && lowerWallForce.magnitude() > 1E-6)
+        if (config.isDEBUG() && lowerWallForce.magnitude() > 1E-6 && this.id == PARTICLE_DEBUG)
             System.out.println("    lowerWallForce: f " + lowerWallForce.toString() + " magnitude: " + lowerWallForce.magnitude() + " pos " + this.getPos());
         f = f.add(lowerWallForce);
 
-        if (!entities.isEmpty() && config.isDEBUG())
+        if (!entities.isEmpty() && config.isDEBUG() && this.id == PARTICLE_DEBUG)
             System.out.println(" obstacles: " + entities.size());
         for (Obstacle e : entities) {
             Vector2D force = getCollisionForce(e, current);
-            if (force.magnitude() > 1E-6 && config.isDEBUG()) {
+            if (force.magnitude() > 1E-6 && config.isDEBUG() && this.id == PARTICLE_DEBUG) {
                 // obstacle position
                 System.out.println("    o:" + e.id + " (" + e.getClass() + ") ");
                 System.out.println("        position: " + e.getPos() + " overlap: " + (this.r + e.getR() - e.distance(this)) + " r: " + e.getR());
@@ -75,8 +88,8 @@ public class Particle extends Obstacle{
             }
             f = f.add(force);
         }
-        if (config.isDEBUG())
-            System.out.println("Resultant force: " + f.toString());
+        if (config.isDEBUG() && this.id == PARTICLE_DEBUG)
+            System.out.println("Particle: " + this.id + ", Position: " + this.pos  + ", Resultant force  : " + f.toString());
         return f.scale(1.0/m);
     }
 
@@ -90,9 +103,16 @@ public class Particle extends Obstacle{
         double distance = dr.magnitude();
         double overlap = this.r + e.getR() - distance;
 
+
         if (overlap > 0) {
             Vector2D normal = dr.unitVector(); // Dirección normal
             Vector2D relV = current ? this.getV().subtract(e.getV()) : this.getPredictedV().subtract(e.getPredictedV());
+
+            if (this.id == PARTICLE_DEBUG && config.isDEBUG()) {
+                System.out.println("Relative velocity: " + relV);
+                System.out.println("My velocity: " + (current? this.getV() : this.getPredictedV()));
+                System.out.println("Other velocity: " + (current? e.getV() : e.getPredictedV()));
+            }
 
             Vector2D tangential = normal.normal(); // Dirección tangencial
 
@@ -115,19 +135,40 @@ public class Particle extends Obstacle{
         return m;
     }
 
+    private double mod(double x, double L) {
+        return ((x % L) + L) % L;
+    }
     public void setX(double x) {
         Config config = Config.getConfig();
-        pos.setX(x - config.getL() * Math.floor(x / config.getL()));
+        if (Double.isNaN(x)) {
+            System.err.println("AAAAA");
+//            throw new IllegalArgumentException("Particle " + this.id + " has x = NaN");
+        }
+        pos.setX(mod(x, config.getL()));
     }
 
     public void setY(double y) {
-//        if (y < r || y + r >= Config.getConfig().getW())
-//            throw new IllegalArgumentException("Particle " + this.getId() + " is out of bounds");
+        // cap the y position to the grid (if y < 0, then 0, if y > W, then W)
+//        double EPSILON = 1E-6;
+//        Config config = Config.getConfig();
+//        if (y < 0) {
+//            y = 0;
+//            setVy(Math.max(0, getV().getY()));
+////            setVy(0);
+//        } else if (y > config.getW())  {
+//            y = config.getW() - EPSILON;
+//            setVy(Math.min(0, getV().getY()));
+////            setVy(0);
+//        }
         pos.setY(y);
     }
 
+
     public void setVx(double vx) {
         v.setX(vx);
+//        if (v.magnitude() > 20) {
+//            System.out.println();
+//        }
     }
 
     public void setVy(double vy) {
@@ -175,5 +216,7 @@ public class Particle extends Obstacle{
         public abstract void setR(double r);
         public abstract void setV(double r);
 
+        public abstract double capV(double v, double r);
     }
 }
+

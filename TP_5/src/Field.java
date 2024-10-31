@@ -31,7 +31,23 @@ public class Field {
             obstacles.forEach(nextGrid::addEntity);
             List<Particle> crossingParticles = new ArrayList<>();
 //            System.out.println("Predicting...");
+//            double maxSpeed = 0;
+//            int maxId = 0;
+//            for (Particle p : particles) {
+//                double speed = p.getV().magnitude();
+//                if (speed > maxSpeed) {
+//                    maxSpeed = speed;
+//                    maxId = p.id;
+//                }
+//            }
+//            if (maxSpeed > 20) {
+//                System.out.println();
+//            }
+//            System.out.println("t: " + t + "Max speed: " + maxSpeed + " id: " + maxId);
+
             for(Particle p : particles) {
+//                if (p.id == 13)
+//                    System.out.println();
                 double currX = p.getX();
                 double nextX = p.getIntegratorX().updatePrediction(t, config.getDT());
                 if (currX > nextX + config.getL()/2)
@@ -65,6 +81,8 @@ public class Field {
             }
             System.out.println(t);
             t += config.getDT();
+//            if (t >= 27.645046717271356)
+//                System.out.print("");
         }
     }
 }
