@@ -22,7 +22,6 @@ public class Field {
         double t = config.getDT();
         double t2 = t;
         System.out.println(config.getDT());
-        FileController.writeAnalysis(analysisPath, particles, 0, false);
         if (config.isANIMATION())
             FileController.writeParticlesState(animationPath, particles, false);
 
@@ -50,12 +49,12 @@ public class Field {
 //                    System.out.println();
                 double currX = p.getX();
                 double nextX = p.getIntegratorX().updatePrediction(t, config.getDT());
-                if (currX > nextX + config.getL()/2)
-                    crossingParticles.add(p);
-
                 double nextY = p.getIntegratorY().updatePrediction(t, config.getDT());
+
                 p.setX(nextX);
                 p.setY(nextY);
+                if (currX > p.getX() + config.getL()/2)
+                    crossingParticles.add(p);
 
                 nextGrid.addEntity(p);
                 p.setGrid(nextGrid);

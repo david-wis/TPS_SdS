@@ -25,8 +25,8 @@ with open("config/config.json", "r") as f:
     LIMIT = 80
 
 colors = {
-    7: "green",
-    14: "purple"
+    # 7: "green",
+    # 14: "purple"
 }
 
 def init_plot(history, obstacles):
