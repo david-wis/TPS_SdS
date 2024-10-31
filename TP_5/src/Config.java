@@ -1,13 +1,19 @@
+import java.util.List;
+
 public class Config {
     private double L;
     private double W;
     private int N;
-    private double M;
-
+    private int M;
+    private List<Integer> MS;
     private double MASS;
     private double R;
     private double TOTAL_TIME;
     private double A0;
+    private List<Double> A0S;
+    private List<String> SEEDS;
+    private String SEED;
+
     private double DT;
     private double OBSTACLE_RADIUS;
     private double T;
@@ -41,8 +47,12 @@ public class Config {
         return N;
     }
 
-    public double getM() {
+    public int getM() {
         return M;
+    }
+
+    public List<Integer> getMS() {
+        return MS;
     }
 
     public double getR() {
@@ -50,11 +60,7 @@ public class Config {
     }
 
     public double getDT() {
-        return DT * Math.sqrt(getM()/getKN());
-    }
-
-    public void setDT(double DT) {
-        this.DT = DT;
+        return DT * Math.sqrt(getMASS()/getKN());
     }
 
     public double getOBSTACLE_RADIUS() {
@@ -65,9 +71,6 @@ public class Config {
         return TOTAL_TIME;
     }
 
-    public double getA0() {
-        return A0;
-    }
 
     public double getT() {
         return T;
@@ -96,4 +99,26 @@ public class Config {
     public boolean isDEBUG() {
         return DEBUG;
     }
+
+    public double getA0() {
+        return A0;
+    }
+
+    public List<Double> getA0S() {
+        return A0S;
+    }
+
+    public List<String> getSEEDS() {
+        return SEEDS;
+    }
+
+    public void setM(int m) {
+        M = m;
+    }
+
+    public void setA0(double a0) {
+        A0 = a0;
+    }
+
+
 }

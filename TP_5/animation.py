@@ -18,10 +18,10 @@ with open("config/config.json", "r") as f:
     W = config["W"]
     R = config["R"]
     OBS_RADIUS = config["OBSTACLE_RADIUS"]
-    BASE_PATH = "output/cac71_100"
+    BASE_PATH = "output/100/1.0/c0ffee"
     # START = 200
     # LIMIT = 150
-    START = 0
+    START = 200
     LIMIT = 80
 
 colors = {

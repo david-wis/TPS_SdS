@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Field {
@@ -21,32 +22,16 @@ public class Field {
         Config config = Config.getConfig();
         double t = config.getDT();
         double t2 = t;
-        System.out.println(config.getDT());
         if (config.isANIMATION())
             FileController.writeParticlesState(animationPath, particles, false);
+        FileController.writeAnalysis(analysisPath, Collections.emptyList(), t, false);
 
         while(t < config.getT()) {
             PeriodicGrid nextGrid = new PeriodicGrid();
             obstacles.forEach(nextGrid::addEntity);
             List<Particle> crossingParticles = new ArrayList<>();
-//            System.out.println("Predicting...");
-//            double maxSpeed = 0;
-//            int maxId = 0;
-//            for (Particle p : particles) {
-//                double speed = p.getV().magnitude();
-//                if (speed > maxSpeed) {
-//                    maxSpeed = speed;
-//                    maxId = p.id;
-//                }
-//            }
-//            if (maxSpeed > 20) {
-//                System.out.println();
-//            }
-//            System.out.println("t: " + t + "Max speed: " + maxSpeed + " id: " + maxId);
 
             for(Particle p : particles) {
-//                if (p.id == 13)
-//                    System.out.println();
                 double currX = p.getX();
                 double nextX = p.getIntegratorX().updatePrediction(t, config.getDT());
                 double nextY = p.getIntegratorY().updatePrediction(t, config.getDT());
@@ -60,7 +45,6 @@ public class Field {
                 p.setGrid(nextGrid);
             }
             nextGrid.updateCollisionMap(particles, obstacles);
-//            System.out.println("Correcting!!!");
             for(Particle p : particles) {
                 double nextVx = p.getIntegratorX().updateCorrection(t, config.getDT());
                 double nextVy = p.getIntegratorY().updateCorrection(t, config.getDT());
@@ -71,17 +55,14 @@ public class Field {
             if (!crossingParticles.isEmpty())
                 FileController.writeAnalysis(analysisPath, crossingParticles, t, true);
 
-            //serializacion
             if (t >= t2) {
                 if (config.isANIMATION())
                     FileController.writeParticlesState(animationPath, particles, true);
                 t2 += config.getDT2();
 
             }
-            System.out.println(t);
+//            System.out.println(t);
             t += config.getDT();
-//            if (t >= 27.645046717271356)
-//                System.out.print("");
         }
     }
 }

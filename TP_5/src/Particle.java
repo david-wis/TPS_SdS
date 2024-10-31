@@ -141,8 +141,8 @@ public class Particle extends Obstacle{
     public void setX(double x) {
         Config config = Config.getConfig();
         if (Double.isNaN(x)) {
-            System.err.println("AAAAA");
-//            throw new IllegalArgumentException("Particle " + this.id + " has x = NaN");
+//            System.err.println("AAAAA");
+            throw new IllegalArgumentException("Particle " + this.id + " has x = NaN");
         }
         pos.setX(mod(x, config.getL()));
     }

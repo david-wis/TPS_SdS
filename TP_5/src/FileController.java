@@ -36,7 +36,7 @@ public class FileController {
         try {
             FileWriter writer = new FileWriter(filename, append);
             if (!particles.isEmpty())
-                writer.write(t + " " + particles.stream().map(Particle::getId).toList() + "\n");
+                writer.write(t + ":" + particles.stream().map(Particle::getId).toList() + "\n");
             writer.close();
         } catch (IOException e) {
             System.err.println("An error occurred writing the analysis.");

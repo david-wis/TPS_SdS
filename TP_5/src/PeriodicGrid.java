@@ -46,17 +46,24 @@ public class PeriodicGrid {
 
     private Point getObstacleCellPosition(final Obstacle o) {
         Config config = Config.getConfig();
-        final int x = (int) (o.getX() / (config.getL() / cols));
-        final int y = (int) (o.getY() / (config.getW() / rows));
+        int x = (int) (o.getX() / (config.getL() / cols));
+        int y = (int) (o.getY() / (config.getW() / rows));
+        if (y >= rows) {
+            y = rows - 1;
+            System.err.printf("HM? %d > %d\n", y, rows);
+        } else if (y < 0 ) {
+            y = 0;
+            System.err.printf("hm? %d < 0\n", y);
+        }
         return new Point(x, y);
     }
 
     public void addEntity(final Obstacle o) {
         final Point cell = getObstacleCellPosition(o);
-        if (cell.y >= rows || cell.y < 0) {
-            System.err.println("Hm?");
-            return;
-        }
+//        if (cell.y >= rows || cell.y < 0) {
+//            System.err.println("Hm?");
+//            return;
+//        }
         grid[cell.x][cell.y].add(o);
     }
 
