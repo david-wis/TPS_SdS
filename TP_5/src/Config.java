@@ -19,6 +19,8 @@ public class Config {
     private double DT2;
 
 
+    private boolean DEBUG;
+
     private static Config config = null;
 
     public static Config getConfig() {
@@ -89,5 +91,9 @@ public class Config {
 
     public double getMASS() {
         return MASS;
+    }
+
+    public boolean isDEBUG() {
+        return DEBUG;
     }
 }

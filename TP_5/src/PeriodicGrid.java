@@ -53,8 +53,8 @@ public class PeriodicGrid {
 
     public void addEntity(final Obstacle o) {
         final Point cell = getObstacleCellPosition(o);
-        if (cell.x >= cols || cell.y >= rows || cell.x < 0 || cell.y < 0)
-            return;
+//        if (cell.x >= cols || cell.y >= rows || cell.x < 0 || cell.y < 0)
+//            return;
         grid[cell.x][cell.y].add(o);
     }
 

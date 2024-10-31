@@ -30,20 +30,27 @@ public class Field {
             PeriodicGrid nextGrid = new PeriodicGrid();
             obstacles.forEach(nextGrid::addEntity);
             List<Particle> crossingParticles = new ArrayList<>();
+//            System.out.println("Predicting...");
             for(Particle p : particles) {
                 double currX = p.getX();
-                p.getIntegratorX().updatePrediction(t, config.getDT());
-                if (currX > p.getX() + config.getL()/2)
+                double nextX = p.getIntegratorX().updatePrediction(t, config.getDT());
+                if (currX > nextX + config.getL()/2)
                     crossingParticles.add(p);
 
-                p.getIntegratorY().updatePrediction(t, config.getDT());
+                double nextY = p.getIntegratorY().updatePrediction(t, config.getDT());
+                p.setX(nextX);
+                p.setY(nextY);
+
                 nextGrid.addEntity(p);
                 p.setGrid(nextGrid);
             }
             nextGrid.updateCollisionMap(particles, obstacles);
+//            System.out.println("Correcting!!!");
             for(Particle p : particles) {
-                p.getIntegratorX().updateCorrection(t, config.getDT());
-                p.getIntegratorY().updateCorrection(t, config.getDT());
+                double nextVx = p.getIntegratorX().updateCorrection(t, config.getDT());
+                double nextVy = p.getIntegratorY().updateCorrection(t, config.getDT());
+                p.setVx(nextVx);
+                p.setVy(nextVy);
             }
 
             if (!crossingParticles.isEmpty())
@@ -56,7 +63,7 @@ public class Field {
                 t2 += config.getDT2();
 
             }
-            System.out.println(t + ": " + particles.get(0));
+            System.out.println(t);
             t += config.getDT();
         }
     }
