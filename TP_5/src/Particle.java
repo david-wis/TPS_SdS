@@ -5,11 +5,14 @@ import java.util.Objects;
 
 public class Particle extends Obstacle{
     private double m;
+
+    private double accumX;
     private ParticleProjection XProjection, YProjection;
     private Beeman integratorX, integratorY;
     private PeriodicGrid grid;
     public Particle(int id, double x, double y, double r, double m) {
         super(id, x, y, r);
+        accumX = x;
         this.m = m;
         XProjection = new ParticleProjection() {
             @Override
@@ -144,6 +147,10 @@ public class Particle extends Obstacle{
 //            System.err.println("AAAAA");
             throw new IllegalArgumentException("Particle " + this.id + " has x = NaN");
         }
+        double diff = x - pos.getX();
+        accumX += diff;
+        accumX = Math.floor(accumX / config.getL()) * config.getL() + mod(x, config.getL());
+
         pos.setX(mod(x, config.getL()));
     }
 
@@ -197,6 +204,9 @@ public class Particle extends Obstacle{
         return integratorY;
     }
 
+    public double getAccumX() {
+        return accumX;
+    }
 
     @Override
     public String toString() {

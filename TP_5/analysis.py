@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
             # find first t > 300
             # ts_stationary = np.array([t for t in ts if t > 350])
-            ts_stationary = np.array(ts[-250:])
+            ts_stationary = np.array(ts[-200:])
             ts_stationary -= ts_stationary[0]
             flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
             flux_accum_stationary -= flux_accum_stationary[0]
@@ -133,4 +133,4 @@ if __name__ == "__main__":
             flux_acum_s.append(flux_accum_stationary)
 
         BASE_PATH = f"output/{M}/1.0"
-        plot_aggregated(tss, flux_acum_s, SEEDS, "Tiempo", "Caudal acumulado", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)
+        plot_aggregated(tss, np.array(flux_acum_s), SEEDS, "Tiempo", "Caudal acumulado", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)

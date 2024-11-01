@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Field {
 
@@ -25,7 +23,8 @@ public class Field {
         if (config.isANIMATION())
             FileController.writeParticlesState(animationPath, particles, false);
         FileController.writeAnalysis(analysisPath, Collections.emptyList(), t, false);
-
+        Map<Particle, Integer> particleLaps = new HashMap<>();
+        particles.forEach(p -> particleLaps.put(p, 1));
         while(t < config.getT()) {
             PeriodicGrid nextGrid = new PeriodicGrid();
             obstacles.forEach(nextGrid::addEntity);
@@ -38,8 +37,11 @@ public class Field {
 
                 p.setX(nextX);
                 p.setY(nextY);
-                if (currX > p.getX() + config.getL()/2)
+                int laps = particleLaps.get(p);
+                if (p.getAccumX() > laps * config.getL()) {
+                    particleLaps.put(p, laps + 1);
                     crossingParticles.add(p);
+                }
 
                 nextGrid.addEntity(p);
                 p.setGrid(nextGrid);
