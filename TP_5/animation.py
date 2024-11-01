@@ -11,18 +11,18 @@ X_IDX = 1
 Y_IDX = 2
 R_IDX = 3
 
-with open("config/config.json", "r") as f:
+with open("config/animation.json", "r") as f:
     config = json.load(f)
     DT2 = config["DT2"]
     L = config["L"]
     W = config["W"]
     R = config["R"]
     OBS_RADIUS = config["OBSTACLE_RADIUS"]
-    BASE_PATH = "output/100/1.0/cac72"
+    BASE_PATH = "output/100/1.0/cac71"
     # START = 200
     # LIMIT = 150
     START = 0
-    LIMIT = 2
+    LIMIT = 1000
 
 colors = {
     # 7: "green",
@@ -107,7 +107,7 @@ if __name__ == "__main__":
         fig, update, frames=min(LIMIT, len(history)), fargs=(scatters, periodic_scatters, labels, ax, history),
         interval=10, blit=True  # interval is in milliseconds
     )
-    anim.save(f'{BASE_PATH}/animation.gif', writer='pillow', fps=20)
+    anim.save(f'{BASE_PATH}/animation.gif', writer='pillow', fps=60)
     clip = mp.VideoFileClip(f'{BASE_PATH}/animation.gif')
     clip.write_videofile(f'{BASE_PATH}/animation.mp4')
 

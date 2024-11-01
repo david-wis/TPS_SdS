@@ -27,11 +27,13 @@ public class Config {
 
     private boolean DEBUG;
 
+    private static String PATH;
+
     private static Config config = null;
 
     public static Config getConfig() {
         if (config != null) return config;
-        config = FileController.getConfig("config/config.json");
+        config = FileController.getConfig(PATH);
         return config;
     }
 
@@ -121,4 +123,7 @@ public class Config {
     }
 
 
+    public static void setPATH(String PATH) {
+        Config.PATH = PATH;
+    }
 }

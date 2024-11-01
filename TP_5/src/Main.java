@@ -11,6 +11,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+        Config.setPATH("config/animation.json");
         Config config = Config.getConfig();
         FileController.createFolderIfNotExists("output/");
         for (int m : config.getMS()) {

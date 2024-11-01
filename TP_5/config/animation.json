@@ -1,0 +1,22 @@
+{
+  "L": 140,
+  "W": 40,
+  "R": 1,
+  "OBSTACLE_RADIUS": 1,
+  "N": 100,
+  "MS": [100],
+  "ALL_MS": [80, 100, 120],
+  "MASS": 1,
+  "A0S": [1.0],
+  "ALL_A0": [0.5, 1.0, 2.5, 3.5, 5.0],
+  "KN": 250,
+  "G": 2.5,
+  "T": 100,
+  "DT": 0.01,
+  "REAL_DT" : 0.1,
+  "DT2": 0.02,
+  "ANIMATION": true,
+  "DEBUG": false,
+  "SEEDS": ["cac71"],
+  "ALL_SEEDS": ["cac71", "cac72", "deadbee", "c0ffee", "1234"]
+}
