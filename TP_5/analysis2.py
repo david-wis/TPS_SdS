@@ -10,7 +10,7 @@ X_IDX = 1
 Y_IDX = 2
 R_IDX = 3
 
-with open("config/config.json", "r") as f:
+with open("config/config2.json", "r") as f:
     config = json.load(f)
     DT2 = config["DT2"]
     L = config["L"]
@@ -84,40 +84,40 @@ def plot_lin_regression_error(xs, ys, x_label, y_label, filename, scatter=False)
 
 
 if __name__ == "__main__":
-    rs = []
-    seed = SEEDS[0]
-    for M in MS:
-        print(f"M = {M}")
-        qs = []
-        for A0 in A0S:
-            print(f"\tA0 = {A0}")
-            ts = [0]
-            BASE_PATH = f"output/{seed}/{M}/{A0}"
-            flux_accum = [0]
-            with open(f"{BASE_PATH}/analysis.txt") as f:
-                lines = f.readlines()
-                for l in lines:
-                    t, ids = l.split(":")
-                    ids = ids[1:-1].split(", ")
-                    flux_accum.append(flux_accum[-1] + len(ids))
-                    ts.append(float(t))
+    for seed in SEEDS:
+        rs = []
+        for M in MS:
+            print(f"M = {M}")
+            qs = []
+            for A0 in A0S:
+                print(f"\tA0 = {A0}")
+                ts = [0]
+                BASE_PATH = f"output/{seed}/{M}/{A0}"
+                flux_accum = [0]
+                with open(f"{BASE_PATH}/analysis.txt") as f:
+                    lines = f.readlines()
+                    for l in lines:
+                        t, ids = l.split(":")
+                        ids = ids[1:-1].split(", ")
+                        flux_accum.append(flux_accum[-1] + len(ids))
+                        ts.append(float(t))
 
-            plot(ts, flux_accum, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_real")
+                plot(ts, flux_accum, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_real")
 
-            ts_stationary = np.array([t for t in ts if t > 250])
-            ts_stationary -= ts_stationary[0]
-            flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
-            flux_accum_stationary -= flux_accum_stationary[0]
-            q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression" )
-            qs.append(q)
-        BASE_PATH = f"output/{seed}/{M}"
-        A0S_normalized = np.array(A0S) #- A0S[0]
-        qs_normalized = np.array(qs) #- qs[0]
-        slope = plot_lin_regression_error(A0S_normalized, qs_normalized, "Aceleración $(\\frac{cm}{s^2})$", "Caudal ($s^{-1}$)", "a_vs_q", True)
-        # q = a * slope = slope * f/m := f / res
-        # slope / m = 1 / res ⇒ res = m / slope
-        res = MASS / slope
-        rs.append(res)
-    BASE_PATH = f"output/{seed}"
-    plot(np.array(MS), np.array(rs), "Numero de obstáculos", "Resistencia ($\\frac{g cm}{s}$)", "res_vs_m")
+                ts_stationary = np.array([t for t in ts if t > 250])
+                ts_stationary -= ts_stationary[0]
+                flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
+                flux_accum_stationary -= flux_accum_stationary[0]
+                q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression" )
+                qs.append(q)
+            BASE_PATH = f"output/{seed}/{M}"
+            A0S_normalized = np.array(A0S) #- A0S[0]
+            qs_normalized = np.array(qs) #- qs[0]
+            slope = plot_lin_regression_error(A0S_normalized, qs_normalized, "Aceleración $(\\frac{cm}{s^2})$", "Caudal ($s^{-1}$)", "a_vs_q", True)
+            # q = a * slope = slope * f/m := f / res
+            # slope / m = 1 / res ⇒ res = m / slope
+            res = MASS / slope
+            rs.append(res)
+        BASE_PATH = f"output/{seed}"
+        plot(np.array(MS), np.array(rs), "Numero de obstáculos", "Resistencia ($\\frac{g cm}{s}$)", "res_vs_m")
 

@@ -17,6 +17,6 @@
   "DT2": 1,
   "ANIMATION": true,
   "DEBUG": false,
-  "SEEDS": ["cac71"],
+  "SEEDS": ["cac71", "1234"],
   "ALL_SEEDS": ["cac71", "cac72", "deadbee", "c0ffee", "1234"]
 }
