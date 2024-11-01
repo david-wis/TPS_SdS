@@ -7,16 +7,16 @@
   "MS": [100],
   "ALL_MS": [80, 100, 120],
   "MASS": 1,
-  "A0S": [1.0],
+  "A0S": [0.5, 1.0, 2.5, 3.5, 5.0],
   "ALL_A0": [0.5, 1.0, 2.5, 3.5, 5.0],
   "KN": 250,
   "G": 0.25,
-  "T": 1000,
+  "T": 600,
   "DT": 0.01,
   "REAL_DT" : 0.1,
   "DT2": 1,
   "ANIMATION": true,
   "DEBUG": false,
-  "SEEDS": ["c0ffee"],
-  "ALL_SEEDS": ["cac71", "deadbee", "c0ffee", "1234"]
+  "SEEDS": ["cac71"],
+  "ALL_SEEDS": ["cac71", "cac72", "deadbee", "c0ffee", "1234"]
 }

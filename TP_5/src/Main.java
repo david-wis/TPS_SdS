@@ -30,7 +30,7 @@ public class Main {
                     List<Particle> particles = FileController.readParticlesState(basePath + "/particles.txt");
                     List<Obstacle> obstacles = FileController.readObstaclesState(basePath + "/obstacles.txt");
                     Field f = new Field(particles, obstacles);
-                    System.out.println("Starting " + seedHex);
+                    System.out.println("Starting " + String.format("%x", seedHex));
                     f.loop(particles, obstacles, basePath);
                 }
             }

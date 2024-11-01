@@ -49,11 +49,11 @@ public class PeriodicGrid {
         int x = (int) (o.getX() / (config.getL() / cols));
         int y = (int) (o.getY() / (config.getW() / rows));
         if (y >= rows) {
-            y = rows - 1;
             System.err.printf("HM? %d > %d\n", y, rows);
+            y = rows - 1;
         } else if (y < 0 ) {
-            y = 0;
             System.err.printf("hm? %d < 0\n", y);
+            y = 0;
         }
         return new Point(x, y);
     }

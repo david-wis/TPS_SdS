@@ -18,11 +18,11 @@ with open("config/config.json", "r") as f:
     W = config["W"]
     R = config["R"]
     OBS_RADIUS = config["OBSTACLE_RADIUS"]
-    BASE_PATH = "output/100/1.0/c0ffee"
+    BASE_PATH = "output/100/5.0/cac71"
     # START = 200
     # LIMIT = 150
-    START = 200
-    LIMIT = 80
+    START = 0
+    LIMIT = 22
 
 colors = {
     # 7: "green",
@@ -64,7 +64,7 @@ def update(frame, scatters, periodic_scatters, labels, ax, history):
         scatter.set_offsets([particle[X_IDX], particle[Y_IDX]])  # particle[1] -> x, particle[2] -> y
         if particle[X_IDX] < R or particle[X_IDX] > L - R:
             x = particle[X_IDX] + L if particle[X_IDX] < L/2 else particle[X_IDX] - L
-            periodic_scatter = ax.scatter(x, particle[Y_IDX], s=100 * (particle[R_IDX])**2, color=colors.get(particle[ID_IDX], "blue"))
+            periodic_scatter = ax.scatter(x, particle[Y_IDX], s=100 * (particle[R_IDX])**2, color=colors.get(particle[ID_IDX], "purple"))
 
             periodic_scatters.append(periodic_scatter)
         # scatter.set_color("red" if particle[-1] == 1 else "blue")  # Change color if needed

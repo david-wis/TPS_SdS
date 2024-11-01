@@ -16,6 +16,7 @@ with open("config/config.json", "r") as f:
     L = config["L"]
     W = config["W"]
     R = config["R"]
+    MASS = config["MASS"]
     OBS_RADIUS = config["OBSTACLE_RADIUS"]
     MS = config["MS"]
     A0S = config["A0S"]
@@ -34,25 +35,6 @@ def plot(xs, ys, x_label, y_label, filename):
     plt.tight_layout()
     plt.savefig(f"{BASE_PATH}/{filename}.png")
     print("Saved")
-    plt.close()
-
-
-def plot_aggregated(xss, yss, ls, x_label, y_label, filename, legend_title=None, logarithmic=False, scatter=False, plot=True, s=20):
-    fig, ax = plt.subplots()
-    plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
-    for xs, ys, l in zip(xss, yss, ls):
-        if plot:
-            ax.plot(xs, ys, label=l)
-        if scatter:
-            ax.scatter(xs, ys, label=l, s=s)
-    ax.set_xlabel(x_label)
-    ax.set_ylabel(y_label)
-    ax.set_ylim(0, np.max(yss) * 2)
-    handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles=handles, labels=labels, title = legend_title)
-    if logarithmic:
-        ax.set_yscale('log')
-    plt.savefig(f"{BASE_PATH}/{filename}.png")
     plt.close()
 
 def plot_lin_regression_error(xs, ys, x_label, y_label, filename):
@@ -100,16 +82,16 @@ def plot_lin_regression_error(xs, ys, x_label, y_label, filename):
 
 
 if __name__ == "__main__":
+    rs = []
     for M in MS:
         print(f"M = {M}")
         qs = []
-        tss = []
-        flux_acum_s = []
+        for A0 in A0S:
+            print(f"\tA0 = {A0}")
 
-        for seed in SEEDS:
-            print(f"\t\tSeed = {seed}")
+            seed = SEEDS[0]
             ts = [0]
-            BASE_PATH = f"output/{M}/1.0/{seed}"
+            BASE_PATH = f"output/{M}/{A0}/{seed}"
             flux_accum = [0]
             with open(f"{BASE_PATH}/analysis.txt") as f:
                 lines = f.readlines()
@@ -122,15 +104,18 @@ if __name__ == "__main__":
             plot(ts, flux_accum, "Tiempo", "Caudal acumulado", "flux_accum_real")
 
             # find first t > 300
-            # ts_stationary = np.array([t for t in ts if t > 350])
             ts_stationary = np.array(ts[-250:])
             ts_stationary -= ts_stationary[0]
             flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
             flux_accum_stationary -= flux_accum_stationary[0]
             q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo", "Caudal acumulado", "flux_accum_regression" )
             qs.append(q)
-            tss.append(ts_stationary)
-            flux_acum_s.append(flux_accum_stationary)
+        BASE_PATH = f"output/{M}"
+        slope = plot_lin_regression_error(np.array(A0S), np.array(qs), "Aceleración", "Caudal", "a_vs_q")
+        # q = a * slope = slope * f/m := f / res
+        # slope / m = 1 / res ⇒ res = m / slope
+        res = MASS / slope
+        rs.append(res)
+    BASE_PATH = f"output"
+    plot(np.array(MS), np.array(rs), "Numero de obstáculos", "Resistencia", "res_vs_m")
 
-        BASE_PATH = f"output/{M}/1.0"
-        plot_aggregated(tss, flux_acum_s, ["a", "b", "c", "d", "e"], "Tiempo", "Caudal acumulado", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)
