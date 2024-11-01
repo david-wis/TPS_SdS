@@ -47,7 +47,8 @@ def plot_aggregated(xss, yss, ls, x_label, y_label, filename, legend_title=None,
             ax.scatter(xs, ys, label=l, s=s)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
-    ax.set_ylim(0, np.max(yss) * 2)
+    maxs = [np.max(ys) for ys in yss]
+    ax.set_ylim(0, max(maxs) * 2)
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles=handles, labels=labels, title = legend_title)
     if logarithmic:
@@ -133,4 +134,4 @@ if __name__ == "__main__":
             flux_acum_s.append(flux_accum_stationary)
 
         BASE_PATH = f"output/{M}/1.0"
-        plot_aggregated(tss, np.array(flux_acum_s), SEEDS, "Tiempo", "Caudal acumulado", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)
+        plot_aggregated(tss, flux_acum_s, SEEDS, "Tiempo", "Caudal acumulado", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)
