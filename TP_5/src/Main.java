@@ -12,6 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         Config config = Config.getConfig();
+        FileController.createFolderIfNotExists("output/");
         for (int m : config.getMS()) {
             config.setM(m);
             System.out.printf("\nM: %d\n", m);

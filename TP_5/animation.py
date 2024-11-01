@@ -18,17 +18,18 @@ with open("config/config.json", "r") as f:
     W = config["W"]
     R = config["R"]
     OBS_RADIUS = config["OBSTACLE_RADIUS"]
-    BASE_PATH = "output/100/5.0/cac71"
+    BASE_PATH = "output/100/1.0/cac72"
     # START = 200
     # LIMIT = 150
     START = 0
-    LIMIT = 22
+    LIMIT = 2
 
 colors = {
     # 7: "green",
     # 14: "purple"
 }
 
+size = 25
 def init_plot(history, obstacles):
     fig, ax = plt.subplots()
     # make the plot square
@@ -38,15 +39,15 @@ def init_plot(history, obstacles):
 
     scatters = []
     labels = []
-
     for p in history[0]:  # One scatter per particle
-        scatter = ax.scatter([], [], s=100 * (p[R_IDX])**2 , color=colors.get(p[ID_IDX], "blue"))  # s sets size; customize if needed
+        scatter = ax.scatter([], [], s=size * (p[R_IDX])**2 , color=colors.get(p[ID_IDX], "blue"))  # s sets size; customize if needed
         scatters.append(scatter)
         text = ax.text(0, 0, "")
         labels.append(text)
     for o in obstacles:
-        scatter = ax.scatter([], [], s=100 * (o[R_IDX])**2 , color="grey")  # s sets size; customize if needed
+        scatter = ax.scatter([], [], s=size * (o[R_IDX])**2 , color="grey")  # s sets size; customize if needed
         scatter.set_offsets([o[X_IDX], o[Y_IDX]])
+    #draw circle with radius 1
     return fig, ax, scatters, labels
 
 
@@ -64,7 +65,7 @@ def update(frame, scatters, periodic_scatters, labels, ax, history):
         scatter.set_offsets([particle[X_IDX], particle[Y_IDX]])  # particle[1] -> x, particle[2] -> y
         if particle[X_IDX] < R or particle[X_IDX] > L - R:
             x = particle[X_IDX] + L if particle[X_IDX] < L/2 else particle[X_IDX] - L
-            periodic_scatter = ax.scatter(x, particle[Y_IDX], s=100 * (particle[R_IDX])**2, color=colors.get(particle[ID_IDX], "purple"))
+            periodic_scatter = ax.scatter(x, particle[Y_IDX], s=size * (particle[R_IDX])**2, color=colors.get(particle[ID_IDX], "purple"))
 
             periodic_scatters.append(periodic_scatter)
         # scatter.set_color("red" if particle[-1] == 1 else "blue")  # Change color if needed

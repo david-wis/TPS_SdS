@@ -133,4 +133,4 @@ if __name__ == "__main__":
             flux_acum_s.append(flux_accum_stationary)
 
         BASE_PATH = f"output/{M}/1.0"
-        plot_aggregated(tss, flux_acum_s, ["a", "b", "c", "d", "e"], "Tiempo", "Caudal acumulado", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)
+        plot_aggregated(tss, flux_acum_s, SEEDS, "Tiempo", "Caudal acumulado", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)
