@@ -26,7 +26,7 @@ def plot(xs, ys, x_label, y_label, filename):
     print("Plotting")
     fig, ax = plt.subplots()
     # plt.ticklabel_format(style='sci', axis='both', scilimits=(-5,5))
-    ax.scatter(xs, ys)
+    ax.plot(xs, ys)
     ax.set_ylim((0, 1.1 * max(ys)))
     # limit ticks in x axis to only have 5
     # ax.set_xticks(np.linspace(min(xs), max(xs), num=5))
@@ -37,7 +37,7 @@ def plot(xs, ys, x_label, y_label, filename):
     print("Saved")
     plt.close()
 
-def plot_lin_regression_error(xs, ys, x_label, y_label, filename):
+def plot_lin_regression_error(xs, ys, x_label, y_label, filename, scatter=False):
     fig, ax = plt.subplots()
     plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
 
@@ -67,12 +67,14 @@ def plot_lin_regression_error(xs, ys, x_label, y_label, filename):
     plt.savefig(f"{BASE_PATH}/{filename}_error.png")
     plt.close()
 
-    xs_star = np.linspace(min(xs), max(xs), 100)
+    xs_star = np.linspace(0, max(xs), 100)
     ys_star = vx * xs_star
     fig, ax = plt.subplots()
     plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
     ax.plot(xs_star, ys_star)
     ax.plot(xs, ys, c="red", zorder=5)
+    if scatter:
+        ax.scatter(xs, ys, c="red", zorder=5)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     ax.legend([f"$y = {vx:.3g} " + "t$"])
@@ -83,15 +85,14 @@ def plot_lin_regression_error(xs, ys, x_label, y_label, filename):
 
 if __name__ == "__main__":
     rs = []
+    seed = SEEDS[0]
     for M in MS:
         print(f"M = {M}")
         qs = []
         for A0 in A0S:
             print(f"\tA0 = {A0}")
-
-            seed = SEEDS[0]
             ts = [0]
-            BASE_PATH = f"output/{M}/{A0}/{seed}"
+            BASE_PATH = f"output/{seed}/{M}/{A0}"
             flux_accum = [0]
             with open(f"{BASE_PATH}/analysis.txt") as f:
                 lines = f.readlines()
@@ -101,21 +102,22 @@ if __name__ == "__main__":
                     flux_accum.append(flux_accum[-1] + len(ids))
                     ts.append(float(t))
 
-            plot(ts, flux_accum, "Tiempo", "Caudal acumulado", "flux_accum_real")
+            plot(ts, flux_accum, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_real")
 
-            # find first t > 300
-            ts_stationary = np.array(ts[-250:])
+            ts_stationary = np.array([t for t in ts if t > 250])
             ts_stationary -= ts_stationary[0]
             flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
             flux_accum_stationary -= flux_accum_stationary[0]
-            q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo", "Caudal acumulado", "flux_accum_regression" )
+            q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression" )
             qs.append(q)
-        BASE_PATH = f"output/{M}"
-        slope = plot_lin_regression_error(np.array(A0S), np.array(qs), "Aceleración", "Caudal", "a_vs_q")
+        BASE_PATH = f"output/{seed}/{M}"
+        A0S_normalized = np.array(A0S) #- A0S[0]
+        qs_normalized = np.array(qs) #- qs[0]
+        slope = plot_lin_regression_error(A0S_normalized, qs_normalized, "Aceleración $(\\frac{cm}{s^2})$", "Caudal ($s^{-1}$)", "a_vs_q", True)
         # q = a * slope = slope * f/m := f / res
         # slope / m = 1 / res ⇒ res = m / slope
         res = MASS / slope
         rs.append(res)
-    BASE_PATH = f"output"
-    plot(np.array(MS), np.array(rs), "Numero de obstáculos", "Resistencia", "res_vs_m")
+    BASE_PATH = f"output/{seed}"
+    plot(np.array(MS), np.array(rs), "Numero de obstáculos", "Resistencia ($\\frac{g cm}{s}$)", "res_vs_m")
 

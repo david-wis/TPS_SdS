@@ -101,16 +101,16 @@ def plot_lin_regression_error(xs, ys, x_label, y_label, filename):
 
 
 if __name__ == "__main__":
-    for M in MS:
-        print(f"M = {M}")
+    for seed in SEEDS:
+        print(f"\t\tSeed = {seed}")
         qs = []
         tss = []
         flux_acum_s = []
 
-        for seed in SEEDS:
-            print(f"\t\tSeed = {seed}")
+        for M in MS:
+            print(f"M = {M}")
             ts = [0]
-            BASE_PATH = f"output/{M}/1.0/{seed}"
+            BASE_PATH = f"output/{seed}/{M}/1.0"
             flux_accum = [0]
             with open(f"{BASE_PATH}/analysis.txt") as f:
                 lines = f.readlines()
@@ -120,7 +120,7 @@ if __name__ == "__main__":
                     flux_accum.append(flux_accum[-1] + len(ids))
                     ts.append(float(t))
 
-            plot(ts, flux_accum, "Tiempo", "Caudal acumulado", "flux_accum_real")
+            plot(ts, flux_accum, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_real")
 
             # find first t > 300
             # ts_stationary = np.array([t for t in ts if t > 350])
@@ -128,10 +128,10 @@ if __name__ == "__main__":
             ts_stationary -= ts_stationary[0]
             flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
             flux_accum_stationary -= flux_accum_stationary[0]
-            q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo", "Caudal acumulado", "flux_accum_regression" )
+            q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression" )
             qs.append(q)
             tss.append(ts_stationary)
             flux_acum_s.append(flux_accum_stationary)
 
-        BASE_PATH = f"output/{M}/1.0"
-        plot_aggregated(tss, flux_acum_s, SEEDS, "Tiempo", "Caudal acumulado", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)
+        BASE_PATH = f"output/"
+        plot_aggregated(tss, flux_acum_s, SEEDS, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)

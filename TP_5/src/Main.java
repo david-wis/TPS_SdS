@@ -6,7 +6,7 @@ import java.util.Random;
 public class Main {
 
     private static String BASE_PATH(int M, double A0, int seed){
-        return String.format("output/%d/%.2g/%x", M, A0, seed);
+        return String.format("output/%x/%d/%.1f", seed, M, A0);
     }
 
 
@@ -14,17 +14,17 @@ public class Main {
         Config.setPATH("config/animation.json");
         Config config = Config.getConfig();
         FileController.createFolderIfNotExists("output/");
-        for (int m : config.getMS()) {
-            config.setM(m);
-            System.out.printf("\nM: %d\n", m);
-            FileController.createFolderIfNotExists("output/" + m);
-            for (double a0 : config.getA0S()) {
-                config.setA0(a0);
-                System.out.printf("\tA0: %g\n", a0);
-                FileController.createFolderIfNotExists(String.format("output/%d/%.2g", m, a0));
-                for (String seed : config.getSEEDS()) {
-                    int seedHex = Integer.parseInt(seed, 16);
-                    System.out.printf("\t\t%x\n", seedHex);
+        for (String seed : config.getSEEDS()) {
+            int seedHex = Integer.parseInt(seed, 16);
+            System.out.printf("\t\t%x\n", seedHex);
+            FileController.createFolderIfNotExists(String.format("output/%x", seedHex));
+            for (int m : config.getMS()) {
+                config.setM(m);
+                System.out.printf("\nM: %d\n", m);
+                FileController.createFolderIfNotExists(String.format("output/%x/%d", seedHex, m));
+                for (double a0 : config.getA0S()) {
+                    config.setA0(a0);
+                    System.out.printf("\tA0: %g\n", a0);
                     String basePath = BASE_PATH(config.getM(), config.getA0(), seedHex);
                     FileController.createFolderIfNotExists(basePath);
                     init(config, seedHex, basePath);
