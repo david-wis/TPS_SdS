@@ -111,8 +111,8 @@ if __name__ == "__main__":
                 q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression" )
                 qs.append(q)
             BASE_PATH = f"output/{seed}/{M}"
-            A0S_normalized = np.array(A0S) #- A0S[0]
-            qs_normalized = np.array(qs) #- qs[0]
+            A0S_normalized = np.array(A0S) - A0S[0]
+            qs_normalized = np.array(qs) - qs[0]
             slope = plot_lin_regression_error(A0S_normalized, qs_normalized, "Aceleración $(\\frac{cm}{s^2})$", "Caudal ($s^{-1}$)", "a_vs_q", True)
             # q = a * slope = slope * f/m := f / res
             # slope / m = 1 / res ⇒ res = m / slope
