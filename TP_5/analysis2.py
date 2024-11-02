@@ -22,11 +22,13 @@ with open("config/config2.json", "r") as f:
     A0S = config["A0S"]
     SEEDS = config["SEEDS"]
 
-def plot(xs, ys, x_label, y_label, filename):
+def plot(xs, ys, x_label, y_label, filename, scatter=False):
     print("Plotting")
     fig, ax = plt.subplots()
     # plt.ticklabel_format(style='sci', axis='both', scilimits=(-5,5))
     ax.plot(xs, ys)
+    if scatter:
+        ax.scatter(xs, ys)
     ax.set_ylim((0, 1.1 * max(ys)))
     # limit ticks in x axis to only have 5
     # ax.set_xticks(np.linspace(min(xs), max(xs), num=5))
@@ -37,7 +39,7 @@ def plot(xs, ys, x_label, y_label, filename):
     print("Saved")
     plt.close()
 
-def plot_lin_regression_error(xs, ys, x_label, y_label, filename, scatter=False):
+def plot_lin_regression_error(xs, ys, x_label, y_label, filename, x_variable, scatter=False):
     fig, ax = plt.subplots()
     plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
 
@@ -77,7 +79,7 @@ def plot_lin_regression_error(xs, ys, x_label, y_label, filename, scatter=False)
         ax.scatter(xs, ys, c="red", zorder=5)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
-    ax.legend([f"$y = {vx:.3g} " + "t$"])
+    ax.legend([f"$y = {vx:.3g}\\ {x_variable}$"])
     plt.savefig(f"{BASE_PATH}/{filename}.png")
     plt.close()
     return vx
@@ -108,16 +110,16 @@ if __name__ == "__main__":
                 ts_stationary -= ts_stationary[0]
                 flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
                 flux_accum_stationary -= flux_accum_stationary[0]
-                q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression" )
+                q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression" , "t")
                 qs.append(q)
             BASE_PATH = f"output/{seed}/{M}"
             A0S_normalized = np.array(A0S) - A0S[0]
             qs_normalized = np.array(qs) - qs[0]
-            slope = plot_lin_regression_error(A0S_normalized, qs_normalized, "Aceleración $(\\frac{cm}{s^2})$", "Caudal ($s^{-1}$)", "a_vs_q", True)
+            slope = plot_lin_regression_error(A0S_normalized, qs_normalized, "Aceleración $(\\frac{cm}{s^2})$", "Caudal ($s^{-1}$)", "a_vs_q", "a", True)
             # q = a * slope = slope * f/m := f / res
             # slope / m = 1 / res ⇒ res = m / slope
             res = MASS / slope
             rs.append(res)
         BASE_PATH = f"output/{seed}"
-        plot(np.array(MS), np.array(rs), "Numero de obstáculos", "Resistencia ($\\frac{g cm}{s}$)", "res_vs_m")
+        plot(np.array(MS), np.array(rs), "Numero de obstáculos", "Resistencia ($\\frac{g cm}{s}$)", "res_vs_m", True)
 
