@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import json
+
+from PyQt5.QtCore import scientific
+from matplotlib.ticker import FuncFormatter
 mpl.use('Agg')
 
 
@@ -10,7 +13,21 @@ X_IDX = 1
 Y_IDX = 2
 R_IDX = 3
 
-with open("config/config.json", "r") as f:
+def scientific_notation(x, pos=0):
+    if x == 0:
+        return '0'
+    exponent = int(np.floor(np.log10(abs(x))))
+    mantissa = x / (10 ** exponent)
+    if abs(exponent) >= 3:
+        return r'${:.2g} \times 10^{{{}}}$'.format(mantissa, exponent)
+    else:
+        if x - int(x) == 0:
+            return str(int(x))
+        return f"{x:.2g}"
+formatter = FuncFormatter(scientific_notation)
+
+
+with open("config/config1.json", "r") as f:
     config = json.load(f)
     DT2 = config["DT2"]
     L = config["L"]
@@ -37,7 +54,7 @@ def plot(xs, ys, x_label, y_label, filename):
     plt.close()
 
 
-def plot_aggregated(xss, yss, ls, x_label, y_label, filename, legend_title=None, logarithmic=False, scatter=False, plot=True, s=20):
+def plot_aggregated(xss, yss, ls, x_label, y_label, filename, legend_title=None, logarithmic=False, scatter=False, plot=True, s=10):
     fig, ax = plt.subplots()
     plt.ticklabel_format(style='sci', axis='x', scilimits=(-5,5))
     for xs, ys, l in zip(xss, yss, ls):
@@ -79,10 +96,13 @@ def plot_lin_regression_error(xs, ys, x_label, y_label, filename):
 
     # zorder
     ax.scatter(vx, vy, color='red', zorder=5)
-    ax.annotate(f"({vx:.3f}, {vy:.3g})", (vx, vy), textcoords="offset points", xytext=(0,15), ha='center', color='red')
+    ax.annotate(f"({scientific_notation(vx)}, {scientific_notation(vy)})", (vx, vy), textcoords="offset points", xytext=(0,15), ha='center', color='red')
 
     ax.set_xlabel("c")
     ax.set_ylabel("E(c)")
+
+    ax.yaxis.set_major_formatter(formatter)
+
     plt.savefig(f"{BASE_PATH}/{filename}_error.png")
     plt.close()
 
@@ -101,37 +121,44 @@ def plot_lin_regression_error(xs, ys, x_label, y_label, filename):
 
 
 if __name__ == "__main__":
+    qs = []
+    tss = []
+    flux_acum_s = []
+    M = 100
+    OFFSETS = {
+        "cac71": -200,
+        "cac72":-200,
+        "1234": -200,
+        "deadbee": -200,
+        "c0ffee": -140
+    }
     for seed in SEEDS:
         print(f"\t\tSeed = {seed}")
-        qs = []
-        tss = []
-        flux_acum_s = []
+        # for M in MS:
+        #     print(f"M = {M}")
+        ts = [0]
+        BASE_PATH = f"output/{seed}/{M}/1.0"
+        flux_accum = [0]
+        with open(f"{BASE_PATH}/analysis.txt") as f:
+            lines = f.readlines()
+            for l in lines:
+                t, ids = l.split(":")
+                ids = ids[1:-1].split(", ")
+                flux_accum.append(flux_accum[-1] + len(ids))
+                ts.append(float(t))
 
-        for M in MS:
-            print(f"M = {M}")
-            ts = [0]
-            BASE_PATH = f"output/{seed}/{M}/1.0"
-            flux_accum = [0]
-            with open(f"{BASE_PATH}/analysis.txt") as f:
-                lines = f.readlines()
-                for l in lines:
-                    t, ids = l.split(":")
-                    ids = ids[1:-1].split(", ")
-                    flux_accum.append(flux_accum[-1] + len(ids))
-                    ts.append(float(t))
+        plot(ts, flux_accum, "t (s)", "N($s^{-1}$)", "flux_accum_real")
 
-            plot(ts, flux_accum, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_real")
+        # find first t > 300
+        # ts_stationary = np.array([t for t in ts if t > 350])
+        ts_stationary = np.array(ts[OFFSETS[seed]:])
+        ts_stationary -= ts_stationary[0]
+        flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
+        flux_accum_stationary -= flux_accum_stationary[0]
+        q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "t (s)", "N ($s^{-1}$)", "flux_accum_regression" )
+        qs.append(q)
+        tss.append(ts_stationary)
+        flux_acum_s.append(flux_accum_stationary)
 
-            # find first t > 300
-            # ts_stationary = np.array([t for t in ts if t > 350])
-            ts_stationary = np.array(ts[-200:])
-            ts_stationary -= ts_stationary[0]
-            flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
-            flux_accum_stationary -= flux_accum_stationary[0]
-            q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression" )
-            qs.append(q)
-            tss.append(ts_stationary)
-            flux_acum_s.append(flux_accum_stationary)
-
-        BASE_PATH = f"output/"
-        plot_aggregated(tss, flux_acum_s, SEEDS, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)
+    BASE_PATH = f"output/"
+    plot_aggregated(tss, flux_acum_s, SEEDS, "t (s)", "N ($s^{-1}$)", "flux_accum_regression_aggr", legend_title="Corrida", scatter=True, plot=False)
