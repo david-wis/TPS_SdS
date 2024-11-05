@@ -31,7 +31,7 @@ def plot(xs, ys, x_label, y_label, filename, scatter=False):
         ax.scatter(xs, ys)
     ax.set_ylim((0, 1.1 * max(ys)))
     # limit ticks in x axis to only have 5
-    # ax.set_xticks(np.linspace(min(xs), max(xs), num=5))
+    ax.set_xticks(xs)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     plt.tight_layout()
@@ -104,22 +104,22 @@ if __name__ == "__main__":
                         flux_accum.append(flux_accum[-1] + len(ids))
                         ts.append(float(t))
 
-                plot(ts, flux_accum, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_real")
+                plot(ts, flux_accum, "t (s)", "N ($s^{-1}$)", "flux_accum_real")
 
                 ts_stationary = np.array([t for t in ts if t > 250])
                 ts_stationary -= ts_stationary[0]
                 flux_accum_stationary = np.array(flux_accum[len(flux_accum)-len(ts_stationary):])
                 flux_accum_stationary -= flux_accum_stationary[0]
-                q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "Tiempo (s)", "Caudal acumulado ($s^{-1}$)", "flux_accum_regression" , "t")
+                q = plot_lin_regression_error(ts_stationary, flux_accum_stationary, "t (s)", "N ($s^{-1}$)", "flux_accum_regression" , "t")
                 qs.append(q)
             BASE_PATH = f"output/{seed}/{M}"
             A0S_normalized = np.array(A0S) - A0S[0]
             qs_normalized = np.array(qs) - qs[0]
-            slope = plot_lin_regression_error(A0S_normalized, qs_normalized, "Aceleración $(\\frac{cm}{s^2})$", "Caudal ($s^{-1}$)", "a_vs_q", "a", True)
+            slope = plot_lin_regression_error(A0S_normalized, qs_normalized, "$A_0$ $(\\frac{cm}{s^2})$", "Q ($s^{-1}$)", "a_vs_q", "a", True)
             # q = a * slope = slope * f/m := f / res
             # slope / m = 1 / res ⇒ res = m / slope
             res = MASS / slope
             rs.append(res)
         BASE_PATH = f"output/{seed}"
-        plot(np.array(MS), np.array(rs), "Numero de obstáculos", "Resistencia ($\\frac{g cm}{s}$)", "res_vs_m", True)
+        plot(np.array(MS), np.array(rs), "M", "R ($\\frac{g\\ cm}{s}$)", "res_vs_m", True)
 
